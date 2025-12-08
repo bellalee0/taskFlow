@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
@@ -38,13 +39,21 @@ public class Task extends BaseEntity {
     //@Column(nullable = false)
     private LocalDateTime dueDate;
 
+    @ColumnDefault("0")
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    private boolean isCompleted;
 
-    public Task(String title, String description, TaskStatus status, TaskPriority priority, User assigneeId, LocalDateTime dueDate) {
+    private LocalDateTime completedDate;
+
+
+    public Task(String title, String description, TaskPriority priority, User assigneeId, LocalDateTime dueDate) {
         this.title = title;
         this.description = description;
-        this.status = status;
+        this.status = TaskStatus.TODO;
         this.priority = priority;
         this.assigneeId = assigneeId;
         this.dueDate = dueDate;
+        this.isCompleted = false;
+        this.completedDate = null;
     }
 }

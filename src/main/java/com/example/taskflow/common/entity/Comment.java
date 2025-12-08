@@ -31,14 +31,21 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "parent_id", nullable = false)
     private Comment parentComment;
 
-    private int depth; //대댓인지 댓글인지
+    private int depth;
 
 
-    public Comment(int depth, Comment parentComment, String content, User user, Task task) {
-        this.depth = depth;
-        this.parentComment = parentComment;
+    public Comment(String content, User user, Task task) {
         this.content = content;
         this.user = user;
         this.task = task;
+        this.depth = 0;
+    }
+
+    public Comment(String content, User user, Task task, Comment parentComment) {
+        this.content = content;
+        this.user = user;
+        this.task = task;
+        this.parentComment = parentComment;
+        this.depth = 1;
     }
 }
