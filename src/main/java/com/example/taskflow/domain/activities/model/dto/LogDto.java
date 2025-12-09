@@ -17,7 +17,7 @@ public class LogDto {
     private Long userId;
     private Long taskId;
     private Long commentId;
-    private LocalDateTime timestamp;
+    private LocalDateTime loggedDateTime;
     private String description;
 
     public static LogDto from(Log log) {
@@ -27,7 +27,7 @@ public class LogDto {
             log.getUser().getId(),
             log.getTask() == null ? 0L : log.getTask().getId(),
             log.getComment().getId() == null ? 0L : log.getComment().getId(),
-            log.getTimestamp(),
+            log.getLoggedDateTime(),
             log.getDescription()
         );
     }

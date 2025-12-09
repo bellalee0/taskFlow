@@ -1,7 +1,6 @@
 package com.example.taskflow.domain.task.model.dto;
 
 import com.example.taskflow.common.entity.Task;
-import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.model.enums.TaskPriority;
 import com.example.taskflow.common.model.enums.TaskStatus;
 import java.time.LocalDateTime;
@@ -20,9 +19,9 @@ public class TaskDto {
     private TaskStatus status;
     private TaskPriority priority;
     private Long assigneeId;
-    private LocalDateTime dueDate;
+    private LocalDateTime dueDateTime;
     private boolean isCompleted;
-    private LocalDateTime completedDate;
+    private LocalDateTime completedDateTime;
 
     public static TaskDto from(Task task) {
         return new TaskDto(
@@ -32,9 +31,9 @@ public class TaskDto {
             task.getStatus(),
             task.getPriority(),
             task.getAssigneeId().getId(),
-            task.getDueDate(),
+            task.getDueDateTime(),
             task.isCompleted(),
-            task.getCompletedDate()
+            task.getCompletedDateTime()
         );
     }
 }
