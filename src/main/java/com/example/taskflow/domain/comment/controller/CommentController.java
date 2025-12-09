@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +40,7 @@ public class CommentController {
     ) {
         CommentCreateResponse result = commentService.createComment(userId, taskId, request);
 
-        return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.COMMENT_CREATE_SUCCESS, result));
+        return ResponseEntity.status(HttpStatus.CREATED).body(GlobalResponse.success(SuccessMessage.COMMENT_CREATE_SUCCESS, result));
     }
 
     @GetMapping("/tasks/{taskId}/comments")
