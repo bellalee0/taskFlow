@@ -20,8 +20,8 @@ public class CommentCreateResponse {
     private UserDto user; // TODO: User 응답 객체로 변경
     private String content;
     private Long parentId;
-    private LocalDateTime createAt;
-    private LocalDateTime updateAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public static CommentCreateResponse from(CommentDto commentDto, UserDto userDto) {
         return new CommentCreateResponse(
@@ -31,7 +31,7 @@ public class CommentCreateResponse {
             userDto,
             commentDto.getContent(),
             commentDto.getParentComment() == null ? null : commentDto.getParentComment().getId(),
-            commentDto.getCreateAt(),
+            commentDto.getCreatedAt(),
             commentDto.getModifiedAt()
         );
     }

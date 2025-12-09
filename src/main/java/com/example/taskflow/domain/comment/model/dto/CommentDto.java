@@ -18,7 +18,7 @@ public class CommentDto {
     private Comment parentComment;
     private int depth;
     private boolean isDeleted;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
     public static CommentDto from(Comment comment) {
