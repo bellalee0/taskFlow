@@ -6,7 +6,9 @@ import com.example.taskflow.common.exception.CustomException;
 import com.example.taskflow.common.exception.ErrorMessage;
 import com.example.taskflow.domain.team.model.dto.TeamDto;
 import com.example.taskflow.domain.team.model.request.TeamCreateRequest;
+import com.example.taskflow.domain.team.model.request.TeamUpdateRequest;
 import com.example.taskflow.domain.team.model.response.TeamCreateResponse;
+import com.example.taskflow.domain.team.model.response.TeamUpdateResponse;
 import com.example.taskflow.domain.team.repository.TeamRepository;
 import com.example.taskflow.domain.team.repository.TeamUserRepository;
 import com.example.taskflow.domain.user.repository.UserRepository;
@@ -38,6 +40,29 @@ public class TeamService {
         TeamDto dto = TeamDto.from(team);
         return TeamCreateResponse.from(dto);
     }
+
+    //팀 수정
+    @Transactional
+    public TeamUpdateResponse updateTeam(TeamUpdateRequest request, Long teamId) {
+        Team selectedTeam = teamRepository.findTeamById(teamId);
+
+        String newName = request.getName();
+        String oldName = selectedTeam.getName();
+
+        if (!oldName.equals(newName) && teamRepository.existsByName(request.getName())) {
+            throw new CustomException(ErrorMessage.TEAM_ALREADY_PRESENT);
+        }
+
+        selectedTeam.updateTeam(
+                request.getName(),
+                request.getDescription()
+        );
+
+        TeamDto dto = TeamDto.from(selectedTeam);
+        return TeamUpdateResponse.from(dto);
+    }
+
+
 
 
 }
