@@ -13,10 +13,14 @@ import com.example.taskflow.common.model.enums.TaskPriority;
 import com.example.taskflow.common.model.enums.TaskStatus;
 import com.example.taskflow.common.model.response.GlobalResponse;
 import com.example.taskflow.domain.comment.repository.CommentRepository;
+import com.example.taskflow.domain.task.model.dto.TaskDto;
 import com.example.taskflow.domain.task.model.request.TaskCreateRequest;
+import com.example.taskflow.domain.task.model.request.TaskUpdateStatusRequest;
 import com.example.taskflow.domain.task.model.response.TaskCreateResponse;
 import com.example.taskflow.domain.task.model.response.TaskGetAllResponse;
+import com.example.taskflow.domain.task.model.response.TaskUpdateStatusResponse;
 import com.example.taskflow.domain.task.repository.TaskRepository;
+import com.example.taskflow.domain.user.model.dto.UserDto;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import java.util.List;
 import java.util.Objects;
@@ -86,6 +90,22 @@ public class TaskService {
     // 작업 수정 기능
 
     // 작업 상태 변경 기능
+    public TaskUpdateStatusResponse updateStatus(long id, TaskUpdateStatusRequest request) {
+
+        Task task = findTaskById(id);
+
+        TaskStatus currentStatus = task.getStatus();
+        TaskStatus requestStatus = TaskStatus.from(request.getStatus());
+
+        if (Math.abs(requestStatus.getLevel() - currentStatus.getLevel()) > 1) {
+            throw new CustomException(TASK_WRONG_ENUM);
+        }
+
+        task.updateStatus(requestStatus);
+        taskRepository.saveAndFlush(task);
+
+        return TaskUpdateStatusResponse.from(TaskDto.from(task), UserDto.from(task.getAssigneeId()));
+    }
 
     // 작업 삭제 기능
     public void deleteTask(long id, long userId) {

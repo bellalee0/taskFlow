@@ -57,4 +57,8 @@ public class Task extends BaseEntity {
         this.isCompleted = false;
         this.completedDateTime = null;
     }
+
+    public void updateStatus(TaskStatus status) {
+        this.status = status;
+    }
 }
