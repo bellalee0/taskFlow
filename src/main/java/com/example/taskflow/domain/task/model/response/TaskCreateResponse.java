@@ -13,8 +13,8 @@ public class TaskCreateResponse {
     private Long id;
     private String title;
     private String description;
-    private String TaskStatus;
-    private String TaskPriority;
+    private String taskStatus;
+    private String taskPriority;
     private String assigneeId;
     private String assignee;
     private LocalDateTime createdAt;

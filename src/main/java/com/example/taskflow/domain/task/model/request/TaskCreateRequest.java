@@ -9,7 +9,7 @@ public class TaskCreateRequest {
 
     private String title;
     private String description;
-    private String priority;
+    private String taskPriority;
     private String assigneeId;
-    private String dueDateTime;
+    private String dueDate;
 }
