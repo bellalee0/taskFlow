@@ -16,7 +16,6 @@ public class CommentDto {
     private Long userId;
     private String content;
     private Comment parentComment;
-    private int depth;
     private boolean isDeleted;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
@@ -28,7 +27,6 @@ public class CommentDto {
             comment.getUser().getId(),
             comment.getContent(),
             comment.getParentComment(),
-            comment.getDepth(),
             comment.isDeleted(),
             comment.getCreatedAt(),
             comment.getModifiedAt()

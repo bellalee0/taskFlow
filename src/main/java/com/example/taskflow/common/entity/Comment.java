@@ -30,14 +30,11 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "parent_id")
     private Comment parentComment;
 
-    private int depth;
-
 
     public Comment(String content, User user, Task task, Comment parentComment) {
         this.content = content;
         this.user = user;
         this.task = task;
         this.parentComment = parentComment;
-        this.depth = parentComment == null ? 0 : parentComment.getDepth() + 1;
     }
 }
