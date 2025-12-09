@@ -6,14 +6,18 @@ import com.example.taskflow.common.entity.Comment;
 import com.example.taskflow.common.entity.Task;
 import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.exception.CustomException;
+import com.example.taskflow.common.model.response.PageResponse;
 import com.example.taskflow.domain.comment.model.dto.CommentDto;
 import com.example.taskflow.domain.comment.model.request.CommentCreateRequest;
 import com.example.taskflow.domain.comment.model.response.CommentCreateResponse;
+import com.example.taskflow.domain.comment.model.response.CommentGetResponse;
 import com.example.taskflow.domain.comment.repository.CommentRepository;
 import com.example.taskflow.domain.task.repository.TaskRepository;
 import com.example.taskflow.domain.user.model.dto.UserDto;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,5 +51,17 @@ public class CommentService {
 
         // TODO: UserDto 요구사항에 맞게 변경 필요(id, username, name)
         return CommentCreateResponse.from(CommentDto.from(comment), UserDto.from(user));
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<CommentGetResponse> getCommentList(long taskId, Pageable pageable) {
+
+        Page<Comment> commentList = commentRepository.findByTaskId(taskId, pageable);
+
+        Page<CommentGetResponse> responsePage = commentList
+            // TODO: UserDto 요구사항에 맞게 변경 필요(id, username, name, email, role)
+            .map(comment -> CommentGetResponse.from(CommentDto.from(comment), UserDto.from(comment.getUser())));
+
+        return PageResponse.from(responsePage);
     }
 }

@@ -2,16 +2,23 @@ package com.example.taskflow.domain.comment.controller;
 
 import com.example.taskflow.common.model.enums.SuccessMessage;
 import com.example.taskflow.common.model.response.GlobalResponse;
-import com.example.taskflow.domain.comment.model.request.CommentCreateRequest;
-import com.example.taskflow.domain.comment.model.response.CommentCreateResponse;
+import com.example.taskflow.common.model.response.PageResponse;
+import com.example.taskflow.domain.comment.model.request.*;
+import com.example.taskflow.domain.comment.model.response.*;
 import com.example.taskflow.domain.comment.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,10 +34,27 @@ public class CommentController {
             // TODO: 로그인 사용자 정보로 변경
             @PathVariable long userId,
             @PathVariable long taskId,
-            @Valid @RequestBody CommentCreateRequest request) {
-
+            @Valid @RequestBody CommentCreateRequest request
+    ) {
         CommentCreateResponse result = commentService.createComment(userId, taskId, request);
 
         return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.COMMENT_CREATE_SUCCESS, result));
+    }
+
+    @GetMapping("/tasks/{taskId}/comments")
+    public ResponseEntity<GlobalResponse<PageResponse<CommentGetResponse>>> getCommentList(
+            @PathVariable long taskId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "newest") String sort
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        if ("oldest".equals(sort)) {
+            pageable = PageRequest.of(page, size, Sort.by("createdAt").ascending());
+        }
+
+        PageResponse<CommentGetResponse> result = commentService.getCommentList(taskId, pageable);
+
+        return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.COMMENT_GET_LIST_SUCCESS, result));
     }
 }
