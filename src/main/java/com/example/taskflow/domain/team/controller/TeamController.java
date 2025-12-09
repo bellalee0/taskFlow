@@ -4,8 +4,10 @@ import com.example.taskflow.common.entity.Team;
 import com.example.taskflow.common.model.enums.SuccessMessage;
 import com.example.taskflow.common.model.response.GlobalResponse;
 import com.example.taskflow.domain.team.model.request.TeamCreateRequest;
+import com.example.taskflow.domain.team.model.request.TeamMemberCreateRequest;
 import com.example.taskflow.domain.team.model.request.TeamUpdateRequest;
 import com.example.taskflow.domain.team.model.response.TeamCreateResponse;
+import com.example.taskflow.domain.team.model.response.TeamMemberCreateResponse;
 import com.example.taskflow.domain.team.model.response.TeamUpdateResponse;
 import com.example.taskflow.domain.team.service.TeamService;
 import jakarta.validation.Valid;
@@ -39,5 +41,12 @@ public class TeamController {
     public ResponseEntity<GlobalResponse<Void>> deleteTeamApi(@PathVariable Long id) {
         teamService.deleteTeam(id);
         return ResponseEntity.ok(GlobalResponse.successNodata(SuccessMessage.TEAM_DELETE_SUCCESS));
+    }
+
+    //팀 멤버 추가
+    @PostMapping("/{teamId}/members")
+    public ResponseEntity<GlobalResponse<TeamMemberCreateResponse>> createTeamMemberApi(@RequestBody @Valid TeamMemberCreateRequest request, @PathVariable Long teamId) {
+        TeamMemberCreateResponse result = teamService.createTeamMember(request, teamId);
+        return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.TEAM_ADD_MEMBER_SUCCESS, result));
     }
 }
