@@ -41,18 +41,18 @@ public class CommentService {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User Not Found"));
 
         // TODO: default 메서드로 변경
-        Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalStateException("User Not Found"));
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalStateException("Task Not Found"));
 
         Comment parentComment = null;
 
         if (request.getParentId() != null) {
-            parentComment = commentRepository.findCommentById(request.getParentId());
-            // TODO: 이때 발생해야 하는 예외는 404보다는 400인 것 같은데, API 명세서에는 400에 대한 내용이 없음
+            parentComment = commentRepository.findCommentById(request.getParentId(), COMMENT_NOT_FOUND_TASK_OR_COMMENT);
+
+            checkTaskCommentRelationship(task, parentComment);
             if (parentComment.getParentComment() != null) { throw new CustomException(COMMENT_NOT_FOUND_TASK_OR_COMMENT); }
         }
 
         Comment comment = new Comment(request.getContent(), user, task, parentComment);
-
         commentRepository.save(comment);
 
         // TODO: UserDto 요구사항에 맞게 변경 필요(id, username, name)
@@ -62,7 +62,10 @@ public class CommentService {
     @Transactional(readOnly = true)
     public PageResponse<CommentGetResponse> getCommentList(long taskId, Pageable pageable) {
 
-        Page<Comment> commentList = commentRepository.findByTaskId(taskId, pageable);
+        // TODO: Task default 메서드로 변경
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalStateException("Task Not Found"));
+
+        Page<Comment> commentList = commentRepository.findByTaskId(task.getId(), pageable);
 
         Page<CommentGetResponse> responsePage = commentList
             // TODO: UserDto 요구사항에 맞게 변경 필요(id, username, name, email, role)
@@ -73,13 +76,11 @@ public class CommentService {
 
     public CommentUpdateResponse updateComment(long taskId, long commentId, long userId, CommentUpdateRequest request) {
 
-        // TODO: task를 만들어야 할까?
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalStateException("Task Not Found"));
+        Comment comment = commentRepository.findCommentById(commentId, COMMENT_NOT_FOUND_COMMENT);
+        checkTaskCommentRelationship(task, comment);
 
-        Comment comment = commentRepository.findCommentById(commentId);
-
-        if (!Objects.equals(comment.getUser().getId(), userId)) {
-            throw new CustomException(COMMENT_NO_PERMISSION);
-        }
+        checkCommentUserRelationship(userId, comment);
 
         comment.update(request);
         commentRepository.saveAndFlush(comment);
@@ -89,13 +90,13 @@ public class CommentService {
 
     public void deleteComment(long taskId, long commentId, long userId) {
 
-        // TODO: task를 만들어야 할까?
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalStateException("Task Not Found"));
+        Comment comment = commentRepository.findCommentById(commentId, COMMENT_NOT_FOUND_COMMENT);
+        checkTaskCommentRelationship(task, comment);
 
-        Comment comment = commentRepository.findCommentById(commentId);
+        checkCommentUserRelationship(userId, comment);
 
-        if (!Objects.equals(comment.getUser().getId(), userId)) { throw new CustomException(COMMENT_NO_PERMISSION); }
-
-        if (comment.isDeleted()) { throw new CustomException(COMMENT_NOT_FOUND_COMMENT); }
+        if (comment.isDeleted()) { throw new CustomException(COMMENT_NO_PERMISSION_DELETE); }
 
         if (commentRepository.existsByParentCommentId(comment.getId())) {
             List<Comment> childCommentList = commentRepository.findAllByParentCommentId(comment.getId());
@@ -103,5 +104,19 @@ public class CommentService {
         }
 
         comment.updateIsDeleted();
+    }
+
+    // Comment가 Task의 댓글인지 확인
+    private static void checkTaskCommentRelationship(Task task, Comment parentComment) {
+        if (!Objects.equals(task.getId(), parentComment.getTask().getId())) {
+            throw new CustomException(COMMENT_NOT_FOUND_TASK_OR_COMMENT);
+        }
+    }
+
+    // User가 Comment의 작성자인지 확인
+    private static void checkCommentUserRelationship(long userId, Comment comment) {
+        if (!Objects.equals(comment.getUser().getId(), userId)) {
+            throw new CustomException(COMMENT_NO_PERMISSION_UPDATE);
+        }
     }
 }

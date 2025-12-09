@@ -1,9 +1,8 @@
 package com.example.taskflow.domain.comment.repository;
 
-import static com.example.taskflow.common.exception.ErrorMessage.*;
-
 import com.example.taskflow.common.entity.Comment;
 import com.example.taskflow.common.exception.CustomException;
+import com.example.taskflow.common.exception.ErrorMessage;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +16,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findAllByParentCommentId(Long id);
 
-    default Comment findCommentById(long id) {
-        return findById(id).orElseThrow(() -> new CustomException(COMMENT_NOT_FOUND_TASK_OR_COMMENT));
+    default Comment findCommentById(long id, ErrorMessage error) {
+        return findById(id).orElseThrow(() -> new CustomException(error));
     }
 }
