@@ -4,9 +4,11 @@ import com.example.taskflow.common.model.enums.TaskPriority;
 import com.example.taskflow.common.model.enums.TaskStatus;
 import com.example.taskflow.common.model.response.GlobalResponse;
 import com.example.taskflow.domain.task.model.request.TaskCreateRequest;
+import com.example.taskflow.domain.task.model.request.TaskUpdateRequest;
 import com.example.taskflow.domain.task.model.response.TaskCreateResponse;
 import com.example.taskflow.domain.task.model.response.TaskGetAllResponse;
 import com.example.taskflow.domain.task.model.response.TaskGetOneResponse;
+import com.example.taskflow.domain.task.model.response.TaskUpdateResponse;
 import com.example.taskflow.domain.task.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +52,13 @@ public class TaskController {
     }
 
     // 작업 수정 기능
+    @PutMapping("/{taskId}")
+    public ResponseEntity<GlobalResponse<TaskUpdateResponse>> updateTask(
+            @PathVariable Long taskId,
+            @Valid @RequestBody TaskUpdateRequest request) {
+        GlobalResponse<TaskUpdateResponse> response = taskService.updateTask(taskId, request);
+        return ResponseEntity.ok(response);
+    }
 
     // 작업 상태 변경 기능
 

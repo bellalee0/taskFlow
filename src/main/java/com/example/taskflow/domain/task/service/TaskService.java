@@ -9,9 +9,11 @@ import com.example.taskflow.common.model.enums.TaskPriority;
 import com.example.taskflow.common.model.enums.TaskStatus;
 import com.example.taskflow.common.model.response.GlobalResponse;
 import com.example.taskflow.domain.task.model.request.TaskCreateRequest;
+import com.example.taskflow.domain.task.model.request.TaskUpdateRequest;
 import com.example.taskflow.domain.task.model.response.TaskCreateResponse;
 import com.example.taskflow.domain.task.model.response.TaskGetAllResponse;
 import com.example.taskflow.domain.task.model.response.TaskGetOneResponse;
+import com.example.taskflow.domain.task.model.response.TaskUpdateResponse;
 import com.example.taskflow.domain.task.repository.TaskRepository;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -43,8 +45,8 @@ public class TaskService {
             throw new CustomException(ErrorMessage.TASK_REQUIRED_FIELD);
         }
 
-        TaskPriority priority = TaskPriority.valueOf(request.getPriority().toUpperCase());
-        LocalDateTime dueDateTime = parseDueDate(request.getDueDateTime());
+        TaskPriority priority = TaskPriority.valueOf(request.getTaskPriority().toUpperCase());
+        LocalDateTime dueDateTime = parseDueDate(request.getDueDate());
 
         Task task = new Task(request.getTitle(), request.getDescription(), priority, assignee, dueDateTime);
         Task savedTask = taskRepository.save(task);
@@ -75,6 +77,7 @@ public class TaskService {
     }
 
     // 작업 상세 조회 기능
+    @Transactional(readOnly = true)
     public GlobalResponse<TaskGetOneResponse> getTaskById(Long taskId) {
         Task task = findTaskById(taskId);
         return GlobalResponse.success(
@@ -84,6 +87,34 @@ public class TaskService {
     }
 
     // 작업 수정 기능
+    public GlobalResponse<TaskUpdateResponse> updateTask(Long taskId, TaskUpdateRequest request) {
+        Task task = findTaskById(taskId);
+
+        if (request.getTitle() != null || request.getDescription() != null ) {
+            task.updateInfo(request.getTitle(), request.getDescription());
+        }
+
+        if (request.getAssigneeId() != null) {
+            Long assigneeIdLong = Long.parseLong(request.getAssigneeId());
+            User assignee = findUserById(assigneeIdLong);
+            task.changeAssignee(assignee);
+        }
+
+        if (request.getTaskPriority() != null) {
+            TaskPriority priority = TaskPriority.valueOf(request.getTaskPriority().toUpperCase());
+            task.changePriority(priority);
+        }
+
+        if (request.getDueDate() != null) {
+            LocalDateTime dueDateTime = parseDueDate(String.valueOf(request.getDueDate()));
+            task.changeDueDate(dueDateTime);
+        }
+
+        return GlobalResponse.success(
+                SuccessMessage.TASK_UPDATE_SUCCESS,
+                TaskUpdateResponse.from(task));
+
+    }
 
     // 작업 상태 변경 기능
 

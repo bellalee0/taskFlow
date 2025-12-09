@@ -55,4 +55,29 @@ public class Task extends BaseEntity {
         this.isCompleted = false;
         this.completedDateTime = null;
     }
+
+    // 작업 정보 수정
+    public void updateInfo(String title, String description) {
+        if (title != null && !title.trim().isBlank()) {
+            this.title = title;
+        }
+        if (description != null && !description.trim().isBlank()) {
+            this.description = description;
+        }
+    }
+
+    // 담당자 변경
+    public void changeAssignee(User assigneeId) {
+        this.assigneeId = assigneeId;
+    }
+
+    // 우선순위 변경
+    public void changePriority(TaskPriority priority) {
+        this.priority = priority;
+    }
+
+    // 마감일시 변경
+    public void changeDueDate(LocalDateTime dueDateTime) {
+        this.dueDateTime = dueDateTime;
+    }
 }
