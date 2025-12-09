@@ -72,4 +72,16 @@ public class CommentController {
 
         return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.COMMENT_UPDATE_SUCCESS, result));
     }
+
+
+    //    @DeleteMapping("/tasks/{taskId}/comments/{commentId}")
+    @DeleteMapping("/tasks/{taskId}/comments/{commentId}/{userId}")
+    public ResponseEntity<GlobalResponse<Void>> deleteComment(
+        @PathVariable long taskId,
+        @PathVariable long commentId,
+        @PathVariable long userId
+    ) {
+        commentService.deleteComment(taskId, commentId, userId);
+        return ResponseEntity.ok(GlobalResponse.successNodata(SuccessMessage.COMMENT_DELETE_SUCCESS));
+    }
 }

@@ -2,6 +2,7 @@ package com.example.taskflow.domain.comment.service;
 
 import static com.example.taskflow.common.exception.ErrorMessage.*;
 
+import com.example.taskflow.common.entity.BaseEntity;
 import com.example.taskflow.common.entity.Comment;
 import com.example.taskflow.common.entity.Task;
 import com.example.taskflow.common.entity.User;
@@ -17,6 +18,7 @@ import com.example.taskflow.domain.comment.repository.CommentRepository;
 import com.example.taskflow.domain.task.repository.TaskRepository;
 import com.example.taskflow.domain.user.model.dto.UserDto;
 import com.example.taskflow.domain.user.repository.UserRepository;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -83,5 +85,23 @@ public class CommentService {
         commentRepository.saveAndFlush(comment);
 
         return CommentUpdateResponse.from(CommentDto.from(comment));
+    }
+
+    public void deleteComment(long taskId, long commentId, long userId) {
+
+        // TODO: task를 만들어야 할까?
+
+        Comment comment = commentRepository.findCommentById(commentId);
+
+        if (!Objects.equals(comment.getUser().getId(), userId)) { throw new CustomException(COMMENT_NO_PERMISSION); }
+
+        if (comment.isDeleted()) { throw new CustomException(COMMENT_NOT_FOUND_COMMENT); }
+
+        if (commentRepository.existsByParentCommentId(comment.getId())) {
+            List<Comment> childCommentList = commentRepository.findAllByParentCommentId(comment.getId());
+            childCommentList.forEach(BaseEntity::updateIsDeleted);
+        }
+
+        comment.updateIsDeleted();
     }
 }
