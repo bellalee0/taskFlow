@@ -25,7 +25,7 @@ public class AuthenticationController {
     // 로그인 요청
     @PostMapping("/login")
     public ResponseEntity<GlobalResponse<String>> login(@RequestBody LoginRequest request) {
-        // 인증서비스의 로그인기능
+        // 인증 서비스의 로그인기능
         String bearerToken = authenticationService.userLogin(request);
         return ResponseEntity.ok(GlobalResponse.success(AUTH_LOGIN_SUCCESS, bearerToken));
     }

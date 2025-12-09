@@ -5,7 +5,6 @@ import com.example.taskflow.common.exception.CustomException;
 import com.example.taskflow.common.utils.JwtUtil;
 import com.example.taskflow.common.utils.PasswordEncoder;
 import com.example.taskflow.domain.auth.model.LoginRequest;
-import com.example.taskflow.domain.auth.model.PasswordRequest;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,9 +48,5 @@ public class AuthenticationService {
 
         // 토큰 생성 반환
         return jwtUtil.generationToken(request.getUsername());
-    }
-
-    public void checkPassword(PasswordRequest request) {
-
     }
 }
