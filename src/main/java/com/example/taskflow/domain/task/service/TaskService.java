@@ -43,7 +43,7 @@ public class TaskService {
         }
 
         TaskPriority priority = TaskPriority.valueOf(request.getPriority().toUpperCase());
-        LocalDateTime dueDateTime = parseDueDate(request.getDueDate());
+        LocalDateTime dueDateTime = parseDueDate(request.getDueDateTime());
 
         Task task = new Task(request.getTitle(), request.getDescription(), priority, assignee, dueDateTime);
         Task savedTask = taskRepository.save(task);
@@ -105,11 +105,11 @@ public class TaskService {
     }
 
     // 마감일 문자열을 LocalDateTime으로 변환
-    private LocalDateTime parseDueDate(String dueDate) {
-        if (dueDate == null || dueDate.trim().isEmpty()) {
+    private LocalDateTime parseDueDate(String dueDateTime) {
+        if (dueDateTime == null || dueDateTime.trim().isEmpty()) {
             return null;
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-        return LocalDateTime.parse(dueDate, formatter);
+        return LocalDateTime.parse(dueDateTime, formatter);
     }
 }
