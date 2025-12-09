@@ -26,25 +26,18 @@ public class Comment extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "parent_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
     private Comment parentComment;
 
     private int depth;
 
-
-    public Comment(String content, User user, Task task) {
-        this.content = content;
-        this.user = user;
-        this.task = task;
-        this.depth = 0;
-    }
 
     public Comment(String content, User user, Task task, Comment parentComment) {
         this.content = content;
         this.user = user;
         this.task = task;
         this.parentComment = parentComment;
-        this.depth = 1;
+        this.depth = parentComment == null ? 0 : parentComment.getDepth() + 1;
     }
 }
