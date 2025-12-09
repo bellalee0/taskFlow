@@ -1,6 +1,5 @@
 package com.example.taskflow.domain.team.controller;
 
-import com.example.taskflow.common.entity.Team;
 import com.example.taskflow.common.model.enums.SuccessMessage;
 import com.example.taskflow.common.model.response.GlobalResponse;
 import com.example.taskflow.domain.team.model.request.TeamCreateRequest;
@@ -48,5 +47,12 @@ public class TeamController {
     public ResponseEntity<GlobalResponse<TeamMemberCreateResponse>> createTeamMemberApi(@RequestBody @Valid TeamMemberCreateRequest request, @PathVariable Long teamId) {
         TeamMemberCreateResponse result = teamService.createTeamMember(request, teamId);
         return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.TEAM_ADD_MEMBER_SUCCESS, result));
+    }
+
+    //팀 멤버 제거
+    @DeleteMapping("/{teamId}/members/{userId}")
+    public ResponseEntity<GlobalResponse<Void>> deleteTeamMemberApi(@PathVariable Long teamId, @PathVariable Long userId) {
+        teamService.deleteTeamMember(teamId, userId);
+        return ResponseEntity.ok(GlobalResponse.successNodata(SuccessMessage.TEAM_DELETE_MEMBER_SUCCESS));
     }
 }

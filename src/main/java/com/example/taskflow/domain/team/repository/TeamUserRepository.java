@@ -1,10 +1,13 @@
 package com.example.taskflow.domain.team.repository;
 
 import com.example.taskflow.common.entity.TeamUser;
+import com.example.taskflow.common.exception.CustomException;
+import com.example.taskflow.common.exception.ErrorMessage;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TeamUserRepository extends JpaRepository<TeamUser, Long> {
     boolean existsByTeam_Id(Long teamId);
@@ -14,4 +17,10 @@ public interface TeamUserRepository extends JpaRepository<TeamUser, Long> {
     @EntityGraph(attributePaths = "user")
     List<TeamUser> findByTeamId(Long teamId);
 
+    Optional<TeamUser> findByTeam_IdAndUser_Id(Long teamId, Long userId);
+
+    default TeamUser findTeamUserOrElseThrow(Long teamId, Long userId) {
+        return findByTeam_IdAndUser_Id(teamId, userId)
+                .orElseThrow(()-> new CustomException(ErrorMessage.TEAMUSER_NOT_FOUND));
+    }
 }

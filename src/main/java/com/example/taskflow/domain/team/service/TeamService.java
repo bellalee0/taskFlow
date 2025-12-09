@@ -85,14 +85,16 @@ public class TeamService {
     //endregion
 
     //region 팀 멤버 추가
+    @Transactional
     public TeamMemberCreateResponse createTeamMember(TeamMemberCreateRequest request, Long teamId) {
-        if (teamUserRepository.existsByTeam_IdAndUser_Id(teamId, request.getUserId())){
-            throw new CustomException(ErrorMessage.TEAMUSER_ALREADY_PRESENT);
+        Long userId = request.getUserId();
+        
+        if (teamUserRepository.existsByTeam_IdAndUser_Id(teamId, userId)){
+            throw new CustomException(ErrorMessage.TEAMUSER_ALREADY_PRESENCE);
         }
-
         Team team = teamRepository.findTeamById(teamId);
-        User user = userRepository.findUserById(request.getUserId());
-
+        User user = userRepository.findUserById(userId);
+        
         TeamUser teamUser = new TeamUser(team, user);
         teamUserRepository.save(teamUser);
 
@@ -110,6 +112,14 @@ public class TeamService {
 
         return TeamMemberCreateResponse.from(teamDto, members);
 
+    }
+    //endregion
+    
+    //region 팀 멤버 제거
+    @Transactional
+    public void deleteTeamMember(Long teamId, Long userId) {
+        TeamUser teamUser = teamUserRepository.findTeamUserOrElseThrow(teamId, userId);
+        teamUser.updateIsDeleted();
     }
     //endregion
 
