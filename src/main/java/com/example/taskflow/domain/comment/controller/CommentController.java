@@ -8,7 +8,6 @@ import com.example.taskflow.domain.comment.model.response.*;
 import com.example.taskflow.domain.comment.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,5 +56,18 @@ public class CommentController {
         PageResponse<CommentGetResponse> result = commentService.getCommentList(taskId, pageable);
 
         return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.COMMENT_GET_LIST_SUCCESS, result));
+    }
+
+//    @PutMapping("/tasks/{taskId}/comments/{commentId}")
+    @PutMapping("/tasks/{taskId}/comments/{commentId}/{userId}")
+    public ResponseEntity<GlobalResponse<CommentUpdateResponse>> updateComment(
+            @PathVariable long taskId,
+            @PathVariable long commentId,
+            @PathVariable long userId,
+            @Valid @RequestBody CommentUpdateRequest request
+    ) {
+        CommentUpdateResponse result = commentService.updateComment(taskId, commentId, userId, request);
+
+        return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.COMMENT_UPDATE_SUCCESS, result));
     }
 }

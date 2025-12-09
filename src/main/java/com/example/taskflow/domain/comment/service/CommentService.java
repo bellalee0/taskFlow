@@ -9,12 +9,15 @@ import com.example.taskflow.common.exception.CustomException;
 import com.example.taskflow.common.model.response.PageResponse;
 import com.example.taskflow.domain.comment.model.dto.CommentDto;
 import com.example.taskflow.domain.comment.model.request.CommentCreateRequest;
+import com.example.taskflow.domain.comment.model.request.CommentUpdateRequest;
 import com.example.taskflow.domain.comment.model.response.CommentCreateResponse;
 import com.example.taskflow.domain.comment.model.response.CommentGetResponse;
+import com.example.taskflow.domain.comment.model.response.CommentUpdateResponse;
 import com.example.taskflow.domain.comment.repository.CommentRepository;
 import com.example.taskflow.domain.task.repository.TaskRepository;
 import com.example.taskflow.domain.user.model.dto.UserDto;
 import com.example.taskflow.domain.user.repository.UserRepository;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -64,5 +67,21 @@ public class CommentService {
             .map(comment -> CommentGetResponse.from(CommentDto.from(comment), UserDto.from(comment.getUser())));
 
         return PageResponse.from(responsePage);
+    }
+
+    public CommentUpdateResponse updateComment(long taskId, long commentId, long userId, CommentUpdateRequest request) {
+
+        // TODO: task를 만들어야 할까?
+
+        Comment comment = commentRepository.findCommentById(commentId);
+
+        if (!Objects.equals(comment.getUser().getId(), userId)) {
+            throw new CustomException(COMMENT_NO_PERMISSION);
+        }
+
+        comment.update(request);
+        commentRepository.saveAndFlush(comment);
+
+        return CommentUpdateResponse.from(CommentDto.from(comment));
     }
 }

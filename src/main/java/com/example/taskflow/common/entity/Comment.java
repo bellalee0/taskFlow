@@ -1,5 +1,6 @@
 package com.example.taskflow.common.entity;
 
+import com.example.taskflow.domain.comment.model.request.CommentUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -36,5 +37,9 @@ public class Comment extends BaseEntity {
         this.user = user;
         this.task = task;
         this.parentComment = parentComment;
+    }
+
+    public void update(CommentUpdateRequest request) {
+        this.content = request.getContent();
     }
 }
