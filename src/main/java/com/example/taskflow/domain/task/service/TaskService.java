@@ -1,5 +1,9 @@
 package com.example.taskflow.domain.task.service;
 
+import static com.example.taskflow.common.exception.ErrorMessage.*;
+
+import com.example.taskflow.common.entity.BaseEntity;
+import com.example.taskflow.common.entity.Comment;
 import com.example.taskflow.common.entity.Task;
 import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.exception.CustomException;
@@ -8,11 +12,14 @@ import com.example.taskflow.common.model.enums.SuccessMessage;
 import com.example.taskflow.common.model.enums.TaskPriority;
 import com.example.taskflow.common.model.enums.TaskStatus;
 import com.example.taskflow.common.model.response.GlobalResponse;
+import com.example.taskflow.domain.comment.repository.CommentRepository;
 import com.example.taskflow.domain.task.model.request.TaskCreateRequest;
 import com.example.taskflow.domain.task.model.response.TaskCreateResponse;
 import com.example.taskflow.domain.task.model.response.TaskGetAllResponse;
 import com.example.taskflow.domain.task.repository.TaskRepository;
 import com.example.taskflow.domain.user.repository.UserRepository;
+import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +36,7 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     // 작업 생성 기능
     public GlobalResponse<TaskCreateResponse> createTask(TaskCreateRequest request) {
@@ -80,7 +88,23 @@ public class TaskService {
     // 작업 상태 변경 기능
 
     // 작업 삭제 기능
+    public void deleteTask(long id, long userId) {
 
+        Task task = findTaskById(id);
+        if (task.isDeleted()) { throw new  CustomException(TASK_NOT_FOUND); }
+
+        User user = findUserById(userId);
+
+        // TODO: 현재 프론트에는 따로 권한 확인이 없는데, 어떤 기준으로 권한 확인해야 할지 확인 필요
+        if (!Objects.equals(task.getAssigneeId().getId(), user.getId())) {
+            throw new CustomException(TASK_DELETE_FORBIDDEN);
+        }
+
+        List<Comment> commentList = commentRepository.findByTaskId(task.getId());
+        commentList.forEach(BaseEntity::updateIsDeleted);
+
+        taskRepository.delete(task);
+    }
 
     // 필수 필드 검증
     private void validateRequiredFields(String title, String description) {
@@ -95,7 +119,7 @@ public class TaskService {
     // 작업 ID로 조회
     private Task findTaskById(Long taskId) {
         return taskRepository.findById(taskId)
-                .orElseThrow(() -> new CustomException(ErrorMessage.TASK_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(TASK_NOT_FOUND));
     }
 
     // 사용자 ID로 조회

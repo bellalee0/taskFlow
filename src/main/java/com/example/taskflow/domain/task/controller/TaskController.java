@@ -1,5 +1,6 @@
 package com.example.taskflow.domain.task.controller;
 
+import com.example.taskflow.common.model.enums.SuccessMessage;
 import com.example.taskflow.common.model.enums.TaskPriority;
 import com.example.taskflow.common.model.enums.TaskStatus;
 import com.example.taskflow.common.model.response.GlobalResponse;
@@ -48,5 +49,13 @@ public class TaskController {
     // 작업 상태 변경 기능
 
     // 작업 삭제 기능
-
+//    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/{userId}")
+    public ResponseEntity<GlobalResponse<Void>> deleteTask(
+        @PathVariable long id,
+        @PathVariable long userId
+    ) {
+        taskService.deleteTask(id, userId);
+        return ResponseEntity.ok(GlobalResponse.successNodata(SuccessMessage.TASK_DELETE_SUCCESS));
+    }
 }
