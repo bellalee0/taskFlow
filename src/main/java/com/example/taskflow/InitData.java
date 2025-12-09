@@ -1,4 +1,5 @@
 package com.example.taskflow;
+/*
 
 import com.example.taskflow.common.entity.Task;
 import com.example.taskflow.common.entity.User;
@@ -60,3 +61,4 @@ public class InitData {
         taskRepository.save(task3);
     }
 }
+*/

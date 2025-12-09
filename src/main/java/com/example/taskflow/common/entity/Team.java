@@ -20,7 +20,6 @@ public class Team extends BaseEntity {
 
     private String description;
 
-
     public Team(String name, String description) {
         this.name = name;
         this.description = description;

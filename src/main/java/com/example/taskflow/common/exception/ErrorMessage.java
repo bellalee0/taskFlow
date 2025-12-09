@@ -21,6 +21,7 @@ public enum ErrorMessage {
 
 
     // 409
+    TEAM_ALREADY_PRESENT(HttpStatus.CONFLICT, "이미 존재하는 팀 이름입니다.")
 
     ;
 
