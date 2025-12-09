@@ -11,6 +11,7 @@ import com.example.taskflow.common.model.response.GlobalResponse;
 import com.example.taskflow.domain.task.model.request.TaskCreateRequest;
 import com.example.taskflow.domain.task.model.response.TaskCreateResponse;
 import com.example.taskflow.domain.task.model.response.TaskGetAllResponse;
+import com.example.taskflow.domain.task.model.response.TaskGetOneResponse;
 import com.example.taskflow.domain.task.repository.TaskRepository;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -74,6 +75,13 @@ public class TaskService {
     }
 
     // 작업 상세 조회 기능
+    public GlobalResponse<TaskGetOneResponse> getTaskById(Long taskId) {
+        Task task = findTaskById(taskId);
+        return GlobalResponse.success(
+                SuccessMessage.TASK_GET_ONE_SUCCESS,
+                TaskGetOneResponse.from(task)
+        );
+    }
 
     // 작업 수정 기능
 

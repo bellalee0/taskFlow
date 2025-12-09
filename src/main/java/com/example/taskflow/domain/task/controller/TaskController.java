@@ -6,6 +6,7 @@ import com.example.taskflow.common.model.response.GlobalResponse;
 import com.example.taskflow.domain.task.model.request.TaskCreateRequest;
 import com.example.taskflow.domain.task.model.response.TaskCreateResponse;
 import com.example.taskflow.domain.task.model.response.TaskGetAllResponse;
+import com.example.taskflow.domain.task.model.response.TaskGetOneResponse;
 import com.example.taskflow.domain.task.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,11 @@ public class TaskController {
     }
 
     // 작업 상세 조회 기능
+    @GetMapping("/{taskId}")
+    public ResponseEntity<TaskGetOneResponse> readTask(@PathVariable Long taskId) {
+        TaskGetOneResponse response = taskService.getTaskById(taskId).getData();
+        return ResponseEntity.ok(response);
+    }
 
     // 작업 수정 기능
 
