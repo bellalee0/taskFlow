@@ -9,11 +9,13 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
 @Table(name = "tasks")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Where(clause = "is_deleted = false")
 public class Task extends BaseEntity {
 
     @Id
@@ -56,6 +58,8 @@ public class Task extends BaseEntity {
         this.completedDateTime = null;
     }
 
+    public void updateStatus(TaskStatus status) {
+        this.status = status;
     // 작업 정보 수정
     public void updateInfo(String title, String description) {
         if (title != null && !title.trim().isBlank()) {

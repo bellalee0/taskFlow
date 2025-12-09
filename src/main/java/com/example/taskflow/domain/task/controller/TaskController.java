@@ -1,9 +1,14 @@
 package com.example.taskflow.domain.task.controller;
 
+import com.example.taskflow.common.model.enums.SuccessMessage;
 import com.example.taskflow.common.model.enums.TaskPriority;
 import com.example.taskflow.common.model.enums.TaskStatus;
 import com.example.taskflow.common.model.response.GlobalResponse;
 import com.example.taskflow.domain.task.model.request.TaskCreateRequest;
+import com.example.taskflow.domain.task.model.request.TaskUpdateStatusRequest;
+import com.example.taskflow.domain.task.model.response.TaskCreateResponse;
+import com.example.taskflow.domain.task.model.response.TaskGetAllResponse;
+import com.example.taskflow.domain.task.model.response.TaskUpdateStatusResponse;
 import com.example.taskflow.domain.task.model.request.TaskUpdateRequest;
 import com.example.taskflow.domain.task.model.response.TaskCreateResponse;
 import com.example.taskflow.domain.task.model.response.TaskGetAllResponse;
@@ -61,7 +66,23 @@ public class TaskController {
     }
 
     // 작업 상태 변경 기능
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<GlobalResponse<TaskUpdateStatusResponse>> updateStatus(
+        @PathVariable long id,
+        @Valid @RequestBody TaskUpdateStatusRequest request
+    ) {
+        TaskUpdateStatusResponse result = taskService.updateStatus(id, request);
+        return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.TASK_UPDATE_STATUS_SUCCESS, result));
+    }
 
     // 작업 삭제 기능
-
+//    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/{userId}")
+    public ResponseEntity<GlobalResponse<Void>> deleteTask(
+            @PathVariable long id,
+            @PathVariable long userId
+    ) {
+        taskService.deleteTask(id, userId);
+        return ResponseEntity.ok(GlobalResponse.successNodata(SuccessMessage.TASK_DELETE_SUCCESS));
+    }
 }
