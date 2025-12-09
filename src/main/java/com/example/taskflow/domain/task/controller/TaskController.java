@@ -52,8 +52,8 @@ public class TaskController {
 //    @DeleteMapping("/{id}")
     @DeleteMapping("/{id}/{userId}")
     public ResponseEntity<GlobalResponse<Void>> deleteTask(
-        @PathVariable long id,
-        @PathVariable long userId
+            @PathVariable long id,
+            @PathVariable long userId
     ) {
         taskService.deleteTask(id, userId);
         return ResponseEntity.ok(GlobalResponse.successNodata(SuccessMessage.TASK_DELETE_SUCCESS));
