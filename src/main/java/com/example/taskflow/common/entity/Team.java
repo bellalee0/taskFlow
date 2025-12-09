@@ -1,6 +1,5 @@
 package com.example.taskflow.common.entity;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -20,6 +19,7 @@ public class Team extends BaseEntity {
     private String name;
 
     private String description;
+
 
     public Team(String name, String description) {
         this.name = name;

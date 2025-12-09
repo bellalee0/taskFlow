@@ -1,6 +1,5 @@
 package com.example.taskflow.common.entity;
 
-
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -41,7 +41,7 @@ public class Log {
     private Comment comment;
 
     @Column(nullable = false)
-    private LocalDateTime timestamp;
+    private LocalDateTime loggedDateTime;
 
 //    @Column(nullable = false)
     private String description;
@@ -51,7 +51,7 @@ public class Log {
         this.type = type;
         this.user = user;
         this.task = task;
-        this.timestamp = LocalDateTime.now();
+        this.loggedDateTime = LocalDateTime.now();
         this.description = description;
     }
 
@@ -59,7 +59,7 @@ public class Log {
         this.type = type;
         this.user = user;
         this.comment = comment;
-        this.timestamp = LocalDateTime.now();
+        this.loggedDateTime = LocalDateTime.now();
         this.description = description;
     }
 }

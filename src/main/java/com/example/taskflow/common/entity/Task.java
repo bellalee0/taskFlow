@@ -7,7 +7,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
@@ -37,23 +36,23 @@ public class Task extends BaseEntity {
     private User assigneeId;
 
     //@Column(nullable = false)
-    private LocalDateTime dueDate;
+    private LocalDateTime dueDateTime;
 
     @ColumnDefault("0")
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean isCompleted;
 
-    private LocalDateTime completedDate;
+    private LocalDateTime completedDateTime;
 
 
-    public Task(String title, String description, TaskPriority priority, User assigneeId, LocalDateTime dueDate) {
+    public Task(String title, String description, TaskPriority priority, User assigneeId, LocalDateTime dueDateTime) {
         this.title = title;
         this.description = description;
         this.status = TaskStatus.TODO;
         this.priority = priority;
         this.assigneeId = assigneeId;
-        this.dueDate = dueDate;
+        this.dueDateTime = dueDateTime;
         this.isCompleted = false;
-        this.completedDate = null;
+        this.completedDateTime = null;
     }
 }

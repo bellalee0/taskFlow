@@ -3,16 +3,26 @@ package com.example.taskflow.common.exception;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 
 @Getter
 @RequiredArgsConstructor
 public enum ErrorMessage {
 
     // 400
-    BAD_REQUEST_NOT_ALLOWED_SELF_FOLLOW(HttpStatus.BAD_REQUEST, "자기 자신은 팔로우 할 수 없습니다.");
+    AUTH_REQUIRED_FIELD(HttpStatus.BAD_REQUEST, "username과 password는 필수입니다."),
+
+    // 401
+    AUTH_WRONG_EMAIL_AND_PASSWORD(HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 올바르지 않습니다."),
+
+    // 403
 
 
+    // 404
+
+
+    // 409
+
+    ;
 
 
     private final HttpStatus status;
