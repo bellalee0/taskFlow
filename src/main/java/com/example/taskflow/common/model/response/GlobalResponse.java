@@ -20,19 +20,19 @@ public class GlobalResponse<T> {
     private LocalDateTime timeStamp;
 
 
-    //성공시
+    // 성공 시 (사용 예시: GlobalResponse.success(SuccessMessage 이넘, 반환 DTO)
     public static <T> GlobalResponse<T> success(SuccessMessage successMessage, T data) {
         return new GlobalResponse<>(true, successMessage.getMessage(), data, LocalDateTime.now());
     }
 
-    //예외처리시
-    public static GlobalResponse<Void> exception(String errorMessage) {
-        return new GlobalResponse<>(false, errorMessage, null, LocalDateTime.now());
-    }
-
-    //성공했는데 응답데이터는 없을시
+    // 성공했는데 응답 데이터는 없을 시 (사용 예시: GlobalResponse.successNodata(SuccessMessage 이넘)
     public static GlobalResponse<Void> successNodata(SuccessMessage successMessage) {
         return new GlobalResponse<>(true, successMessage.getMessage(), null, LocalDateTime.now());
+    }
+
+    // 예외 처리 시
+    public static GlobalResponse<Void> exception(String errorMessage) {
+        return new GlobalResponse<>(false, errorMessage, null, LocalDateTime.now());
     }
 }
 
