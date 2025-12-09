@@ -19,7 +19,7 @@ public class TaskCreateResponse {
     private String assignee;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private LocalDateTime dueDateTime;
+    private LocalDateTime dueDate;
     private LocalDateTime timestamp;
 
     public static TaskCreateResponse from(Task task) {
