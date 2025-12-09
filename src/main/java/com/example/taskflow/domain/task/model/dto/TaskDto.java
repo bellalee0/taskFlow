@@ -22,6 +22,9 @@ public class TaskDto {
     private LocalDateTime dueDateTime;
     private boolean isCompleted;
     private LocalDateTime completedDateTime;
+    private boolean isDeleted;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
 
     public static TaskDto from(Task task) {
         return new TaskDto(
@@ -33,7 +36,10 @@ public class TaskDto {
             task.getAssigneeId().getId(),
             task.getDueDateTime(),
             task.isCompleted(),
-            task.getCompletedDateTime()
+            task.getCompletedDateTime(),
+            task.isDeleted(),
+            task.getCreatedAt(),
+            task.getModifiedAt()
         );
     }
 }
