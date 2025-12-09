@@ -18,6 +18,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByParentCommentId(Long id);
 
     default Comment findCommentById(long id) {
-        return findById(id).orElseThrow(() -> new CustomException(COMMENT_NOT_FOUND));
+        return findById(id).orElseThrow(() -> new CustomException(COMMENT_NOT_FOUND_TASK_OR_COMMENT));
     }
 }

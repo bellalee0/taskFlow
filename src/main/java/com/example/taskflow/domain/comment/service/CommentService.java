@@ -48,7 +48,7 @@ public class CommentService {
         if (request.getParentId() != null) {
             parentComment = commentRepository.findCommentById(request.getParentId());
             // TODO: 이때 발생해야 하는 예외는 404보다는 400인 것 같은데, API 명세서에는 400에 대한 내용이 없음
-            if (parentComment.getParentComment() != null) { throw new CustomException(COMMENT_NOT_FOUND); }
+            if (parentComment.getParentComment() != null) { throw new CustomException(COMMENT_NOT_FOUND_TASK_OR_COMMENT); }
         }
 
         Comment comment = new Comment(request.getContent(), user, task, parentComment);
