@@ -5,12 +5,11 @@ import com.example.taskflow.common.exception.CustomException;
 import com.example.taskflow.common.utils.JwtUtil;
 import com.example.taskflow.common.utils.PasswordEncoder;
 import com.example.taskflow.domain.auth.model.LoginRequest;
+import com.example.taskflow.domain.auth.model.PasswordRequest;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.example.taskflow.common.exception.ErrorMessage.AUTH_REQUIRED_FIELD;
-import static com.example.taskflow.common.exception.ErrorMessage.AUTH_WRONG_EMAIL_AND_PASSWORD;
+import static com.example.taskflow.common.exception.ErrorMessage.*;
 
 @Service
 public class AuthenticationService {
@@ -38,13 +37,21 @@ public class AuthenticationService {
             throw new CustomException(AUTH_REQUIRED_FIELD);
         }
 
-        PasswordEncoder passwordEncoder = new PasswordEncoder();
+        // 비밀번호값이 null이거나 공백 검증
+        if (user.getPassword() == null || user.getPassword().isBlank()) {
+            throw new CustomException(AUTH_REQUIRED_FIELD);
+        }
+
         // 암호환 된 비밀번호 검증
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        if (!PasswordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CustomException(AUTH_WRONG_EMAIL_AND_PASSWORD);
         }
 
         // 토큰 생성 반환
         return jwtUtil.generationToken(request.getUsername());
+    }
+
+    public void checkPassword(PasswordRequest request) {
+
     }
 }
