@@ -29,8 +29,15 @@ public class TeamController {
 
     //팀 수정
     @PutMapping("/{id}")
-    public ResponseEntity<GlobalResponse<TeamUpdateResponse>>  updateTeamApi(@RequestBody @Valid TeamUpdateRequest request, @PathVariable Long id) {
+    public ResponseEntity<GlobalResponse<TeamUpdateResponse>> updateTeamApi(@RequestBody @Valid TeamUpdateRequest request, @PathVariable Long id) {
         TeamUpdateResponse result = teamService.updateTeam(request, id);
         return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.TEAM_UPDATE_SUCCESS, result));
+    }
+
+    //팀 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<GlobalResponse<Void>> deleteTeamApi(@PathVariable Long id) {
+        teamService.deleteTeam(id);
+        return ResponseEntity.ok(GlobalResponse.successNodata(SuccessMessage.TEAM_DELETE_SUCCESS));
     }
 }

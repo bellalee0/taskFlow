@@ -1,7 +1,6 @@
 package com.example.taskflow.domain.team.service;
 
 import com.example.taskflow.common.entity.Team;
-import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.exception.CustomException;
 import com.example.taskflow.common.exception.ErrorMessage;
 import com.example.taskflow.domain.team.model.dto.TeamDto;
@@ -62,7 +61,18 @@ public class TeamService {
         return TeamUpdateResponse.from(dto);
     }
 
+    //팀 삭제
+    @Transactional
+    public void deleteTeam(Long teamId) {
+        Team selectedTeam = teamRepository.findTeamById(teamId);
+        boolean teamHasUser = teamUserRepository.existsByTeam_Id(teamId);
 
+        if (teamHasUser) {
+            throw new CustomException(ErrorMessage.TEAM_HAS_USER_WHEN_DELETE);
+        }
+
+        selectedTeam.updateIsDeleted();
+    }
 
 
 }

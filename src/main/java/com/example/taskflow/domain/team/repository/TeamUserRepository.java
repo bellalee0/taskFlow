@@ -4,4 +4,5 @@ import com.example.taskflow.common.entity.TeamUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TeamUserRepository extends JpaRepository<TeamUser, Long> {
+    boolean existsByTeam_Id(Long teamId);
 }

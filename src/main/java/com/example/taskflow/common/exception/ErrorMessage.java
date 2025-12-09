@@ -22,7 +22,8 @@ public enum ErrorMessage {
 
 
     // 409
-    TEAM_ALREADY_PRESENT(HttpStatus.CONFLICT, "이미 존재하는 팀 이름입니다.")
+    TEAM_ALREADY_PRESENT(HttpStatus.CONFLICT, "이미 존재하는 팀 이름입니다."),
+    TEAM_HAS_USER_WHEN_DELETE(HttpStatus.CONFLICT, "팀에 멤버가 존재하여 삭제할 수 없습니다.")
 
     ;
 
