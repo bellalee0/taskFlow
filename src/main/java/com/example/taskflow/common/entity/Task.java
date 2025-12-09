@@ -9,11 +9,13 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
 @Table(name = "tasks")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Where(clause = "is_deleted = false")
 public class Task extends BaseEntity {
 
     @Id
