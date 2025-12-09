@@ -3,13 +3,12 @@ package com.example.taskflow.domain.task.model.response;
 import com.example.taskflow.common.entity.Task;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class TaskGetAllResponse {
+public class TaskGetOneResponse {
 
     private Long id;
     private String title;
@@ -23,8 +22,8 @@ public class TaskGetAllResponse {
     private LocalDateTime dueDate;
     private LocalDateTime timestamp;
 
-    public static TaskGetAllResponse from(Task task) {
-        return new TaskGetAllResponse(
+    public static TaskGetOneResponse from(Task task) {
+        return new TaskGetOneResponse(
                 task.getId(),
                 task.getTitle(),
                 task.getDescription(),

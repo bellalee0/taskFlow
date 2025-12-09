@@ -9,6 +9,11 @@ import com.example.taskflow.domain.task.model.request.TaskUpdateStatusRequest;
 import com.example.taskflow.domain.task.model.response.TaskCreateResponse;
 import com.example.taskflow.domain.task.model.response.TaskGetAllResponse;
 import com.example.taskflow.domain.task.model.response.TaskUpdateStatusResponse;
+import com.example.taskflow.domain.task.model.request.TaskUpdateRequest;
+import com.example.taskflow.domain.task.model.response.TaskCreateResponse;
+import com.example.taskflow.domain.task.model.response.TaskGetAllResponse;
+import com.example.taskflow.domain.task.model.response.TaskGetOneResponse;
+import com.example.taskflow.domain.task.model.response.TaskUpdateResponse;
 import com.example.taskflow.domain.task.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -45,8 +50,20 @@ public class TaskController {
     }
 
     // 작업 상세 조회 기능
+    @GetMapping("/{taskId}")
+    public ResponseEntity<TaskGetOneResponse> readTask(@PathVariable Long taskId) {
+        TaskGetOneResponse response = taskService.getTaskById(taskId).getData();
+        return ResponseEntity.ok(response);
+    }
 
     // 작업 수정 기능
+    @PutMapping("/{taskId}")
+    public ResponseEntity<GlobalResponse<TaskUpdateResponse>> updateTask(
+            @PathVariable Long taskId,
+            @Valid @RequestBody TaskUpdateRequest request) {
+        GlobalResponse<TaskUpdateResponse> response = taskService.updateTask(taskId, request);
+        return ResponseEntity.ok(response);
+    }
 
     // 작업 상태 변경 기능
     @PatchMapping("/{id}/status")
