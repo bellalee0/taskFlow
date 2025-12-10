@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import static com.example.taskflow.common.exception.ErrorMessage.USER_NOT_EMAIL_FOUND;
 import static com.example.taskflow.common.exception.ErrorMessage.USER_NOT_FOUND;
 
