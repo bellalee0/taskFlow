@@ -1,17 +1,13 @@
 package com.example.taskflow.domain.auth.model;
 
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+
+@Getter
 public class LoginRequest {
-    // 속성
-    // 로그인 요청 도메인
+
+    @NotBlank(message = "username과 password는 필수입니다")
     private String username;
+    @NotBlank(message = "username과 password는 필수입니다")
     private String password;
-
-    // 기능
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
 }

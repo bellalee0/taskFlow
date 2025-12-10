@@ -27,22 +27,10 @@ public class AuthenticationService {
                 () -> new CustomException(AUTH_WRONG_EMAIL_AND_PASSWORD)
         );
 
-        // 아이다값이 null이거나 공백 검증
-        if (request.getUsername() == null || request.getUsername().isBlank()) {
-            throw new CustomException(AUTH_REQUIRED_FIELD);
-        }
-
-        // 비밀번호값이 null이거나 공백 검증
-        if (request.getPassword() == null || request.getPassword().isBlank()) {
-            throw new CustomException(AUTH_REQUIRED_FIELD);
-        }
-
-        // 암호환 된 비밀번호 검증
         if (!PasswordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CustomException(AUTH_WRONG_EMAIL_AND_PASSWORD);
         }
 
-        // 토큰 생성 반환
         return jwtUtil.generationToken(request.getUsername());
     }
 }
