@@ -33,10 +33,10 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         // 요청 url
-        String RequestURL = request.getRequestURI();
+        String requestURL = request.getRequestURI();
 
         // 로그인 url 일때 통과
-        if (RequestURL.equals("/api/auth/login")) {
+        if (requestURL.equals("/api/auth/login")) {
             filterChain.doFilter(request, response);
             return;
         }
