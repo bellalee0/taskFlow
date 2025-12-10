@@ -1,5 +1,6 @@
 package com.example.taskflow.common.entity;
 
+import com.example.taskflow.common.model.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,11 +28,15 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
-    public User(String userName, String email, String password, String name) {
+    public User(String userName, String email, String password, String name, UserRole role) {
         this.userName = userName;
         this.email = email;
         this.password = password;
         this.name = name;
+        this.role = role;
     }
 }
