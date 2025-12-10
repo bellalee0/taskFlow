@@ -32,12 +32,12 @@ public class AuthenticationService {
         );
 
         // 아이다값이 null이거나 공백 검증
-        if (user.getUserName() == null || user.getUserName().isBlank()) {
+        if (request.getUsername() == null || request.getUsername().isBlank()) {
             throw new CustomException(AUTH_REQUIRED_FIELD);
         }
 
         // 비밀번호값이 null이거나 공백 검증
-        if (user.getPassword() == null || user.getPassword().isBlank()) {
+        if (request.getPassword() == null || request.getPassword().isBlank()) {
             throw new CustomException(AUTH_REQUIRED_FIELD);
         }
 
