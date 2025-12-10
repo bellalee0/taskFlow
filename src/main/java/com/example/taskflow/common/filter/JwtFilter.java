@@ -29,7 +29,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String requestURL = request.getRequestURI();
 
-        if (requestURL.equals("/api/auth/login") || requestURL.equals("api/users")) {
+        if (requestURL.equals("/api/auth/login") || (requestURL.equals("api/users") && "POST".equalsIgnoreCase(request.getMethod()))) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -40,11 +40,17 @@ public class JwtFilter extends OncePerRequestFilter {
             throw new CustomException(TOKEN_REQUIRED_FIELD);
         }
 
-        if (!jwtUtil.validateToken(token)) {
+        if (token.startsWith("Bearer ")) {
+            throw new CustomException(TOKEN_REQUIRED_FIELD);
+        }
+
+        String jwt = token.substring(7);
+
+        if (!jwtUtil.validateToken(jwt)) {
             throw new CustomException(TOKEN_INVALID_FIELD);
         }
 
-        String username = jwtUtil.getUserName(token);
+        String username = jwtUtil.getUserName(jwt);
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 username, null, List.of());
