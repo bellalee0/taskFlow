@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class TaskService {
 
     private final TaskRepository taskRepository;
@@ -36,10 +35,11 @@ public class TaskService {
     private final CommentRepository commentRepository;
 
     // 작업 생성 기능
+    @Transactional
     public TaskCreateResponse createTask(TaskCreateRequest request) {
 
         User assignee = findUserById(request.getAssigneeId());
-        if (Objects.isNull(assignee)) {
+        if (Objects.isNull(assignee) || assignee.isDeleted()) {
             throw new CustomException(ASSIGNEE_NOT_FOUND);
         }
 
@@ -69,7 +69,7 @@ public class TaskService {
     public TaskGetOneResponse getTaskById(long taskId) {
 
         Task task = taskRepository.findTaskById(taskId);
-        if (task == null) {
+        if (task == null || task.isDeleted()) {
             throw new CustomException(TASK_NOT_FOUND);
         }
 
@@ -77,8 +77,12 @@ public class TaskService {
     }
 
     // 작업 수정 기능
+    @Transactional
     public TaskUpdateResponse updateTask(long taskId, TaskUpdateRequest request) {
         Task task = taskRepository.findTaskById(taskId);
+        if (task == null || task.isDeleted()) {
+            throw new CustomException(TASK_NOT_FOUND);
+        }
 
         User assignee = findUserById(request.getAssigneeId() != null
                 ? findUserById(request.getAssigneeId()).getId()
@@ -100,9 +104,13 @@ public class TaskService {
     }
 
     // 작업 상태 변경 기능
+    @Transactional
     public TaskUpdateStatusResponse updateStatus(long taskId, TaskUpdateStatusRequest request) {
 
         Task task = taskRepository.findTaskById(taskId);
+        if (task == null || task.isDeleted()) {
+            throw new CustomException(TASK_NOT_FOUND);
+        }
 
         TaskStatus currentStatus = task.getStatus();
         TaskStatus requestStatus = request.getStatus();
@@ -118,10 +126,10 @@ public class TaskService {
     }
 
     // 작업 삭제 기능
-    public void deleteTask(long taskid, long userId) {
-
-        Task task = taskRepository.findTaskById(taskid);
-        if (task.isDeleted()) {
+    @Transactional
+    public void deleteTask(long taskId, long userId) {
+        Task task = taskRepository.findTaskById(taskId);
+        if (task == null || task.isDeleted()) {
             throw new  CustomException(TASK_NOT_FOUND);
         }
 
@@ -135,7 +143,7 @@ public class TaskService {
         List<Comment> commentList = commentRepository.findByTaskId(task.getId());
         commentList.forEach(BaseEntity::updateIsDeleted);
 
-        taskRepository.delete(task);
+        task.updateIsDeleted();
     }
 
     // 사용자 ID로 조회
