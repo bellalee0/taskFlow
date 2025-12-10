@@ -7,7 +7,7 @@ import com.example.taskflow.common.model.response.PageResponse;
 import com.example.taskflow.common.utils.PasswordEncoder;
 import com.example.taskflow.domain.user.model.dto.UserDto;
 import com.example.taskflow.domain.user.model.request.UserCreateRequest;
-import com.example.taskflow.domain.user.model.request.UserDeleteRequest;
+//import com.example.taskflow.domain.user.model.request.UserDeleteRequest;
 import com.example.taskflow.domain.user.model.request.UserUpdateInfoRequest;
 import com.example.taskflow.domain.user.model.response.UserCreateResponse;
 import com.example.taskflow.domain.user.model.response.UserGetProfileResponse;
@@ -18,7 +18,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+//import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +37,7 @@ public class UserService {
     @Transactional
     public UserCreateResponse createUser(@Valid UserCreateRequest request) {
 
-        if (userRepository.existsUserByUserName(request.getUserName())) {
+        if (userRepository.existsUserByUserName(request.getUsername())) {
             throw new CustomException(USER_USED_USERNAME);
         }
 
@@ -48,7 +48,7 @@ public class UserService {
         String encodingPassword = PasswordEncoder.encode(request.getPassword());
 
         User user = new User(
-                request.getUserName(),
+                request.getUsername(),
                 request.getEmail(),
                 encodingPassword,
                 request.getName(),
@@ -81,34 +81,35 @@ public class UserService {
     }
 
     //사용자 정보 수정
-    @Transactional
-    public UserUpdateInfoResponse updateUserInfo(Long id, UserUpdateInfoRequest request) {
+//    @Transactional
+//    public UserUpdateInfoResponse updateUserInfo(Long id, UserUpdateInfoRequest request) {
+//
+//        User user = userRepository.findUserById(id);
+//
+//        if (!user.getName().equals(request.getName())) {
+//            throw new CustomException(USER_USED_USERNAME);
+//        }
+//        if(!user.getEmail().equals(request.getEmail())) {
+//            throw new CustomException(USER_USED_EMAIL);
+//        }
+//
+//        //request Dto로 한번에
+//        user.updateName(request.getName());
+//        user.updateEmail(request.getEmail());
+//
+//        //비밀번호 확인
+//        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+//            throw new CustomException(AUTH_WRONG_EMAIL_AND_PASSWORD);
+//        }
+//        return request;
+//
+//        //회원탈퇴시 아람님이 만든 패스워드인코더로
+//
+//
+//
+//    }
 
-        User user = userRepository.findUserById(id);
-
-        if (!user.getName().equals(request.getName())) {
-            throw new CustomException(USER_USED_USERNAME);
-        }
-        if(!user.getEmail().equals(request.getEmail())) {
-            throw new CustomException(USER_USED_EMAIL);
-        }
-
-        //request Dto로 한번에
-        user.updateName(request.getName());
-        user.updateEmail(request.getEmail());
-
-        //비밀번호 확인
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new CustomException(AUTH_WRONG_EMAIL_AND_PASSWORD);
-        }
-        return request;
-
-        //회원탈퇴시 아람님이 만든 패스워드인코더로
-
-
-
-    }
-
+    /**
         //1. 아이디 먼저 찾고
         User user = userRepository.findById(request).orElseThrow()
 

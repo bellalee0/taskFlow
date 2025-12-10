@@ -4,7 +4,7 @@ import com.example.taskflow.common.model.enums.SuccessMessage;
 import com.example.taskflow.common.model.response.GlobalResponse;
 import com.example.taskflow.common.model.response.PageResponse;
 import com.example.taskflow.domain.user.model.request.UserCreateRequest;
-import com.example.taskflow.domain.user.model.request.UserDeleteRequest;
+//import com.example.taskflow.domain.user.model.request.UserDeleteRequest;
 import com.example.taskflow.domain.user.model.request.UserUpdateInfoRequest;
 import com.example.taskflow.domain.user.model.response.UserCreateResponse;
 import com.example.taskflow.domain.user.model.response.UserGetProfileResponse;
@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+//import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import static com.example.taskflow.common.model.enums.SuccessMessage.*;
@@ -40,7 +41,7 @@ public class UserController {
 
     //사용자 정보 조회
     @GetMapping("/{id}")
-    public ResponseEntity<GlobalResponse<UserGetProfileResponse>> getUserApi(@AuthenticationPrincipal @PathVariable Long id) {
+    public ResponseEntity<GlobalResponse<UserGetProfileResponse>> getUserApi(@PathVariable Long id) {
 
         UserGetProfileResponse response = userService.getUser(id);
 
@@ -58,15 +59,15 @@ public class UserController {
     }
 
     //사용자 정보 수정
-    @PutMapping("/{id}")
-    public ResponseEntity<GlobalResponse<UserUpdateInfoResponse>> updateUserInfo(
-            @AuthenticationPrincipal @PathVariable Long id,
-            @Valid @RequestBody UserUpdateInfoRequest request
-    ) {
-        UserUpdateInfoResponse response = userService.updateUserInfo(id, request);
-
-        return ResponseEntity.ok(GlobalResponse.success(USER_UPDATE_SUCCESS,response));
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<GlobalResponse<UserUpdateInfoResponse>> updateUserInfo(
+//            @AuthenticationPrincipal @PathVariable Long id,
+//            @Valid @RequestBody UserUpdateInfoRequest request
+//    ) {
+//        UserUpdateInfoResponse response = userService.updateUserInfo(id, request);
+//
+//        return ResponseEntity.ok(GlobalResponse.success(USER_UPDATE_SUCCESS,response));
+//    }
 
     /**
      @DeleteMapping("/id") public ResponseEntity<GlobalResponse<Void>> deleteUserApi(@AuthenticationPrincipal @PathVariable Long id, UserDeleteRequest request) {

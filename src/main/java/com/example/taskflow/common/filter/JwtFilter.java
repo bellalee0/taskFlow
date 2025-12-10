@@ -8,8 +8,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -33,7 +33,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String requestURL = request.getRequestURI();
 
-        if (requestURL.equals("/api/auth/login") || (requestURL.equals("api/users") && "POST".equalsIgnoreCase(request.getMethod()))) {
+        if (requestURL.equals("/api/auth/login") || (requestURL.equals("/api/users"))) { // && "POST".equalsIgnoreCase(request.getMethod())
             filterChain.doFilter(request, response);
             return;
         }
@@ -57,10 +57,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
             String username = jwtUtil.getUserName(jwt);
 
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    username, null, List.of());
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+//            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+//                    username, null, List.of());
+//
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
 
             filterChain.doFilter(request, response);
         } catch (CustomException e) {
