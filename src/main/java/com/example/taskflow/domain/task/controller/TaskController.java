@@ -9,7 +9,6 @@ import com.example.taskflow.domain.task.model.request.*;
 import com.example.taskflow.domain.task.model.response.*;
 import com.example.taskflow.domain.task.service.TaskService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;

@@ -1,6 +1,5 @@
 package com.example.taskflow.domain.task.model.response;
 
-import com.example.taskflow.common.entity.Task;
 import com.example.taskflow.common.model.enums.TaskPriority;
 import com.example.taskflow.common.model.enums.TaskStatus;
 import com.example.taskflow.domain.task.model.dto.TaskDto;
