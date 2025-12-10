@@ -1,6 +1,9 @@
 package com.example.taskflow.domain.task.repository;
 
+import static com.example.taskflow.common.exception.ErrorMessage.TASK_NOT_FOUND;
+
 import com.example.taskflow.common.entity.Task;
+import com.example.taskflow.common.exception.CustomException;
 import com.example.taskflow.common.model.enums.TaskPriority;
 import com.example.taskflow.common.model.enums.TaskStatus;
 import org.springframework.data.domain.Page;
@@ -23,4 +26,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             @Param("priority") TaskPriority priority,
             @Param("assigneeId") Long assigneeId,
             Pageable pageable);
+
+    default Task findTaskById(Long taskId) {
+        return findById(taskId)
+            .orElseThrow(() -> new CustomException(TASK_NOT_FOUND));
+    }
 }

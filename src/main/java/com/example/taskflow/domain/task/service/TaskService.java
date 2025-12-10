@@ -12,18 +12,11 @@ import com.example.taskflow.common.model.enums.SuccessMessage;
 import com.example.taskflow.common.model.enums.TaskPriority;
 import com.example.taskflow.common.model.enums.TaskStatus;
 import com.example.taskflow.common.model.response.GlobalResponse;
+import com.example.taskflow.common.model.response.PageResponse;
 import com.example.taskflow.domain.comment.repository.CommentRepository;
 import com.example.taskflow.domain.task.model.dto.TaskDto;
-import com.example.taskflow.domain.task.model.request.TaskCreateRequest;
-import com.example.taskflow.domain.task.model.request.TaskUpdateStatusRequest;
-import com.example.taskflow.domain.task.model.response.TaskCreateResponse;
-import com.example.taskflow.domain.task.model.response.TaskGetAllResponse;
-import com.example.taskflow.domain.task.model.response.TaskUpdateStatusResponse;
-import com.example.taskflow.domain.task.model.request.TaskUpdateRequest;
-import com.example.taskflow.domain.task.model.response.TaskCreateResponse;
-import com.example.taskflow.domain.task.model.response.TaskGetAllResponse;
-import com.example.taskflow.domain.task.model.response.TaskGetOneResponse;
-import com.example.taskflow.domain.task.model.response.TaskUpdateResponse;
+import com.example.taskflow.domain.task.model.request.*;
+import com.example.taskflow.domain.task.model.response.*;
 import com.example.taskflow.domain.task.repository.TaskRepository;
 import com.example.taskflow.domain.user.model.dto.UserDto;
 import com.example.taskflow.domain.user.repository.UserRepository;
@@ -48,9 +41,7 @@ public class TaskService {
     private final CommentRepository commentRepository;
 
     // 작업 생성 기능
-    public GlobalResponse<TaskCreateResponse> createTask(TaskCreateRequest request) {
-
-        validateRequiredFields(request.getTitle(), request.getDescription());
+    public TaskCreateResponse createTask(TaskCreateRequest request) {
 
         Long assigneeIdLong = Long.parseLong(request.getAssigneeId());
         User assignee = findUserById(assigneeIdLong);
@@ -63,17 +54,14 @@ public class TaskService {
         LocalDateTime dueDateTime = parseDueDate(request.getDueDate());
 
         Task task = new Task(request.getTitle(), request.getDescription(), priority, assignee, dueDateTime);
-        Task savedTask = taskRepository.save(task);
+        taskRepository.save(task);
 
-        return GlobalResponse.success(
-                SuccessMessage.TASK_CREATE_SUCCESS,
-                TaskCreateResponse.from(task)
-        );
+        return TaskCreateResponse.from(task);
     }
 
     // 작업 목록 조회 기능(페이징, 필터링)
     @Transactional(readOnly = true)
-    public GlobalResponse<Page<TaskGetAllResponse>> getTaskList(
+    public PageResponse<TaskGetAllResponse> getTaskList(
             TaskStatus status,
             TaskPriority priority,
             Long assigneeId,
@@ -84,16 +72,13 @@ public class TaskService {
         Page<TaskGetAllResponse> responsePage =
                 tasks.map(TaskGetAllResponse::from);
 
-        return GlobalResponse.success(
-                SuccessMessage.TASK_GET_LIST_SUCCESS,
-                responsePage
-        );
+        return PageResponse.from(responsePage);
     }
 
     // 작업 상세 조회 기능
     @Transactional(readOnly = true)
     public GlobalResponse<TaskGetOneResponse> getTaskById(Long taskId) {
-        Task task = findTaskById(taskId);
+        Task task = taskRepository.findTaskById(taskId);
         return GlobalResponse.success(
                 SuccessMessage.TASK_GET_ONE_SUCCESS,
                 TaskGetOneResponse.from(task)
@@ -101,8 +86,8 @@ public class TaskService {
     }
 
     // 작업 수정 기능
-    public GlobalResponse<TaskUpdateResponse> updateTask(Long taskId, TaskUpdateRequest request) {
-        Task task = findTaskById(taskId);
+    public TaskUpdateResponse updateTask(Long taskId, TaskUpdateRequest request) {
+        Task task = taskRepository.findTaskById(taskId);
 
         if (request.getTitle() != null || request.getDescription() != null ) {
             task.updateInfo(request.getTitle(), request.getDescription());
@@ -124,16 +109,14 @@ public class TaskService {
             task.changeDueDate(dueDateTime);
         }
 
-        return GlobalResponse.success(
-                SuccessMessage.TASK_UPDATE_SUCCESS,
-                TaskUpdateResponse.from(task));
+        return TaskUpdateResponse.from(task);
 
     }
 
     // 작업 상태 변경 기능
     public TaskUpdateStatusResponse updateStatus(long id, TaskUpdateStatusRequest request) {
 
-        Task task = findTaskById(id);
+        Task task = taskRepository.findTaskById(id);
 
         TaskStatus currentStatus = task.getStatus();
         TaskStatus requestStatus = TaskStatus.from(request.getStatus());
@@ -151,7 +134,7 @@ public class TaskService {
     // 작업 삭제 기능
     public void deleteTask(long id, long userId) {
 
-        Task task = findTaskById(id);
+        Task task = taskRepository.findTaskById(id);
         if (task.isDeleted()) { throw new  CustomException(TASK_NOT_FOUND); }
 
         User user = findUserById(userId);
@@ -167,23 +150,9 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
-    // 필수 필드 검증
-    private void validateRequiredFields(String title, String description) {
-        if (title == null || title.trim().isEmpty()) {
-            throw new CustomException(ErrorMessage.TASK_REQUIRED_FIELD);
-        }
-        if (description == null || description.trim().isEmpty()) {
-            throw new CustomException(ErrorMessage.TASK_REQUIRED_FIELD);
-        }
-    }
-
-    // 작업 ID로 조회
-    private Task findTaskById(Long taskId) {
-        return taskRepository.findById(taskId)
-                .orElseThrow(() -> new CustomException(TASK_NOT_FOUND));
-    }
 
     // 사용자 ID로 조회
+    // TODO: 추후에 UserRepository의 default 메서드로 변경
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorMessage.ASSIGNEE_NOT_FOUND));

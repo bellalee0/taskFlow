@@ -60,6 +60,8 @@ public class Task extends BaseEntity {
 
     public void updateStatus(TaskStatus status) {
         this.status = status;
+    }
+
     // 작업 정보 수정
     public void updateInfo(String title, String description) {
         if (title != null && !title.trim().isBlank()) {

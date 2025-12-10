@@ -4,20 +4,12 @@ import com.example.taskflow.common.model.enums.SuccessMessage;
 import com.example.taskflow.common.model.enums.TaskPriority;
 import com.example.taskflow.common.model.enums.TaskStatus;
 import com.example.taskflow.common.model.response.GlobalResponse;
-import com.example.taskflow.domain.task.model.request.TaskCreateRequest;
-import com.example.taskflow.domain.task.model.request.TaskUpdateStatusRequest;
-import com.example.taskflow.domain.task.model.response.TaskCreateResponse;
-import com.example.taskflow.domain.task.model.response.TaskGetAllResponse;
-import com.example.taskflow.domain.task.model.response.TaskUpdateStatusResponse;
-import com.example.taskflow.domain.task.model.request.TaskUpdateRequest;
-import com.example.taskflow.domain.task.model.response.TaskCreateResponse;
-import com.example.taskflow.domain.task.model.response.TaskGetAllResponse;
-import com.example.taskflow.domain.task.model.response.TaskGetOneResponse;
-import com.example.taskflow.domain.task.model.response.TaskUpdateResponse;
+import com.example.taskflow.common.model.response.PageResponse;
+import com.example.taskflow.domain.task.model.request.*;
+import com.example.taskflow.domain.task.model.response.*;
 import com.example.taskflow.domain.task.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,26 +26,26 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<GlobalResponse<TaskCreateResponse>> createTask(
             @Valid @RequestBody TaskCreateRequest request) {
-        GlobalResponse<TaskCreateResponse> response = taskService.createTask(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        TaskCreateResponse response = taskService.createTask(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(GlobalResponse.success(SuccessMessage.TASK_CREATE_SUCCESS, response));
     }
 
     // 작업 목록 조회 기능 (페이징, 필터링)
     @GetMapping
-    public ResponseEntity<GlobalResponse<Page<TaskGetAllResponse>>> readTaskList(
+    public ResponseEntity<GlobalResponse<PageResponse<TaskGetAllResponse>>> readTaskList(
             @RequestParam(required = false) TaskStatus status,
             @RequestParam(required = false) TaskPriority priority,
             @RequestParam(required = false) Long assigneeId,
             Pageable pageable) {
-       GlobalResponse<Page<TaskGetAllResponse>> response = taskService.getTaskList(status, priority, assigneeId, pageable);
-        return  ResponseEntity.ok(response);
+       PageResponse<TaskGetAllResponse> response = taskService.getTaskList(status, priority, assigneeId, pageable);
+        return  ResponseEntity.ok(GlobalResponse.success(SuccessMessage.TASK_GET_LIST_SUCCESS, response));
     }
 
     // 작업 상세 조회 기능
     @GetMapping("/{taskId}")
-    public ResponseEntity<TaskGetOneResponse> readTask(@PathVariable Long taskId) {
+    public ResponseEntity<GlobalResponse<TaskGetOneResponse>> readTask(@PathVariable Long taskId) {
         TaskGetOneResponse response = taskService.getTaskById(taskId).getData();
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.TASK_GET_ONE_SUCCESS, response));
     }
 
     // 작업 수정 기능
@@ -61,8 +53,8 @@ public class TaskController {
     public ResponseEntity<GlobalResponse<TaskUpdateResponse>> updateTask(
             @PathVariable Long taskId,
             @Valid @RequestBody TaskUpdateRequest request) {
-        GlobalResponse<TaskUpdateResponse> response = taskService.updateTask(taskId, request);
-        return ResponseEntity.ok(response);
+        TaskUpdateResponse response = taskService.updateTask(taskId, request);
+        return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.TASK_UPDATE_SUCCESS, response));
     }
 
     // 작업 상태 변경 기능
