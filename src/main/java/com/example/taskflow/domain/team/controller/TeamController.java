@@ -39,6 +39,16 @@ public class TeamController {
         return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.TEAM_GET_ONE_SUCCESS, result));
     }
 
+    //팀 멤버 조회
+    @GetMapping("/{teamId}/members")
+    public ResponseEntity<GlobalResponse<List<TeamGetMemberResponse>>> getTeamMemberApi(
+            @PathVariable Long teamId
+    ) {
+        List<TeamGetMemberResponse> result = teamService.getTeamMember(teamId);
+
+        return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.TEAM_GET_MEMBER_LIST_SUCCESS, result));
+    }
+
     //팀 생성
     @PostMapping
     public ResponseEntity<GlobalResponse<TeamCreateResponse>> createTeamApi(

@@ -32,8 +32,8 @@ public class TeamService {
     public List<TeamGetListResponse> getTeamList() {
 
         List<Team> teamList = teamRepository.findAll();
-        List<TeamGetListResponse> teamDtoList = new ArrayList<>();
 
+        List<TeamGetListResponse> teamDtoList = new ArrayList<>();
         for (Team team : teamList) {
             TeamDto teamDto = TeamDto.from(team);
             teamDtoList.add(TeamGetListResponse.from(teamDto));
@@ -58,6 +58,25 @@ public class TeamService {
             memberDtoList.add(MemberIdUsernameNameEmailRoleResponse.from(userDto));
         }
         return TeamGetOneResponse.from(teamDto, memberDtoList);
+    }
+    //endregion
+
+    //region 팀 멤버 조회
+    @Transactional(readOnly = true)
+    public List<TeamGetMemberResponse> getTeamMember(Long teamId) {
+        if(!teamRepository.existsById(teamId)){
+            throw new CustomException(ErrorMessage.TEAM_NOT_FOUND);
+        }
+
+        List<TeamUser> teamUserList = teamUserRepository.findByTeamId(teamId);
+
+        List<TeamGetMemberResponse> memberDtoList = new ArrayList<>();
+        for (TeamUser teamUser : teamUserList) {
+            UserDto userDto = UserDto.from(teamUser.getUser());
+            memberDtoList.add(TeamGetMemberResponse.from(userDto));
+        }
+
+        return memberDtoList;
     }
     //endregion
 
