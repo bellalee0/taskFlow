@@ -34,7 +34,7 @@ public class TaskDto {
             task.getStatus(),
             task.getPriority(),
             task.getAssigneeId().getId(),
-            task.getDueDateTime(),
+            task.getDueDate(),
             task.isCompleted(),
             task.getCompletedDateTime(),
             task.isDeleted(),
