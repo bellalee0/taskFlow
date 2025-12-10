@@ -9,8 +9,8 @@ import jakarta.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class InitData {
 
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    //private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
 
@@ -26,8 +26,8 @@ public class InitData {
     @Transactional
     public void init() {
         // --- Users ---
-        User user1 = new User("alpha", "alpha@test.com", passwordEncoder.encode("1234"), "알파");
-        User user2 = new User("beta", "beta@test.com", passwordEncoder.encode("1234"), "베타");
+        User user1 = new User("alpha", "alpha@test.com", "1234", "알파");
+        User user2 = new User("beta", "beta@test.com", "1234", "베타");
 
         userRepository.save(user1);
         userRepository.save(user2);
