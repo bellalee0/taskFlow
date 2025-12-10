@@ -9,11 +9,8 @@ import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.exception.CustomException;
 import com.example.taskflow.common.model.response.PageResponse;
 import com.example.taskflow.domain.comment.model.dto.CommentDto;
-import com.example.taskflow.domain.comment.model.request.CommentCreateRequest;
-import com.example.taskflow.domain.comment.model.request.CommentUpdateRequest;
-import com.example.taskflow.domain.comment.model.response.CommentCreateResponse;
-import com.example.taskflow.domain.comment.model.response.CommentGetResponse;
-import com.example.taskflow.domain.comment.model.response.CommentUpdateResponse;
+import com.example.taskflow.domain.comment.model.request.*;
+import com.example.taskflow.domain.comment.model.response.*;
 import com.example.taskflow.domain.comment.repository.CommentRepository;
 import com.example.taskflow.domain.task.repository.TaskRepository;
 import com.example.taskflow.domain.user.model.dto.UserDto;
@@ -27,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class CommentService {
 
@@ -35,6 +31,8 @@ public class CommentService {
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
 
+    // 댓글 생성
+    @Transactional
     public CommentCreateResponse createComment(long userId, long taskId, CommentCreateRequest request) {
 
         // TODO: default 메서드로 변경
@@ -55,10 +53,11 @@ public class CommentService {
         Comment comment = new Comment(request.getContent(), user, task, parentComment);
         commentRepository.save(comment);
 
-        // TODO: UserDto 요구사항에 맞게 변경 필요(id, username, name)
+        // TODO: UserDto 요구사항에 맞게 변경 필요(id, username, name, email, role)
         return CommentCreateResponse.from(CommentDto.from(comment), UserDto.from(user));
     }
 
+    // 댓글 목록 조회
     @Transactional(readOnly = true)
     public PageResponse<CommentGetResponse> getCommentList(long taskId, Pageable pageable) {
 
@@ -74,12 +73,15 @@ public class CommentService {
         return PageResponse.from(responsePage);
     }
 
+    // 댓글 수정
+    @Transactional
     public CommentUpdateResponse updateComment(long taskId, long commentId, long userId, CommentUpdateRequest request) {
 
+        // TODO: Task default 메서드로 변경
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalStateException("Task Not Found"));
         Comment comment = commentRepository.findCommentById(commentId, COMMENT_NOT_FOUND_COMMENT);
-        checkTaskCommentRelationship(task, comment);
 
+        checkTaskCommentRelationship(task, comment);
         checkCommentUserRelationship(userId, comment);
 
         comment.update(request);
@@ -88,12 +90,14 @@ public class CommentService {
         return CommentUpdateResponse.from(CommentDto.from(comment));
     }
 
+    // 댓글 삭제
+    @Transactional
     public void deleteComment(long taskId, long commentId, long userId) {
 
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalStateException("Task Not Found"));
         Comment comment = commentRepository.findCommentById(commentId, COMMENT_NOT_FOUND_COMMENT);
-        checkTaskCommentRelationship(task, comment);
 
+        checkTaskCommentRelationship(task, comment);
         checkCommentUserRelationship(userId, comment);
 
         if (comment.isDeleted()) { throw new CustomException(COMMENT_NO_PERMISSION_DELETE); }

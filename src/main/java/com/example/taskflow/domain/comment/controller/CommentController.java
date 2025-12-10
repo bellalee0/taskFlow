@@ -30,9 +30,10 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    // 댓글 생성
 //    @PostMapping("/tasks/{taskId}/comments")
     @PostMapping("/tasks/{taskId}/comments/{userId}")
-    public ResponseEntity<GlobalResponse<CommentCreateResponse>> createComment(
+    public ResponseEntity<GlobalResponse<CommentCreateResponse>> createCommentApi(
             // TODO: 로그인 사용자 정보로 변경
             @PathVariable long userId,
             @PathVariable long taskId,
@@ -43,8 +44,9 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(GlobalResponse.success(SuccessMessage.COMMENT_CREATE_SUCCESS, result));
     }
 
+    // 댓글 목록 조회
     @GetMapping("/tasks/{taskId}/comments")
-    public ResponseEntity<GlobalResponse<PageResponse<CommentGetResponse>>> getCommentList(
+    public ResponseEntity<GlobalResponse<PageResponse<CommentGetResponse>>> getCommentListApi(
             @PathVariable long taskId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -60,9 +62,10 @@ public class CommentController {
         return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.COMMENT_GET_LIST_SUCCESS, result));
     }
 
+    // 댓글 수정
 //    @PutMapping("/tasks/{taskId}/comments/{commentId}")
     @PutMapping("/tasks/{taskId}/comments/{commentId}/{userId}")
-    public ResponseEntity<GlobalResponse<CommentUpdateResponse>> updateComment(
+    public ResponseEntity<GlobalResponse<CommentUpdateResponse>> updateCommentApi(
             @PathVariable long taskId,
             @PathVariable long commentId,
             @PathVariable long userId,
@@ -73,15 +76,16 @@ public class CommentController {
         return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.COMMENT_UPDATE_SUCCESS, result));
     }
 
-
+    // 댓글 삭제
     //    @DeleteMapping("/tasks/{taskId}/comments/{commentId}")
     @DeleteMapping("/tasks/{taskId}/comments/{commentId}/{userId}")
-    public ResponseEntity<GlobalResponse<Void>> deleteComment(
-        @PathVariable long taskId,
-        @PathVariable long commentId,
-        @PathVariable long userId
+    public ResponseEntity<GlobalResponse<Void>> deleteCommentApi(
+            @PathVariable long taskId,
+            @PathVariable long commentId,
+            @PathVariable long userId
     ) {
         commentService.deleteComment(taskId, commentId, userId);
+
         return ResponseEntity.ok(GlobalResponse.successNodata(SuccessMessage.COMMENT_DELETE_SUCCESS));
     }
 }
