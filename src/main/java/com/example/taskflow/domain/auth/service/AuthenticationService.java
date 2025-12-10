@@ -5,6 +5,7 @@ import com.example.taskflow.common.exception.CustomException;
 import com.example.taskflow.common.utils.JwtUtil;
 import com.example.taskflow.common.utils.PasswordEncoder;
 import com.example.taskflow.domain.auth.model.LoginRequest;
+import com.example.taskflow.domain.auth.model.LoginResponse;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class AuthenticationService {
 
     // 기능
     @Transactional
-    public String userLogin(LoginRequest request) {
+    public LoginResponse userLogin(LoginRequest request) {
         // 회원가입된 유저의 아이디 조회
         User user = userRepository.findByUserName(request.getUsername()).orElseThrow(
                 () -> new CustomException(AUTH_WRONG_EMAIL_AND_PASSWORD)
@@ -31,6 +32,6 @@ public class AuthenticationService {
             throw new CustomException(AUTH_WRONG_EMAIL_AND_PASSWORD);
         }
 
-        return jwtUtil.generationToken(request.getUsername());
+        return new LoginResponse(jwtUtil.generationToken(user.getUserName()));
     }
 }

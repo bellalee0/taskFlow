@@ -1,6 +1,7 @@
 package com.example.taskflow.domain.auth.controller;
 import com.example.taskflow.common.model.response.GlobalResponse;
 import com.example.taskflow.domain.auth.model.LoginRequest;
+import com.example.taskflow.domain.auth.model.LoginResponse;
 import com.example.taskflow.domain.auth.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +22,8 @@ public class AuthenticationController {
     // 기능
     // 로그인 요청
     @PostMapping("/login")
-    public ResponseEntity<GlobalResponse<String>> login(@RequestBody LoginRequest request) {
-        String bearerToken = authenticationService.userLogin(request);
-        return ResponseEntity.ok(GlobalResponse.success(AUTH_LOGIN_SUCCESS, bearerToken));
+    public ResponseEntity<GlobalResponse<LoginResponse>> login(@RequestBody LoginRequest request) {
+        LoginResponse token = authenticationService.userLogin(request);
+        return ResponseEntity.ok(GlobalResponse.success(AUTH_LOGIN_SUCCESS, token));
     }
 }
