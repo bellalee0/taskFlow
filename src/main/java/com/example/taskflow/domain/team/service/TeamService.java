@@ -29,19 +29,25 @@ public class TeamService {
 
     //region 팀 목록 조회
     @Transactional(readOnly = true)
-    public TeamGetListResponse getTeam () {
+    public List<TeamGetListResponse> getTeamList() {
 
-       List<Team> teamList = teamRepository.findAll();
-        List<TeamIdNameDesCrAtResponse> teamDtoList = new ArrayList<>();
+        List<Team> teamList = teamRepository.findAll();
+        List<TeamGetListResponse> teamDtoList = new ArrayList<>();
 
         for (Team team : teamList) {
             TeamDto teamDto = TeamDto.from(team);
-            teamDtoList.add(TeamIdNameDesCrAtResponse.from(teamDto));
+            teamDtoList.add(TeamGetListResponse.from(teamDto));
         }
 
-        return TeamGetListResponse.from(teamDtoList);
+        return teamDtoList;
     }
     //endregion
+
+    //region 팀 상세 조회
+/*    @Transactional(readOnly = true)
+    public TeamGetOneResponse getTeamOne(Long teamId) {
+
+    }*/
 
     //region 팀 생성
     @Transactional

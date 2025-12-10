@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/teams")
@@ -20,12 +22,21 @@ public class TeamController {
 
     //팀 목록 조회
     @GetMapping
-    public ResponseEntity<GlobalResponse<TeamGetListResponse>> getTeamApi(
+    public ResponseEntity<GlobalResponse<List<TeamGetListResponse>>> getTeamListApi(
     ) {
-        TeamGetListResponse result = teamService.getTeam();
+        List<TeamGetListResponse> result = teamService.getTeamList();
 
         return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.TEAM_GET_LIST_SUCCESS, result));
     }
+
+    //팀 상세 조회
+/*    @GetMapping("/{id}")
+    public ResponseEntity<GlobalResponse<TeamGetOneResponse>> getTeamOneApi(
+            @PathVariable Long id
+    ) {
+        TeamGetOneResponse result = teamService.getTeamOne(id);
+        return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.TEAM_GET_ONE_SUCCESS, result));
+    }*/
 
     //팀 생성
     @PostMapping
