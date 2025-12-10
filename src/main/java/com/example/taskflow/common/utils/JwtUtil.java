@@ -30,9 +30,7 @@ public class JwtUtil {
 
     // 토큰 생성
     public String generationToken(String username) {
-        // 토큰 발급 시간
         Date nowTokenDate = new Date();
-        // 토큰 반환
         return Jwts.builder()
                 .claim("username", username)
                 .issuedAt(nowTokenDate)
@@ -43,7 +41,6 @@ public class JwtUtil {
 
     // 토큰 검증
     public boolean validateToken(String token) {
-
         try {
             Jwts.parser()
                     .verifyWith(key) // 서명 검증

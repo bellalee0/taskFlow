@@ -1,6 +1,7 @@
 package com.example.taskflow.common.config;
 
 import com.example.taskflow.common.filter.JwtFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -13,15 +14,12 @@ import org.springframework.security.web.context.SecurityContextHolderFilter;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
     // 속성
     private final JwtFilter jwtFilter;
 
-    // 생성자
-    public SecurityConfig(JwtFilter jwtFilter) {
-        this.jwtFilter = jwtFilter;
-    }
-
+    // 기능
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity

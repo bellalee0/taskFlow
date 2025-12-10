@@ -6,22 +6,18 @@ import com.example.taskflow.common.utils.JwtUtil;
 import com.example.taskflow.common.utils.PasswordEncoder;
 import com.example.taskflow.domain.auth.model.LoginRequest;
 import com.example.taskflow.domain.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import static com.example.taskflow.common.exception.ErrorMessage.*;
 
 @Service
+@RequiredArgsConstructor
 public class AuthenticationService {
 
     // 속성
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
-
-    // 생성자
-    public AuthenticationService(UserRepository userRepository, JwtUtil jwtUtil) {
-        this.userRepository = userRepository;
-        this.jwtUtil = jwtUtil;
-    }
 
     // 기능
     @Transactional
