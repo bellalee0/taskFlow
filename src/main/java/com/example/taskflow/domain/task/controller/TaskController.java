@@ -9,8 +9,10 @@ import com.example.taskflow.domain.task.model.request.*;
 import com.example.taskflow.domain.task.model.response.*;
 import com.example.taskflow.domain.task.service.TaskService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,10 +37,10 @@ public class TaskController {
     // 작업 목록 조회 기능 (페이징, 필터링)
     @GetMapping
     public ResponseEntity<GlobalResponse<PageResponse<TaskGetAllResponse>>> getTaskListApi(
-            @RequestParam(defaultValue = "TODO") TaskStatus status,
-            @RequestParam(defaultValue = "HIGH") TaskPriority priority,
+            @RequestParam(required = false) TaskStatus status,
+            @RequestParam(required = false) TaskPriority priority,
             @RequestParam(required = false) Long assigneeId,
-            Pageable pageable
+            @PageableDefault(page = 0, size = 10) Pageable pageable
     ) {
        PageResponse<TaskGetAllResponse> response = taskService.getTaskList(status, priority, assigneeId, pageable);
 
