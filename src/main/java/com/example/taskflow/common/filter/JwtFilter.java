@@ -1,6 +1,7 @@
 package com.example.taskflow.common.filter;
 
 import com.example.taskflow.common.exception.CustomException;
+import com.example.taskflow.common.exception.JwtExceptionHandler;
 import com.example.taskflow.common.utils.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,8 +12,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import java.io.IOException;
 import java.util.List;
+
 import static com.example.taskflow.common.exception.ErrorMessage.TOKEN_INVALID_FIELD;
 import static com.example.taskflow.common.exception.ErrorMessage.TOKEN_REQUIRED_FIELD;
 
@@ -21,6 +24,7 @@ import static com.example.taskflow.common.exception.ErrorMessage.TOKEN_REQUIRED_
 public class JwtFilter extends OncePerRequestFilter {
     // 속성
     private final JwtUtil jwtUtil;
+    private final JwtExceptionHandler jwtExceptionHandler;
 
     // 기능
     @Override
@@ -36,27 +40,31 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String token = request.getHeader("Authorization");
 
-        if (token == null || token.isBlank()) {
-            throw new CustomException(TOKEN_REQUIRED_FIELD);
+        try {
+            if (token == null || token.isBlank()) {
+                throw new CustomException(TOKEN_REQUIRED_FIELD);
+            }
+
+            if (!token.startsWith("Bearer ")) {
+                throw new CustomException(TOKEN_REQUIRED_FIELD);
+            }
+
+            String jwt = token.substring(7);
+
+            if (!jwtUtil.validateToken(jwt)) {
+                throw new CustomException(TOKEN_INVALID_FIELD);
+            }
+
+            String username = jwtUtil.getUserName(jwt);
+
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    username, null, List.of());
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            filterChain.doFilter(request, response);
+        } catch (CustomException e) {
+            jwtExceptionHandler.handleCustomException(response, e);
         }
-
-        if (!token.startsWith("Bearer ")) {
-            throw new CustomException(TOKEN_REQUIRED_FIELD);
-        }
-
-        String jwt = token.substring(7);
-
-        if (!jwtUtil.validateToken(jwt)) {
-            throw new CustomException(TOKEN_INVALID_FIELD);
-        }
-
-        String username = jwtUtil.getUserName(jwt);
-
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                username, null, List.of());
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        filterChain.doFilter(request, response);
     }
 }
