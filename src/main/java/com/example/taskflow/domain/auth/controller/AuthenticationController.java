@@ -16,11 +16,9 @@ import static com.example.taskflow.common.model.enums.SuccessMessage.AUTH_LOGIN_
 @RequiredArgsConstructor
 @RequestMapping("api/auth")
 public class AuthenticationController {
-    // 속성
+
     private final AuthenticationService authenticationService;
 
-    // 기능
-    // 로그인 요청
     @PostMapping("/login")
     public ResponseEntity<GlobalResponse<LoginResponse>> login(@RequestBody LoginRequest request) {
         LoginResponse token = authenticationService.userLogin(request);

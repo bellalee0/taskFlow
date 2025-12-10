@@ -16,14 +16,13 @@ import static com.example.taskflow.common.exception.ErrorMessage.*;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    // 속성
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-    // 기능
+
     @Transactional
     public LoginResponse userLogin(LoginRequest request) {
-        // 회원가입된 유저의 아이디 조회
+
         User user = userRepository.findByUserName(request.getUsername()).orElseThrow(
                 () -> new CustomException(AUTH_WRONG_EMAIL_AND_PASSWORD)
         );

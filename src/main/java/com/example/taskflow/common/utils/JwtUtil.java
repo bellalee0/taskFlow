@@ -43,9 +43,9 @@ public class JwtUtil {
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                    .verifyWith(key) // 서명 검증
+                    .verifyWith(key)
                     .build()
-                    .parseSignedClaims(token); // jws 검증
+                    .parseSignedClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException exception) {
             return false;
