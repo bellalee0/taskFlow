@@ -22,7 +22,7 @@ public enum SuccessMessage {
     TASK_GET_ONE_SUCCESS(HttpStatus.OK, "작업 조회 성공"),
     TASK_UPDATE_SUCCESS(HttpStatus.OK, "작업이 수정되었습니다."),
     TASK_DELETE_SUCCESS(HttpStatus.OK, "작업이 삭제되었습니다."),
-    TASK_DELETE_STATUS_SUCCESS(HttpStatus.OK, "작업 상태가 변경되었습니다."),
+    TASK_UPDATE_STATUS_SUCCESS(HttpStatus.OK, "작업 상태가 변경되었습니다."),
 
     TEAM_GET_LIST_SUCCESS(HttpStatus.OK, "팀 목록 조회 성공"),
     TEAM_GET_ONE_SUCCESS(HttpStatus.OK, "팀 조회 성공"),
