@@ -20,6 +20,8 @@ public class UserDto {
     private String name;
     private UserRole role;
     private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
+    private boolean isDeleted;
 
     public static UserDto from(User user) {
         return new UserDto(
@@ -29,11 +31,9 @@ public class UserDto {
             user.getPassword(),
             user.getName(),
             user.getRole(),
-            user.getCreatedAt()
+            user.getCreatedAt(),
+            user.getModifiedAt(),
+            user.isDeleted()
         );
-    }
-
-    public LocalDateTime getCreatAt() {
-        return createdAt;
     }
 }

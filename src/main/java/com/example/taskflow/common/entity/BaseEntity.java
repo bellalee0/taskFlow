@@ -33,4 +33,8 @@ public abstract class BaseEntity {
     public void updateIsDeleted() {
         this.isDeleted = true;
     }
+
+    public LocalDateTime getUpdatedAt() {
+        return modifiedAt;
+    }
 }

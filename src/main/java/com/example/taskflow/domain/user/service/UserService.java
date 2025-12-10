@@ -3,42 +3,46 @@ package com.example.taskflow.domain.user.service;
 import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.exception.CustomException;
 import com.example.taskflow.common.model.enums.UserRole;
+import com.example.taskflow.common.model.response.PageResponse;
 import com.example.taskflow.common.utils.PasswordEncoder;
 import com.example.taskflow.domain.user.model.dto.UserDto;
 import com.example.taskflow.domain.user.model.request.UserCreateRequest;
-import com.example.taskflow.domain.user.model.request.UserInformationModyifyingRequest;
+import com.example.taskflow.domain.user.model.request.UserUpdateInfoRequest;
 import com.example.taskflow.domain.user.model.response.UserCreateResponse;
+import com.example.taskflow.domain.user.model.response.UserGetProfileResponse;
 import com.example.taskflow.domain.user.model.response.UserListInquiryResponse;
 import com.example.taskflow.domain.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import static com.example.taskflow.common.exception.ErrorMessage.*;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     //회원가입
+    @Transactional
     public UserCreateResponse createUser(@Valid UserCreateRequest request) {
+
         if (userRepository.existsUserByUserName(request.getUserName())) {
             throw new CustomException(USER_USED_USERNAME);
         }
 
         if (userRepository.existsUserByEmail(request.getEmail())) {
-            throw new CustomException(USER_REQUEST_NOT_VALID_EMAIL_FORMAT);
+            throw new CustomException(USER_USED_EMAIL);
         }
 
-       String encodingPassword = passwordEncoder.encode(request.getPassword());
-
+        String encodingPassword = passwordEncoder.encode(request.getPassword());
 
         User user = new User(
                 request.getUserName(),
@@ -51,31 +55,53 @@ public class UserService {
         userRepository.save(user);
 
         return UserCreateResponse.from(UserDto.from(user));
-
     }
 
     //사용자 정보 조회
-    public UserCreateResponse getUser(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+    public UserGetProfileResponse getUser(Long id) {
 
-        return UserCreateResponse.from(UserDto.from(user));
+        User user =  userRepository.findUserById(id); //디폴트 메소드로
 
+        return UserGetProfileResponse.from(UserDto.from(user));
     }
 
     //사용자 목록 조회
-    public Page<UserListInquiryResponse> getUserList(Pageable pageable) {
+    public PageResponse<UserListInquiryResponse> getUserList(Pageable pageable) {
+
         Page<User> userList = userRepository.findAll(pageable);
-        return userList.map(UserListInquiryResponse::new);
+
+        Page<UserListInquiryResponse> userDtoList = userList.map(UserListInquiryResponse::new);
+
+        return PageResponse.from(userDtoList);
     }
-//
-//    //사용자 정보 수정
-//    public UserInformationModyifyingRequest updateUserInfo(Long id, UserInformationModyifyingRequest request) {
-//
-//        if(userRepository.findByEmail(()).equalse )
-//
-//        User user = userRepository.findById()
-//    }
+
+    //사용자 정보 수정
+    public UserUpdateInfoRequest updateUserInfo(Long id, UserUpdateInfoRequest request) {
+
+        User user = userRepository.findUserById(id);
+
+        if (!user.getName().equals(request.getName())) {
+            throw new CustomException(USER_USED_USERNAME);
+        }
+        if(!user.getEmail().equals(request.getEmail())) {
+            throw new CustomException(USER_USED_EMAIL);
+        }
+
+        //request Dto로 한번에
+        user.updateName(request.getName());
+        user.updateEmail(request.getEmail());
+
+        //비밀번호 확인
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new CustomException(AUTH_WRONG_EMAIL_AND_PASSWORD);
+        }
+        return request;
+
+        //회원탈퇴시 아람님이 만든 패스워드인코더로
+
+
+
+    }
 
 
 }

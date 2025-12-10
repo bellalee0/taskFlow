@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCreateResponse {
+public class UserGetProfileResponse {
 
     private Long id;
     private String userName;
@@ -18,17 +18,18 @@ public class UserCreateResponse {
     private String name;
     private String role;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
 
-
-    public static UserCreateResponse from(UserDto userDto) {
-        return new UserCreateResponse(
+    public static UserGetProfileResponse from(UserDto userDto) {
+        return new UserGetProfileResponse(
                 userDto.getId(),
                 userDto.getUserName(),
                 userDto.getEmail(),
                 userDto.getName(),
                 userDto.getRole().toString(),
-                userDto.getCreatedAt()
+                userDto.getCreatedAt(),
+                userDto.getModifiedAt()
         );
     }
 }
