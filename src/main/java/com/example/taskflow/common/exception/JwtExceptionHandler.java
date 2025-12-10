@@ -1,6 +1,6 @@
 package com.example.taskflow.common.exception;
 
-import com.example.taskflow.common.model.response.JwtErrorResponse;
+import com.example.taskflow.common.model.response.GlobalResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
@@ -19,11 +19,10 @@ public class JwtExceptionHandler {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
 
-        JwtErrorResponse errorResponse = new JwtErrorResponse(e.getErrorMessage());
-        writeErrorResponse(response, errorResponse);
+        writeErrorResponse(response, GlobalResponse.exception("인증이 필요합니다."));
     }
 
-    public void writeErrorResponse(HttpServletResponse response, JwtErrorResponse body)
+    public void writeErrorResponse(HttpServletResponse response, GlobalResponse<Void> body)
             throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
