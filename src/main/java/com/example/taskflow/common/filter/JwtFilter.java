@@ -40,7 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
             throw new CustomException(TOKEN_REQUIRED_FIELD);
         }
 
-        if (token.startsWith("Bearer ")) {
+        if (!token.startsWith("Bearer ")) {
             throw new CustomException(TOKEN_REQUIRED_FIELD);
         }
 
