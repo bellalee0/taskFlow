@@ -57,4 +57,5 @@ public class InitData {
         taskRepository.save(task2);
         taskRepository.save(task3);
     }
+
 }
