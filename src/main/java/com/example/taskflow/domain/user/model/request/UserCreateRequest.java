@@ -13,7 +13,7 @@ public class UserCreateRequest {
 
     @NotBlank(message = "닉네임은 필수입니다.")
     @Size(max = 10, message = "닉네임은 10글자를 넘길 수 없습니다.")
-    private String username;
+    private String userName;
 
     @Email(message = "올바른 이메일 형식이 아닙니다.")
     private String email;

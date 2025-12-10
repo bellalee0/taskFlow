@@ -34,7 +34,7 @@ public enum ErrorMessage {
     COMMENT_NOT_FOUND_TASK_OR_COMMENT(HttpStatus.NOT_FOUND, "작업을 찾을 수 없습니다."),
     COMMENT_NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),
     ASSIGNEE_NOT_FOUND(HttpStatus.NOT_FOUND, "담당자를 찾을 수 없습니다."),
-    TASK_NOT_FOUND(HttpStatus.NOT_FOUND, "작업을 찾을 수 없습니다."),
+    TASK_NOT_FOUND(HttpStatus.NOT_FOUND, "작업을 찾을 수 없습니다.")
 
 
 
