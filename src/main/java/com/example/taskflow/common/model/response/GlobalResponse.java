@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GlobalResponse<T> {
 
     private boolean success;
