@@ -18,7 +18,6 @@ public class LogDto {
     private LogType type;
     private Long userId;
     private Task task;
-    private Comment comment;
     private LocalDateTime loggedDateTime;
     private String description;
 
@@ -28,7 +27,6 @@ public class LogDto {
             log.getType(),
             log.getUser().getId(),
             log.getTask(),
-            log.getComment(),
             log.getLoggedDateTime(),
             log.getDescription()
         );
