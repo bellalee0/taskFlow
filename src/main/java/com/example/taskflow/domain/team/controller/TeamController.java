@@ -30,13 +30,14 @@ public class TeamController {
     }
 
     //팀 상세 조회
-/*    @GetMapping("/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<GlobalResponse<TeamGetOneResponse>> getTeamOneApi(
             @PathVariable Long id
     ) {
         TeamGetOneResponse result = teamService.getTeamOne(id);
+
         return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.TEAM_GET_ONE_SUCCESS, result));
-    }*/
+    }
 
     //팀 생성
     @PostMapping

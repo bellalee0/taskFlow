@@ -1,4 +1,3 @@
-/*
 package com.example.taskflow.domain.team.model.response;
 
 import com.example.taskflow.domain.team.model.dto.TeamDto;
@@ -17,8 +16,13 @@ public class TeamGetOneResponse {
     private final LocalDateTime createdAt;
     private final List<MemberIdUsernameNameEmailRoleResponse> members;
 
-    public static TeamGetOneResponse from(TeamDto dto) {
-        return new TeamGetOneResponse(dto.getId(), dto.getName(), dto.getDescription(), dto.getCreatedAt());
+    public static TeamGetOneResponse from(TeamDto dto, List<MemberIdUsernameNameEmailRoleResponse> members) {
+        return new TeamGetOneResponse(
+                dto.getId(),
+                dto.getName(),
+                dto.getDescription(),
+                dto.getCreatedAt(),
+                members
+        );
     }
 }
-*/

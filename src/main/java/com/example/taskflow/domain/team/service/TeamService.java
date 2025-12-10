@@ -44,10 +44,22 @@ public class TeamService {
     //endregion
 
     //region 팀 상세 조회
-/*    @Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public TeamGetOneResponse getTeamOne(Long teamId) {
 
-    }*/
+        Team team = teamRepository.findTeamById(teamId);
+        TeamDto teamDto = TeamDto.from(team);
+
+        List<TeamUser> teamUserList = teamUserRepository.findByTeamId(teamId);
+
+        List<MemberIdUsernameNameEmailRoleResponse> memberDtoList = new ArrayList<>();
+        for (TeamUser teamUser : teamUserList) {
+            UserDto userDto = UserDto.from(teamUser.getUser());
+            memberDtoList.add(MemberIdUsernameNameEmailRoleResponse.from(userDto));
+        }
+        return TeamGetOneResponse.from(teamDto, memberDtoList);
+    }
+    //endregion
 
     //region 팀 생성
     @Transactional
