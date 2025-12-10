@@ -3,6 +3,7 @@ package com.example.taskflow.domain.activities.repository;
 import com.example.taskflow.common.entity.Log;
 import com.example.taskflow.common.model.enums.LogType;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,4 +26,6 @@ public interface LogRepository extends JpaRepository<Log, Long> {
         @Param("taskId") Long taskId,
         @Param("startDate") LocalDateTime startDate,
         @Param("endDate") LocalDateTime endDate);
+
+    List<Log> findAllByUserId(long userId);
 }
