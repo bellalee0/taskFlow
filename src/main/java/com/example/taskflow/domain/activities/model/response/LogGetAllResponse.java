@@ -10,7 +10,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LogGetAllResponse {
 
     private Long id;
@@ -27,7 +26,7 @@ public class LogGetAllResponse {
             logDto.getType(),
             logDto.getUserId(),
             userDto,
-            logDto.getTask() == null ? null : logDto.getTask().getId(),
+            logDto.getTask().getId(),
             logDto.getLoggedDateTime(),
             logDto.getDescription()
         );
