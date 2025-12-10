@@ -1,6 +1,10 @@
 package com.example.taskflow.domain.task.model.response;
 
 import com.example.taskflow.common.entity.Task;
+import com.example.taskflow.common.model.enums.TaskPriority;
+import com.example.taskflow.common.model.enums.TaskStatus;
+import com.example.taskflow.domain.task.model.dto.TaskDto;
+import com.example.taskflow.domain.user.model.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,28 +17,26 @@ public class TaskGetOneResponse {
     private Long id;
     private String title;
     private String description;
-    private String TaskStatus;
-    private String TaskPriority;
-    private String assigneeId;
-    private String assignee;
+    private TaskStatus status;
+    private TaskPriority priority;
+    private Long assigneeId;
+    private UserDto assignee;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime dueDate;
-    private LocalDateTime timestamp;
 
-    public static TaskGetOneResponse from(Task task) {
+    public static TaskGetOneResponse from(TaskDto taskDto, UserDto userDto) {
         return new TaskGetOneResponse(
-                task.getId(),
-                task.getTitle(),
-                task.getDescription(),
-                task.getStatus().name(),
-                task.getPriority().name(),
-                task.getAssigneeId() != null ? task.getAssigneeId().getId().toString() : null,
-                task.getAssigneeId() != null ? task.getAssigneeId().getName() : null,
-                task.getCreatedAt(),
-                task.getModifiedAt(),
-                task.getDueDateTime(),
-                LocalDateTime.now()
+                taskDto.getId(),
+                taskDto.getTitle(),
+                taskDto.getDescription(),
+                taskDto.getStatus(),
+                taskDto.getPriority(),
+                taskDto.getAssigneeId(),
+                userDto,
+                taskDto.getCreatedAt(),
+                taskDto.getModifiedAt(),
+                taskDto.getDueDateTime()
         );
     }
 }
