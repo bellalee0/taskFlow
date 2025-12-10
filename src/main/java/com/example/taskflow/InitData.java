@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class InitData {
 
-    //    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    //private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
     private final TeamRepository teamRepository;

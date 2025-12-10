@@ -9,11 +9,13 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
 @Table(name = "tasks")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Where(clause = "is_deleted = false")
 public class Task extends BaseEntity {
 
     @Id
@@ -36,7 +38,7 @@ public class Task extends BaseEntity {
     private User assigneeId;
 
     //@Column(nullable = false)
-    private LocalDateTime dueDateTime;
+    private LocalDateTime dueDate;
 
     @ColumnDefault("0")
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
@@ -51,8 +53,22 @@ public class Task extends BaseEntity {
         this.status = TaskStatus.TODO;
         this.priority = priority;
         this.assigneeId = assigneeId;
-        this.dueDateTime = dueDateTime;
+        this.dueDate = dueDateTime;
         this.isCompleted = false;
         this.completedDateTime = null;
+    }
+
+    public void updateStatus(TaskStatus status) {
+        this.status = status;
+    }
+
+    // 작업 정보 수정
+    public void update(String title, String description, User assigneeId,
+                       TaskPriority priority, LocalDateTime dueDate) {
+        if (title != null) this.title = title;
+        if (description != null) this.description = description;
+        if (assigneeId != null) this.assigneeId = assigneeId;
+        if (priority != null) this.priority = priority;
+        if (dueDate != null) this.dueDate = dueDate;
     }
 }
