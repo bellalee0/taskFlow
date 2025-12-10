@@ -17,10 +17,12 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     // 다중 필터 작업 목록 조회 (상태, 우선순위, 담당자)
     @EntityGraph(attributePaths = {"assigneeId"})
-    @Query("SELECT t FROM Task t WHERE " +
-            "(:status IS NULL OR t.status = :status) AND " +
-            "(:priority IS NULL OR t.priority = :priority) AND " +
-            "(:assigneeId IS NULL OR t.assigneeId.id = :assigneeId)")
+    @Query("""
+            SELECT t FROM Task t WHERE
+            (:status IS NULL OR t.status = :status) AND
+            (:priority IS NULL OR t.priority = :priority) AND
+            (:assigneeId IS NULL OR t.assigneeId.id = :assigneeId)
+            """)
     Page<Task> findByFilters(
             @Param("status") TaskStatus status,
             @Param("priority") TaskPriority priority,

@@ -38,7 +38,7 @@ public class Task extends BaseEntity {
     private User assigneeId;
 
     //@Column(nullable = false)
-    private LocalDateTime dueDateTime;
+    private LocalDateTime dueDate;
 
     @ColumnDefault("0")
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
@@ -53,7 +53,7 @@ public class Task extends BaseEntity {
         this.status = TaskStatus.TODO;
         this.priority = priority;
         this.assigneeId = assigneeId;
-        this.dueDateTime = dueDateTime;
+        this.dueDate = dueDateTime;
         this.isCompleted = false;
         this.completedDateTime = null;
     }
@@ -63,27 +63,12 @@ public class Task extends BaseEntity {
     }
 
     // 작업 정보 수정
-    public void updateInfo(String title, String description) {
-        if (title != null && !title.trim().isBlank()) {
-            this.title = title;
-        }
-        if (description != null && !description.trim().isBlank()) {
-            this.description = description;
-        }
-    }
-
-    // 담당자 변경
-    public void changeAssignee(User assigneeId) {
-        this.assigneeId = assigneeId;
-    }
-
-    // 우선순위 변경
-    public void changePriority(TaskPriority priority) {
-        this.priority = priority;
-    }
-
-    // 마감일시 변경
-    public void changeDueDate(LocalDateTime dueDateTime) {
-        this.dueDateTime = dueDateTime;
+    public void update(String title, String description, User assigneeId,
+                       TaskPriority priority, LocalDateTime dueDate) {
+        if (title != null) this.title = title;
+        if (description != null) this.description = description;
+        if (assigneeId != null) this.assigneeId = assigneeId;
+        if (priority != null) this.priority = priority;
+        if (dueDate != null) this.dueDate = dueDate;
     }
 }
