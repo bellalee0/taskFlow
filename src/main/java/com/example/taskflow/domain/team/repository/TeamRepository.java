@@ -9,10 +9,8 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 
     boolean existsByName(String name);
 
-
     default Team findTeamById (Long teamId) {
         return findById(teamId)
                 .orElseThrow(() -> new CustomException(ErrorMessage.TEAM_NOT_FOUND));
     }
-
 }

@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TeamUserRepository extends JpaRepository<TeamUser, Long> {
-    boolean existsByTeam_Id(Long teamId);
+    boolean existsByTeamId(Long teamId);
 
-    boolean existsByTeam_IdAndUser_Id(Long teamId, Long userId);
+    boolean existsByTeamIdAndUserId(Long teamId, Long userId);
 
     @EntityGraph(attributePaths = "user")
     List<TeamUser> findByTeamId(Long teamId);

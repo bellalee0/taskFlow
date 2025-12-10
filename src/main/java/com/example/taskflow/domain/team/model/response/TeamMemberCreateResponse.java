@@ -15,9 +15,9 @@ public class TeamMemberCreateResponse {
     private final String name;
     private final String description;
     private final LocalDateTime createdAt;
-    private final List<UserInfo> members;
+    private final List<MemberIdUsernameNameResponse> members;
 
-    public static TeamMemberCreateResponse from(TeamDto dto, List<UserInfo> members) {
+    public static TeamMemberCreateResponse from(TeamDto dto, List<MemberIdUsernameNameResponse> members) {
         return new TeamMemberCreateResponse(
                 dto.getId(),
                 dto.getName(),
@@ -26,15 +26,4 @@ public class TeamMemberCreateResponse {
                 members
         );
     }
-
-    @Getter
-    @AllArgsConstructor
-    public static class UserInfo {
-        private final Long id;
-        @JsonProperty("username")
-        private final String userName;
-        private final String name;
-
-    }
-
 }

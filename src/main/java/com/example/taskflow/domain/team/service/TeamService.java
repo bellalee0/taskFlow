@@ -6,14 +6,11 @@ import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.exception.CustomException;
 import com.example.taskflow.common.exception.ErrorMessage;
 import com.example.taskflow.domain.team.model.dto.TeamDto;
-import com.example.taskflow.domain.team.model.request.TeamCreateRequest;
-import com.example.taskflow.domain.team.model.request.TeamMemberCreateRequest;
-import com.example.taskflow.domain.team.model.request.TeamUpdateRequest;
-import com.example.taskflow.domain.team.model.response.TeamCreateResponse;
-import com.example.taskflow.domain.team.model.response.TeamMemberCreateResponse;
-import com.example.taskflow.domain.team.model.response.TeamUpdateResponse;
+import com.example.taskflow.domain.team.model.request.*;
+import com.example.taskflow.domain.team.model.response.*;
 import com.example.taskflow.domain.team.repository.TeamRepository;
 import com.example.taskflow.domain.team.repository.TeamUserRepository;
+import com.example.taskflow.domain.user.model.dto.UserDto;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,9 +27,26 @@ public class TeamService {
     private final TeamUserRepository teamUserRepository;
     private final UserRepository userRepository;
 
+    //region 팀 목록 조회
+/*    @Transactional(readOnly = true)
+    public TeamGetListResponse getTeam () {
+       List<Team> teams = teamRepository.findAll();
+
+       for (Team team : teams) {
+
+
+
+       }
+        TeamDto dto = TeamDto.from(team);
+       return TeamGetListResponse.from(dto);
+    }*/
+
+    //endregion
+
     //region 팀 생성
     @Transactional
     public TeamCreateResponse createTeam(TeamCreateRequest request) {
+
         if (teamRepository.existsByName(request.getName())) {
             throw new CustomException(ErrorMessage.TEAM_ALREADY_PRESENT);
         }
@@ -43,14 +57,14 @@ public class TeamService {
         );
         teamRepository.save(team);
 
-        TeamDto dto = TeamDto.from(team);
-        return TeamCreateResponse.from(dto);
+        return TeamCreateResponse.from(TeamDto.from(team));
     }
     //endregion
 
     //region 팀 수정
     @Transactional
     public TeamUpdateResponse updateTeam(TeamUpdateRequest request, Long teamId) {
+
         Team selectedTeam = teamRepository.findTeamById(teamId);
 
         String newName = request.getName();
@@ -65,18 +79,17 @@ public class TeamService {
                 request.getDescription()
         );
 
-        TeamDto dto = TeamDto.from(selectedTeam);
-        return TeamUpdateResponse.from(dto);
+        return TeamUpdateResponse.from(TeamDto.from(selectedTeam));
     }
     //endregion
 
     //region 팀 삭제
     @Transactional
     public void deleteTeam(Long teamId) {
-        Team selectedTeam = teamRepository.findTeamById(teamId);
-        boolean teamHasUser = teamUserRepository.existsByTeam_Id(teamId);
 
-        if (teamHasUser) {
+        Team selectedTeam = teamRepository.findTeamById(teamId);
+
+        if (teamUserRepository.existsByTeamId(teamId)) {
             throw new CustomException(ErrorMessage.TEAM_HAS_USER_WHEN_DELETE);
         }
 
@@ -87,34 +100,29 @@ public class TeamService {
     //region 팀 멤버 추가
     @Transactional
     public TeamMemberCreateResponse createTeamMember(TeamMemberCreateRequest request, Long teamId) {
+
         Long userId = request.getUserId();
-        
-        if (teamUserRepository.existsByTeam_IdAndUser_Id(teamId, userId)){
+
+        if (teamUserRepository.existsByTeamIdAndUserId(teamId, userId)) {
             throw new CustomException(ErrorMessage.TEAMUSER_ALREADY_PRESENCE);
         }
         Team team = teamRepository.findTeamById(teamId);
         User user = userRepository.findUserById(userId);
-        
+
         TeamUser teamUser = new TeamUser(team, user);
         teamUserRepository.save(teamUser);
 
-        List<TeamUser> teamUsers= teamUserRepository.findByTeamId(teamId);
-        List<TeamMemberCreateResponse.UserInfo> members = new ArrayList<>();
-        for (TeamUser dto : teamUsers) {
-            members.add(new TeamMemberCreateResponse.UserInfo(
-                    dto.getUser().getId(),
-                    dto.getUser().getUserName(),
-                    dto.getUser().getName()
-            ));
+        List<TeamUser> teamUserList = teamUserRepository.findByTeamId(teamId);
+        List<MemberIdUsernameNameResponse> memberList = new ArrayList<>();
+        for (TeamUser dto : teamUserList) {
+            UserDto userDto = UserDto.from(dto.getUser());
+            memberList.add(MemberIdUsernameNameResponse.from(userDto));
         }
 
-        TeamDto teamDto = TeamDto.from(team);
-
-        return TeamMemberCreateResponse.from(teamDto, members);
-
+        return TeamMemberCreateResponse.from(TeamDto.from(team), memberList);
     }
     //endregion
-    
+
     //region 팀 멤버 제거
     @Transactional
     public void deleteTeamMember(Long teamId, Long userId) {
@@ -122,6 +130,4 @@ public class TeamService {
         teamUser.updateIsDeleted();
     }
     //endregion
-
-
 }
