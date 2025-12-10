@@ -7,15 +7,18 @@ import com.example.taskflow.common.model.response.PageResponse;
 import com.example.taskflow.common.utils.PasswordEncoder;
 import com.example.taskflow.domain.user.model.dto.UserDto;
 import com.example.taskflow.domain.user.model.request.UserCreateRequest;
+import com.example.taskflow.domain.user.model.request.UserDeleteRequest;
 import com.example.taskflow.domain.user.model.request.UserUpdateInfoRequest;
 import com.example.taskflow.domain.user.model.response.UserCreateResponse;
 import com.example.taskflow.domain.user.model.response.UserGetProfileResponse;
 import com.example.taskflow.domain.user.model.response.UserListInquiryResponse;
+import com.example.taskflow.domain.user.model.response.UserUpdateInfoResponse;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +27,7 @@ import static com.example.taskflow.common.exception.ErrorMessage.*;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
@@ -42,7 +45,7 @@ public class UserService {
             throw new CustomException(USER_USED_EMAIL);
         }
 
-        String encodingPassword = passwordEncoder.encode(request.getPassword());
+        String encodingPassword = PasswordEncoder.encode(request.getPassword());
 
         User user = new User(
                 request.getUserName(),
@@ -58,6 +61,7 @@ public class UserService {
     }
 
     //사용자 정보 조회
+    @Transactional(readOnly = true)
     public UserGetProfileResponse getUser(Long id) {
 
         User user =  userRepository.findUserById(id); //디폴트 메소드로
@@ -66,6 +70,7 @@ public class UserService {
     }
 
     //사용자 목록 조회
+    @Transactional(readOnly = true)
     public PageResponse<UserListInquiryResponse> getUserList(Pageable pageable) {
 
         Page<User> userList = userRepository.findAll(pageable);
@@ -76,7 +81,8 @@ public class UserService {
     }
 
     //사용자 정보 수정
-    public UserUpdateInfoRequest updateUserInfo(Long id, UserUpdateInfoRequest request) {
+    @Transactional
+    public UserUpdateInfoResponse updateUserInfo(Long id, UserUpdateInfoRequest request) {
 
         User user = userRepository.findUserById(id);
 
@@ -103,5 +109,13 @@ public class UserService {
 
     }
 
+        //1. 아이디 먼저 찾고
+        User user = userRepository.findById(request).orElseThrow()
 
+        2. 찾은 아이디에서 비밀번호를 내꺼서  입력한 비밀번호와 비교
+       if (!PasswordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new CustomException(UNAUTHORIZED_WRONG_PASSWORD);
+        }
+    }*/
 }
+

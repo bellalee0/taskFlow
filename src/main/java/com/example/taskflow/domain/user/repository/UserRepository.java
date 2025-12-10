@@ -6,7 +6,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.jpa.repository.JpaRepository;
-import static com.example.taskflow.common.exception.ErrorMessage.USER_NOT_EMAIL_FOUND;
+
+import java.util.Optional;
 import static com.example.taskflow.common.exception.ErrorMessage.USER_NOT_FOUND;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -23,6 +24,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
         return findById(id)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
     }
+
+    Optional<User> findByUserName(String username);
 
 //    default User findUserByEmail(String email) {
 //        return findUserByEmail(email)
