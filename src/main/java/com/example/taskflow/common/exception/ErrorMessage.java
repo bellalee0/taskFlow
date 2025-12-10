@@ -17,7 +17,9 @@ public enum ErrorMessage {
 
     // 401
     AUTH_WRONG_EMAIL_AND_PASSWORD(HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 올바르지 않습니다."),
-
+    AUTH_WRONG_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 올바르지 않습니다."),
+    TOKEN_REQUIRED_FIELD(HttpStatus.UNAUTHORIZED, "토큰이 필요합니다."),
+    TOKEN_INVALID_FIELD(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
     // 403
     COMMENT_NO_PERMISSION_UPDATE(HttpStatus.FORBIDDEN, "댓글을 수정할 권한이 없습니다."),
     COMMENT_NO_PERMISSION_DELETE(HttpStatus.FORBIDDEN, "댓글을 삭제할 권한이 없습니다."),
@@ -30,6 +32,8 @@ public enum ErrorMessage {
     COMMENT_NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),
     ASSIGNEE_NOT_FOUND(HttpStatus.NOT_FOUND, "담당자를 찾을 수 없습니다."),
     TASK_NOT_FOUND(HttpStatus.NOT_FOUND, "작업을 찾을 수 없습니다.")
+
+
 
     // 409
 

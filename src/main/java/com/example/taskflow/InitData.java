@@ -3,14 +3,12 @@ package com.example.taskflow;
 import com.example.taskflow.common.entity.Task;
 import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.model.enums.TaskPriority;
+import com.example.taskflow.common.utils.PasswordEncoder;
 import com.example.taskflow.domain.task.repository.TaskRepository;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
-
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class InitData {
 
-    //private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
 
