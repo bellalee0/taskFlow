@@ -35,11 +35,8 @@ public class CommentService {
     @Transactional
     public CommentCreateResponse createComment(long userId, long taskId, CommentCreateRequest request) {
 
-        // TODO: default 메서드로 변경
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User Not Found"));
-
-        // TODO: default 메서드로 변경
-        Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalStateException("Task Not Found"));
+        User user = userRepository.findUserById(userId);
+        Task task = taskRepository.findTaskById(taskId);
 
         Comment parentComment = null;
 
@@ -61,8 +58,7 @@ public class CommentService {
     @Transactional(readOnly = true)
     public PageResponse<CommentGetResponse> getCommentList(long taskId, Pageable pageable) {
 
-        // TODO: Task default 메서드로 변경
-        Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalStateException("Task Not Found"));
+        Task task = taskRepository.findTaskById(taskId);
 
         Page<Comment> commentList = commentRepository.findByTaskId(task.getId(), pageable);
 
@@ -77,8 +73,7 @@ public class CommentService {
     @Transactional
     public CommentUpdateResponse updateComment(long taskId, long commentId, long userId, CommentUpdateRequest request) {
 
-        // TODO: Task default 메서드로 변경
-        Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalStateException("Task Not Found"));
+        Task task = taskRepository.findTaskById(taskId);
         Comment comment = commentRepository.findCommentById(commentId, COMMENT_NOT_FOUND_COMMENT);
 
         checkTaskCommentRelationship(task, comment);
@@ -94,7 +89,7 @@ public class CommentService {
     @Transactional
     public void deleteComment(long taskId, long commentId, long userId) {
 
-        Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalStateException("Task Not Found"));
+        Task task = taskRepository.findTaskById(taskId);
         Comment comment = commentRepository.findCommentById(commentId, COMMENT_NOT_FOUND_COMMENT);
 
         checkTaskCommentRelationship(task, comment);
