@@ -19,11 +19,13 @@ public class TeamController {
     private final TeamService teamService;
 
     //팀 목록 조회
-/*    @GetMapping
-    public ResponseEntity<GlobalResponse<TeamGetListResponse>> getTeamApi() {
+    @GetMapping
+    public ResponseEntity<GlobalResponse<TeamGetListResponse>> getTeamApi(
+    ) {
+        TeamGetListResponse result = teamService.getTeam();
 
-    }*/
-
+        return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.TEAM_GET_LIST_SUCCESS, result));
+    }
 
     //팀 생성
     @PostMapping

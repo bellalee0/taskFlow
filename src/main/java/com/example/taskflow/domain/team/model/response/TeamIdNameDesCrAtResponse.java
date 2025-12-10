@@ -5,24 +5,21 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class TeamMemberCreateResponse {
+public class TeamIdNameDesCrAtResponse {
     private final Long id;
     private final String name;
     private final String description;
     private final LocalDateTime createdAt;
-    private final List<MemberIdUsernameNameResponse> members;
 
-    public static TeamMemberCreateResponse from(TeamDto dto, List<MemberIdUsernameNameResponse> members) {
-        return new TeamMemberCreateResponse(
+    public static TeamIdNameDesCrAtResponse from(TeamDto dto){
+        return new TeamIdNameDesCrAtResponse(
                 dto.getId(),
                 dto.getName(),
                 dto.getDescription(),
-                dto.getCreatedAt(),
-                members
+                dto.getCreatedAt()
         );
     }
 }

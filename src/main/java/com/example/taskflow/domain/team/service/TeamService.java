@@ -28,19 +28,19 @@ public class TeamService {
     private final UserRepository userRepository;
 
     //region 팀 목록 조회
-/*    @Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public TeamGetListResponse getTeam () {
-       List<Team> teams = teamRepository.findAll();
 
-       for (Team team : teams) {
+       List<Team> teamList = teamRepository.findAll();
+        List<TeamIdNameDesCrAtResponse> teamDtoList = new ArrayList<>();
 
+        for (Team team : teamList) {
+            TeamDto teamDto = TeamDto.from(team);
+            teamDtoList.add(TeamIdNameDesCrAtResponse.from(teamDto));
+        }
 
-
-       }
-        TeamDto dto = TeamDto.from(team);
-       return TeamGetListResponse.from(dto);
-    }*/
-
+        return TeamGetListResponse.from(teamDtoList);
+    }
     //endregion
 
     //region 팀 생성
