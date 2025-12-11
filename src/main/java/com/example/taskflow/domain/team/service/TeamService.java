@@ -64,7 +64,7 @@ public class TeamService {
 
         List<TeamUser> teamUserList = teamUserRepository.findByTeamId(teamId);
 
-        return teamUserList.stream().map(teamUser -> UserDto.from(teamUser.getUser())).toList();
+        return teamUserList.stream().map(teamUser -> TeamGetMemberResponse.from(UserDto.from(teamUser.getUser()))).toList();
     }
     //endregion
 
