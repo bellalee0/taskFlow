@@ -13,7 +13,7 @@ import static com.example.taskflow.common.exception.ErrorMessage.USER_NOT_FOUND;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     //유저이름 존재 여부
-    boolean existsUserByUserName(String userName);
+    boolean existsByUsername(String username);
 
     //이메일 존재 여부
     boolean existsUserByEmail(String email);
@@ -25,13 +25,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
     }
 
-    Optional<User> findByUserName(String username);
+    Optional<User> findByUsername(String username);
 
 //    default User findUserByEmail(String email) {
 //        return findUserByEmail(email)
 //                .orElseThrow(() -> new CustomException(USER_NOT_EMAIL_FOUND));
 //    }
+
+    default User findUserByUsername(String username) {
+        return findByUsername(username)
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+    }
 }
-
-
-

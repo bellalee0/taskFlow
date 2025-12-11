@@ -4,12 +4,10 @@ import com.example.taskflow.common.model.enums.SuccessMessage;
 import com.example.taskflow.common.model.response.GlobalResponse;
 import com.example.taskflow.common.model.response.PageResponse;
 import com.example.taskflow.domain.user.model.request.UserCreateRequest;
-import com.example.taskflow.domain.user.model.request.UserDeleteRequest;
 import com.example.taskflow.domain.user.model.request.UserUpdateInfoRequest;
 import com.example.taskflow.domain.user.model.response.UserCreateResponse;
 import com.example.taskflow.domain.user.model.response.UserGetProfileResponse;
 import com.example.taskflow.domain.user.model.response.UserListInquiryResponse;
-import com.example.taskflow.domain.user.model.response.UserUpdateInfoResponse;
 import com.example.taskflow.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +38,7 @@ public class UserController {
 
     //사용자 정보 조회
     @GetMapping("/{id}")
-    public ResponseEntity<GlobalResponse<UserGetProfileResponse>> getUserApi(@AuthenticationPrincipal @PathVariable Long id) {
+    public ResponseEntity<GlobalResponse<UserGetProfileResponse>> getUserApi(@PathVariable Long id) {
 
         UserGetProfileResponse response = userService.getUser(id);
 
@@ -59,19 +57,24 @@ public class UserController {
 
     //사용자 정보 수정
     @PutMapping("/{id}")
-    public ResponseEntity<GlobalResponse<UserUpdateInfoResponse>> updateUserInfo(
-            @AuthenticationPrincipal @PathVariable Long id,
+    public ResponseEntity<GlobalResponse<UserUpdateInfoRequest>> updateUserInfo(
+            @PathVariable Long id,
             @Valid @RequestBody UserUpdateInfoRequest request
     ) {
-        UserUpdateInfoResponse response = userService.updateUserInfo(id, request);
+        UserUpdateInfoRequest response = userService.updateUserInfo(id, request);
 
         return ResponseEntity.ok(GlobalResponse.success(USER_UPDATE_SUCCESS,response));
     }
 
-    /**
-     @DeleteMapping("/id") public ResponseEntity<GlobalResponse<Void>> deleteUserApi(@AuthenticationPrincipal @PathVariable Long id, UserDeleteRequest request) {
+    //회원 탈퇴
+    @DeleteMapping("/{id}")
+    public ResponseEntity<GlobalResponse<Void>> deleteUserApi(@PathVariable Long id) {
 
-     userService.deleteUser(request);
+        userService.deleteUser(id);
 
-     return ResponseEntity.ok(GlobalResponse.success(USER_DELETE_SUCCESS)); */
+        return ResponseEntity.ok(GlobalResponse.successNodata(USER_DELETE_SUCCESS));
+
+
+
+    }
 }
