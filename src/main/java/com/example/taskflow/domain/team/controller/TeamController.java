@@ -32,7 +32,7 @@ public class TeamController {
     //팀 상세 조회
     @GetMapping("/{id}")
     public ResponseEntity<GlobalResponse<TeamGetOneResponse>> getTeamOneApi(
-            @PathVariable Long id
+            @PathVariable long id
     ) {
         TeamGetOneResponse result = teamService.getTeamOne(id);
 
@@ -42,7 +42,7 @@ public class TeamController {
     //팀 멤버 조회
     @GetMapping("/{teamId}/members")
     public ResponseEntity<GlobalResponse<List<TeamGetMemberResponse>>> getTeamMemberApi(
-            @PathVariable Long teamId
+            @PathVariable long teamId
     ) {
         List<TeamGetMemberResponse> result = teamService.getTeamMember(teamId);
 
@@ -63,7 +63,7 @@ public class TeamController {
     @PutMapping("/{id}")
     public ResponseEntity<GlobalResponse<TeamUpdateResponse>> updateTeamApi(
             @RequestBody @Valid TeamUpdateRequest request,
-            @PathVariable Long id
+            @PathVariable long id
     ) {
         TeamUpdateResponse result = teamService.updateTeam(request, id);
 
@@ -73,7 +73,7 @@ public class TeamController {
     //팀 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<GlobalResponse<Void>> deleteTeamApi(
-            @PathVariable Long id
+            @PathVariable long id
     ) {
         teamService.deleteTeam(id);
 
@@ -84,7 +84,7 @@ public class TeamController {
     @PostMapping("/{teamId}/members")
     public ResponseEntity<GlobalResponse<TeamMemberCreateResponse>> createTeamMemberApi(
             @RequestBody @Valid TeamMemberCreateRequest request,
-            @PathVariable Long teamId
+            @PathVariable long teamId
     ) {
         TeamMemberCreateResponse result = teamService.createTeamMember(request, teamId);
 
@@ -94,8 +94,8 @@ public class TeamController {
     //팀 멤버 제거
     @DeleteMapping("/{teamId}/members/{userId}")
     public ResponseEntity<GlobalResponse<Void>> deleteTeamMemberApi(
-            @PathVariable Long teamId,
-            @PathVariable Long userId
+            @PathVariable long teamId,
+            @PathVariable long userId
     ) {
         teamService.deleteTeamMember(teamId, userId);
 

@@ -32,10 +32,10 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             @Param("assigneeId") Long assigneeId,
             Pageable pageable);
 
+    List<Task> findAllByAssigneeId(User assigneeId);
+
     default Task findTaskById(Long taskId) {
         return findById(taskId)
             .orElseThrow(() -> new CustomException(TASK_NOT_FOUND));
     }
-
-    List<Task> findAllByAssigneeId(User assigneeId);
 }

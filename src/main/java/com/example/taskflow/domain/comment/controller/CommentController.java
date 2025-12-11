@@ -76,7 +76,7 @@ public class CommentController {
     }
 
     // 댓글 삭제
-        @DeleteMapping("/tasks/{taskId}/comments/{commentId}")
+    @DeleteMapping("/tasks/{taskId}/comments/{commentId}")
     public ResponseEntity<GlobalResponse<Void>> deleteCommentApi(
             @PathVariable long taskId,
             @PathVariable long commentId,

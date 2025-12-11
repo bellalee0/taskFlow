@@ -3,23 +3,20 @@ package com.example.taskflow.domain.user.model.response;
 import com.example.taskflow.domain.user.model.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class UserGetProfileResponse {
 
-    private Long id;
-    private String username;
-    private String email;
-    private String name;
-    private String role;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-
+    private final Long id;
+    private final String username;
+    private final String email;
+    private final String name;
+    private final String role;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
     public static UserGetProfileResponse from(UserDto userDto) {
         return new UserGetProfileResponse(

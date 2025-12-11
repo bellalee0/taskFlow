@@ -1,7 +1,7 @@
 package com.example.taskflow.domain.task.model.response;
 
 import com.example.taskflow.domain.task.model.dto.TaskDto;
-import com.example.taskflow.domain.user.model.dto.UserDto;
+import com.example.taskflow.domain.team.model.response.MemberIdUsernameNameEmailRoleResponse;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -11,18 +11,18 @@ import lombok.Getter;
 @AllArgsConstructor
 public class TaskUpdateStatusResponse {
 
-    private Long id;
-    private String title;
-    private String description;
-    private String status;
-    private String priority;
-    private Long assigneeId;
-    private UserDto assignee;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime dueDate;
+    private final Long id;
+    private final String title;
+    private final String description;
+    private final String status;
+    private final String priority;
+    private final Long assigneeId;
+    private final MemberIdUsernameNameEmailRoleResponse assignee;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
+    private final LocalDateTime dueDate;
 
-    public static TaskUpdateStatusResponse from(TaskDto taskDto, UserDto userDto) {
+    public static TaskUpdateStatusResponse from(TaskDto taskDto, MemberIdUsernameNameEmailRoleResponse userDto) {
         return new TaskUpdateStatusResponse(
             taskDto.getId(),
             taskDto.getTitle(),

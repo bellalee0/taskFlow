@@ -3,7 +3,7 @@ package com.example.taskflow.domain.task.model.response;
 import com.example.taskflow.common.model.enums.TaskPriority;
 import com.example.taskflow.common.model.enums.TaskStatus;
 import com.example.taskflow.domain.task.model.dto.TaskDto;
-import com.example.taskflow.domain.user.model.dto.UserDto;
+import com.example.taskflow.domain.team.model.response.MemberIdUsernameNameEmailRoleResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,18 +13,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class TaskGetAllResponse {
 
-    private Long id;
-    private String title;
-    private String description;
-    private TaskStatus status;
-    private TaskPriority priority;
-    private Long assigneeId;
-    private UserDto assignee;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime dueDate;
+    private final Long id;
+    private final String title;
+    private final String description;
+    private final TaskStatus status;
+    private final TaskPriority priority;
+    private final Long assigneeId;
+    private final MemberIdUsernameNameEmailRoleResponse assignee;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
+    private final LocalDateTime dueDate;
 
-    public static TaskGetAllResponse from(TaskDto taskDto, UserDto userDto) {
+    public static TaskGetAllResponse from(TaskDto taskDto, MemberIdUsernameNameEmailRoleResponse userDto) {
         return new TaskGetAllResponse(
                 taskDto.getId(),
                 taskDto.getTitle(),

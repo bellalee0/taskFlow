@@ -105,14 +105,14 @@ public class CommentService {
     }
 
     // Comment가 Task의 댓글인지 확인
-    private static void checkTaskCommentRelationship(Task task, Comment parentComment) {
+    private void checkTaskCommentRelationship(Task task, Comment parentComment) {
         if (!Objects.equals(task.getId(), parentComment.getTask().getId())) {
             throw new CustomException(COMMENT_NOT_FOUND_TASK_OR_COMMENT);
         }
     }
 
     // User가 Comment의 작성자인지 확인
-    private static void checkCommentUserRelationship(String username, Comment comment) {
+    private void checkCommentUserRelationship(String username, Comment comment) {
         if (!Objects.equals(comment.getUser().getUsername(), username)) {
             throw new CustomException(COMMENT_NO_PERMISSION_UPDATE);
         }

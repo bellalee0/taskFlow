@@ -11,16 +11,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    Page<Comment> findByTaskId(long taskId, Pageable pageable);
-
     boolean existsByParentCommentId(Long id);
 
+    Page<Comment> findByTaskId(long taskId, Pageable pageable);
+
     List<Comment> findAllByParentCommentId(Long id);
+
+    List<Comment> findByTaskId(Long id);
+
+    List<Comment> findAllByUser(User user);
 
     default Comment findCommentById(long id, ErrorMessage error) {
         return findById(id).orElseThrow(() -> new CustomException(error));
     }
-    List<Comment> findByTaskId(Long id);
-
-    List<Comment> findAllByUser(User user);
 }

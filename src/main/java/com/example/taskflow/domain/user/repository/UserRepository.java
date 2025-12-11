@@ -5,6 +5,8 @@ import com.example.taskflow.common.exception.CustomException;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
+
+import static com.example.taskflow.common.exception.ErrorMessage.AUTH_WRONG_EMAIL_AND_PASSWORD;
 import static com.example.taskflow.common.exception.ErrorMessage.USER_NOT_FOUND;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -23,5 +25,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     default User findUserByUsername(String username) {
         return findByUsername(username)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+    }
+
+    default User findLoginUserByUsername(String username) {
+        return findByUsername(username)
+            .orElseThrow(() -> new CustomException(AUTH_WRONG_EMAIL_AND_PASSWORD));
     }
 }

@@ -25,7 +25,7 @@ public class AuthenticationService {
     @Transactional
     public AuthLoginResponse userLogin(AuthLoginRequest request) {
 
-        User user = userRepository.findUserByUsername(request.getUsername());
+        User user = userRepository.findLoginUserByUsername(request.getUsername());
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CustomException(AUTH_WRONG_EMAIL_AND_PASSWORD);

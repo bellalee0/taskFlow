@@ -14,14 +14,13 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
-    // 속성
-    private static final long  EXIT_TOKEN_TIME = 60 * 60 * 1000L; // 60분
+
+    private static final long EXIT_TOKEN_TIME = 60 * 60 * 1000L; // 60분
 
     @Value("${jwt.secret.key}")
     private String stringSecretKey;
     private SecretKey key;
 
-    // 실행 후 제일 먼저 실행
     // key 초기화
     @PostConstruct
     public void init() {

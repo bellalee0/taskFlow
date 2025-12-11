@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class AuthVerifyPasswordResponse {
-    private boolean valid;
+    private final boolean valid;
 }
