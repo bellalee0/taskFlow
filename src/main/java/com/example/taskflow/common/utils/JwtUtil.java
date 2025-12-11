@@ -29,9 +29,10 @@ public class JwtUtil {
     }
 
     // 토큰 생성
-    public String generationToken(String username) {
+    public String generationToken(Long userId, String username) {
         Date nowTokenDate = new Date();
         return Jwts.builder()
+                .subject(String.valueOf(userId))
                 .claim("username", username)
                 .issuedAt(nowTokenDate)
                 .expiration(new Date(nowTokenDate.getTime() + EXIT_TOKEN_TIME))
