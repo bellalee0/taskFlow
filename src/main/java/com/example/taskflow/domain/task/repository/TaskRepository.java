@@ -13,6 +13,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
+
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     // 다중 필터 작업 목록 조회 (상태, 우선순위, 담당자)
@@ -28,6 +30,14 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             @Param("priority") TaskPriority priority,
             @Param("assigneeId") Long assigneeId,
             Pageable pageable);
+
+    long countByStatus(TaskStatus taskStatus);
+
+    long countByStatusNotAndDueDateBefore(TaskStatus taskStatus, LocalDateTime now);
+
+    long countByAssigneeIdId(Long userId);
+
+    long countByAssigneeIdIdAndStatus(Long userId, TaskStatus taskStatus);
 
     default Task findTaskById(Long taskId) {
         return findById(taskId)
