@@ -37,6 +37,7 @@ public enum ErrorMessage {
     TASK_NOT_FOUND(HttpStatus.NOT_FOUND, "작업을 찾을 수 없습니다."),
 
 
+
     // 409
     USER_USED_USERNAME(HttpStatus.CONFLICT, "이미 존재하는 사용자명입니다."),
     USER_USED_EMAIL(HttpStatus.CONFLICT, "이미 사용 중인 이메일입니다."),

@@ -110,4 +110,29 @@ public class UserService {
 //            throw new CustomException(UNAUTHORIZED_WRONG_PASSWORD);
 //        }
     }
+        return new UserUpdateInfoResponse(
+                user.getId(),
+                user.getUserName(),
+                user.getEmail(),
+                user.getName(),
+                user.getRole(),
+                user.getCreatedAt(),
+                user.getModifiedAt()
+        );
+    }
+
+    ;
+
+    //회원탈퇴시 아람님이 만든 패스워드인코더로
+
+/**
+ * //1. 아이디 먼저 찾고
+ * User user = userRepository.findById(request).orElseThrow()
+ * <p>
+ * 2. 찾은 아이디에서 비밀번호를 내꺼서  입력한 비밀번호와 비교
+ * if (!PasswordEncoder.matches(request.getPassword(), user.getPassword())) {
+ * throw new CustomException(UNAUTHORIZED_WRONG_PASSWORD);
+ * }
+ * }
+ */
 }

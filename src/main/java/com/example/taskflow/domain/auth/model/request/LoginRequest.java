@@ -1,4 +1,4 @@
-package com.example.taskflow.domain.auth.model;
+package com.example.taskflow.domain.auth.model.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

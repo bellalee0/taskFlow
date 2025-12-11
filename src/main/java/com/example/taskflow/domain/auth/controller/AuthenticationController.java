@@ -1,6 +1,6 @@
 package com.example.taskflow.domain.auth.controller;
 import com.example.taskflow.common.model.response.GlobalResponse;
-import com.example.taskflow.domain.auth.model.LoginRequest;
+import com.example.taskflow.domain.auth.model.request.LoginRequest;
 import com.example.taskflow.domain.auth.model.LoginResponse;
 import com.example.taskflow.domain.auth.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
