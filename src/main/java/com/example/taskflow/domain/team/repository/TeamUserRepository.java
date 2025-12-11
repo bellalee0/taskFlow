@@ -1,5 +1,6 @@
 package com.example.taskflow.domain.team.repository;
 
+import com.example.taskflow.common.entity.Team;
 import com.example.taskflow.common.entity.TeamUser;
 import com.example.taskflow.common.exception.CustomException;
 import com.example.taskflow.common.exception.ErrorMessage;
@@ -23,4 +24,5 @@ public interface TeamUserRepository extends JpaRepository<TeamUser, Long> {
         return findByTeam_IdAndUser_Id(teamId, userId)
                 .orElseThrow(()-> new CustomException(ErrorMessage.TEAMUSER_NOT_FOUND));
     }
+
 }

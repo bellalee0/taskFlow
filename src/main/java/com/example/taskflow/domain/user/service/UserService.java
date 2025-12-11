@@ -1,10 +1,14 @@
 package com.example.taskflow.domain.user.service;
 
-import com.example.taskflow.common.entity.User;
+import com.example.taskflow.common.entity.*;
 import com.example.taskflow.common.exception.CustomException;
 import com.example.taskflow.common.model.enums.UserRole;
 import com.example.taskflow.common.model.response.PageResponse;
 import com.example.taskflow.common.utils.PasswordEncoder;
+import com.example.taskflow.domain.comment.repository.CommentRepository;
+import com.example.taskflow.domain.task.repository.TaskRepository;
+import com.example.taskflow.domain.team.repository.TeamRepository;
+import com.example.taskflow.domain.team.repository.TeamUserRepository;
 import com.example.taskflow.domain.user.model.dto.UserDto;
 import com.example.taskflow.domain.user.model.request.*;
 import com.example.taskflow.domain.user.model.response.*;
@@ -13,19 +17,25 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
+import java.util.List;
 
 import static com.example.taskflow.common.exception.ErrorMessage.*;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TaskRepository taskRepository;
+    private final CommentRepository commentRepository;
+    private final TeamRepository teamRepository;
+    private final TeamUserRepository teamUserRepository;
 
     //회원가입
     @Transactional
@@ -50,6 +60,7 @@ public class UserService {
     }
 
     //사용자 정보 조회
+    @Transactional
     public UserGetProfileResponse getUser(Long id) {
 
         User user = userRepository.findUserById(id); //디폴트 메소드로
@@ -58,6 +69,7 @@ public class UserService {
     }
 
     //사용자 목록 조회
+    @Transactional
     public PageResponse<UserListInquiryResponse> getUserList(Pageable pageable) {
 
         Page<User> userList = userRepository.findAll(pageable);
@@ -68,6 +80,7 @@ public class UserService {
     }
 
     //사용자 정보 수정
+    @Transactional
     public UserUpdateInfoResponse updateUserInfo(Long id, UserUpdateInfoRequest request) {
 
         User user = userRepository.findUserById(id);
@@ -90,10 +103,37 @@ public class UserService {
 
         User user = userRepository.findUserById(id);
 
-        // TODO: task, comment와 병합 후, 유저의 comment, task 삭제 처리
+        //user와 연관 되어있는 task 삭제
+        List<Task> tasks = taskRepository.findAllByAssigneeId(user);
+        for (Task task : tasks) {
+            task.updateIsDeleted();
 
-        user.updateIsDeleted();
+            List<Comment> comments = commentRepository.findAllByUser(user);
+            for (Comment comment : comments) {
+                comment.updateIsDeleted();
+            }
+
+            user.updateIsDeleted();
+        }
     }
+
+    //추가 가능한 사용자 조회
+    @Transactional
+    public List<UserAvailableTeamResponse> findAvailableUsers(Long teamId) {
+        List<User> users = userRepository.findAll();
+
+        if(teamId == null) {
+            return users.stream().map(user -> UserAvailableTeamResponse.from(UserDto.from(user))).toList();
+        }
+        List<TeamUser> teams = teamUserRepository.findByTeamId(teamId);
+
+        List<User> userList = teams.stream().map(teamUser -> teamUser.getUser()).toList();
+
+        return users.stream().filter(user -> userList.contains(user))
+                .map(user -> UserAvailableTeamResponse.from(UserDto.from(user))).toList();
+    }
+
+
 
     // username 중복 여부 확인
     private void checkUsernameExistence(String username) {

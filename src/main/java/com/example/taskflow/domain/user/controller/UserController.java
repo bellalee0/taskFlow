@@ -9,10 +9,13 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.example.taskflow.common.model.enums.SuccessMessage.*;
 
@@ -69,5 +72,15 @@ public class UserController {
         userService.deleteUser(id);
 
         return ResponseEntity.ok(GlobalResponse.successNodata(USER_DELETE_SUCCESS));
+    }
+
+    //추가 가능한 사용자 조회
+    @GetMapping("/available")
+    public ResponseEntity<GlobalResponse<List<UserAvailableTeamResponse>>> findTeamUser(
+            @RequestParam(required = false) Long teamId
+    ) {
+        List<UserAvailableTeamResponse> responses = userService.findAvailableUsers(teamId);
+
+        return ResponseEntity.ok(GlobalResponse.success(USER_GET_AVAILABLE_LIST_SUCCESS,responses));
     }
 }

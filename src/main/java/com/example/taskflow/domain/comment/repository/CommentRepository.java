@@ -1,6 +1,7 @@
 package com.example.taskflow.domain.comment.repository;
 
 import com.example.taskflow.common.entity.Comment;
+import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.exception.CustomException;
 import com.example.taskflow.common.exception.ErrorMessage;
 import java.util.List;
@@ -20,4 +21,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
         return findById(id).orElseThrow(() -> new CustomException(error));
     }
     List<Comment> findByTaskId(Long id);
+
+    List<Comment> findAllByUser(User user);
 }
