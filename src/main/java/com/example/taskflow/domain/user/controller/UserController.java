@@ -68,8 +68,11 @@ public class UserController {
 
     //회원 탈퇴
     @DeleteMapping("/{id}")
-    public void deleteUserApi(@PathVariable Long id) {
+    public ResponseEntity<GlobalResponse<Void>> deleteUserApi(@PathVariable Long id) {
+
         userService.deleteUser(id);
+
+        return ResponseEntity.ok(GlobalResponse.successNodata(USER_DELETE_SUCCESS));
 
 
 

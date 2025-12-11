@@ -101,7 +101,7 @@ public class UserService {
         User user = userRepository.findUserById(id);
 
         user.updateIsDeleted();
-        userRepository.save(user);
+
 
     }
 }
