@@ -1,4 +1,4 @@
-package com.example.taskflow.domain.auth.model;
+package com.example.taskflow.domain.auth.model.request;
 
 public class PasswordRequest {
     // 속성
