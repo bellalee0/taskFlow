@@ -14,22 +14,26 @@ import java.time.LocalDateTime;
 public class UserDto {
 
     private Long id;
-    private String userName;
+    private String username;
     private String email;
     private String password;
     private String name;
     private UserRole role;
     private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
+    private boolean isDeleted;
 
     public static UserDto from(User user) {
         return new UserDto(
-                user.getId(),
-                user.getUserName(),
-                user.getEmail(),
-                user.getPassword(),
-                user.getName(),
-                user.getRole(),
-                user.getCreatedAt()
+            user.getId(),
+            user.getUsername(),
+            user.getEmail(),
+            user.getPassword(),
+            user.getName(),
+            user.getRole(),
+            user.getCreatedAt(),
+            user.getModifiedAt(),
+            user.isDeleted()
         );
     }
 }

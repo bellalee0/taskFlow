@@ -1,15 +1,18 @@
 package com.example.taskflow.common.entity;
 
 import com.example.taskflow.common.model.enums.UserRole;
+import com.example.taskflow.domain.user.model.request.UserUpdateInfoRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Where(clause = "is_deleted = false")
 public class User extends BaseEntity {
 
     @Id
@@ -17,7 +20,7 @@ public class User extends BaseEntity {
     private Long id;
 
     @Column(length = 20, nullable = false, unique = true)
-    private String userName;
+    private String username;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -32,11 +35,16 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    public User(String userName, String email, String password, String name, UserRole role) {
-        this.userName = userName;
+    public User(String username, String email, String password, String name, UserRole role) {
+        this.username = username;
         this.email = email;
         this.password = password;
         this.name = name;
         this.role = role;
+    }
+
+    public void updateUser(UserUpdateInfoRequest request) {
+        this.email = request.getEmail();
+        this.name = request.getName();
     }
 }
