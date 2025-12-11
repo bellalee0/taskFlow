@@ -1,7 +1,6 @@
 package com.example.taskflow.domain.task.model.response;
 
 import com.example.taskflow.domain.task.model.dto.TaskDto;
-import com.example.taskflow.domain.team.model.response.MemberIdUsernameNameEmailRoleResponse;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
