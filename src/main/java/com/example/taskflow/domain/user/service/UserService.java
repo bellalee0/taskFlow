@@ -45,7 +45,7 @@ public class UserService {
             throw new CustomException(USER_USED_EMAIL);
         }
 
-        String encodingPassword = PasswordEncoder.encode(request.getPassword());
+        String encodingPassword = passwordEncoder.encode(request.getPassword());
 
         User user = new User(
                 request.getUserName(),
@@ -64,7 +64,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserGetProfileResponse getUser(Long id) {
 
-        User user =  userRepository.findUserById(id); //디폴트 메소드로
+        User user = userRepository.findUserById(id); //디폴트 메소드로
 
         return UserGetProfileResponse.from(UserDto.from(user));
     }
@@ -89,7 +89,7 @@ public class UserService {
         if (!user.getName().equals(request.getName())) {
             throw new CustomException(USER_USED_USERNAME);
         }
-        if(!user.getEmail().equals(request.getEmail())) {
+        if (!user.getEmail().equals(request.getEmail())) {
             throw new CustomException(USER_USED_EMAIL);
         }
 
@@ -101,21 +101,30 @@ public class UserService {
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CustomException(AUTH_WRONG_EMAIL_AND_PASSWORD);
         }
-        return request;
-
-        //회원탈퇴시 아람님이 만든 패스워드인코더로
-
-
-
+        return new UserUpdateInfoResponse(
+                user.getId(),
+                user.getUserName(),
+                user.getEmail(),
+                user.getName(),
+                user.getRole(),
+                user.getCreatedAt(),
+                user.getModifiedAt()
+        );
     }
 
-        //1. 아이디 먼저 찾고
-        User user = userRepository.findById(request).orElseThrow()
+    ;
 
-        2. 찾은 아이디에서 비밀번호를 내꺼서  입력한 비밀번호와 비교
-       if (!PasswordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new CustomException(UNAUTHORIZED_WRONG_PASSWORD);
-        }
-    }*/
+    //회원탈퇴시 아람님이 만든 패스워드인코더로
+
+/**
+ * //1. 아이디 먼저 찾고
+ * User user = userRepository.findById(request).orElseThrow()
+ * <p>
+ * 2. 찾은 아이디에서 비밀번호를 내꺼서  입력한 비밀번호와 비교
+ * if (!PasswordEncoder.matches(request.getPassword(), user.getPassword())) {
+ * throw new CustomException(UNAUTHORIZED_WRONG_PASSWORD);
+ * }
+ * }
+ */
 }
 
