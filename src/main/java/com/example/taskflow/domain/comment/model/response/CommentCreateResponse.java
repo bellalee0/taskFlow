@@ -6,22 +6,20 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommentCreateResponse {
 
-    private Long id;
-    private Long taskId;
-    private Long userId;
-    private MemberIdUsernameNameEmailRoleResponse user;
-    private String content;
-    private Long parentId;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private final Long id;
+    private final Long taskId;
+    private final Long userId;
+    private final MemberIdUsernameNameEmailRoleResponse user;
+    private final String content;
+    private final Long parentId;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
     public static CommentCreateResponse from(CommentDto commentDto, MemberIdUsernameNameEmailRoleResponse userDto) {
         return new CommentCreateResponse(

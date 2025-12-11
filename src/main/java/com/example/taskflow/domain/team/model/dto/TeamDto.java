@@ -3,21 +3,19 @@ package com.example.taskflow.domain.team.model.dto;
 import com.example.taskflow.common.entity.Team;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class TeamDto {
 
-    private Long id;
-    private String name;
-    private String description;
-    private boolean isDeleted;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+    private final Long id;
+    private final String name;
+    private final String description;
+    private final boolean isDeleted;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime modifiedAt;
 
     public static TeamDto from(Team team) {
         return new TeamDto(

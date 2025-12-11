@@ -4,24 +4,22 @@ import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.model.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
 
-    private Long id;
-    private String username;
-    private String email;
-    private String password;
-    private String name;
-    private UserRole role;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
-    private boolean isDeleted;
+    private final Long id;
+    private final String username;
+    private final String email;
+    private final String password;
+    private final String name;
+    private final UserRole role;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime modifiedAt;
+    private final boolean isDeleted;
 
     public static UserDto from(User user) {
         return new UserDto(

@@ -49,7 +49,7 @@ public class TaskController {
     // 작업 상세 조회 기능
     @GetMapping("/{id}")
     public ResponseEntity<GlobalResponse<TaskGetOneResponse>> getTaskApi(
-            @PathVariable Long id
+            @PathVariable long id
     ) {
         TaskGetOneResponse response = taskService.getTaskById(id);
 
@@ -59,7 +59,7 @@ public class TaskController {
     // 작업 수정 기능
     @PutMapping("/{id}")
     public ResponseEntity<GlobalResponse<TaskUpdateResponse>> updateTaskApi(
-            @PathVariable Long id,
+            @PathVariable long id,
             @Valid @RequestBody TaskUpdateRequest request
     ) {
         TaskUpdateResponse response = taskService.updateTask(id, request);
