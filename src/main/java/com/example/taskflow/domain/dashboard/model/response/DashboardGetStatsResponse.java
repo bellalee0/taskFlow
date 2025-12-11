@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class DashboardStatsResponse {
+public class DashboardGetStatsResponse {
     private long totalTasks;
     private long completedTasks;
     private long inProgressTasks;
