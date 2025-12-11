@@ -2,6 +2,8 @@ package com.example.taskflow.common.exception;
 
 import com.example.taskflow.common.model.response.GlobalResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -31,6 +33,8 @@ public class JwtExceptionHandler {
             throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         String json = objectMapper.writeValueAsString(body);
 
         try (PrintWriter writer = response.getWriter()) {
