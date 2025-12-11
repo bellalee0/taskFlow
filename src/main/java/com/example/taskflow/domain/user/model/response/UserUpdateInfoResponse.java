@@ -20,16 +20,4 @@ public class UserUpdateInfoResponse {
     private UserRole role;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
-
-    public static UserUpdateInfoResponse from(User user) {
-        return new UserUpdateInfoResponse(
-                user.getId(),
-                user.getUserName(),
-                user.getEmail(),
-                user.getName(),
-                user.getRole(),
-                user.getCreatedAt(),
-                user.getUpdatedAt()
-        );
-    }
 }
