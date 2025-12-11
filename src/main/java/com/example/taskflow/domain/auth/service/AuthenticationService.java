@@ -32,6 +32,6 @@ public class AuthenticationService {
             throw new CustomException(AUTH_WRONG_EMAIL_AND_PASSWORD);
         }
 
-        return new LoginResponse(jwtUtil.generationToken(user.getUsername(), user.getId()));
+        return new LoginResponse(jwtUtil.generationToken(user.getId(), user.getUsername()));
     }
 }
