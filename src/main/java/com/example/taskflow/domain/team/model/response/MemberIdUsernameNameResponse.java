@@ -12,6 +12,6 @@ public class MemberIdUsernameNameResponse {
     private final String name;
 
     public static MemberIdUsernameNameResponse from(UserDto dto) {
-        return new MemberIdUsernameNameResponse(dto.getId(), dto.getUserName(), dto.getName());
+        return new MemberIdUsernameNameResponse(dto.getId(), dto.getUsername(), dto.getName());
     }
 }

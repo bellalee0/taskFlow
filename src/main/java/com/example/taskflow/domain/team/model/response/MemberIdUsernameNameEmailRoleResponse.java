@@ -17,7 +17,7 @@ public class MemberIdUsernameNameEmailRoleResponse {
     public static MemberIdUsernameNameEmailRoleResponse from(UserDto dto) {
         return new MemberIdUsernameNameEmailRoleResponse(
                 dto.getId(),
-                dto.getUserName(),
+                dto.getUsername(),
                 dto.getName(),
                 dto.getEmail(),
                 dto.getRole()

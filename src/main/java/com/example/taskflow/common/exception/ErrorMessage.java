@@ -32,9 +32,7 @@ public enum ErrorMessage {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
     USER_NOT_EMAIL_FOUND(HttpStatus.NOT_FOUND,"이메일을 찾을 수 없습니다."),
     TEAM_NOT_FOUND(HttpStatus.NOT_FOUND, "팀을 찾을 수 없습니다."),
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
     TEAMUSER_NOT_FOUND(HttpStatus.NOT_FOUND, "팀 멤버를 찾을 수 없습니다."),
-
     COMMENT_NOT_FOUND_TASK_OR_COMMENT(HttpStatus.NOT_FOUND, "작업을 찾을 수 없습니다."),
     COMMENT_NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),
     ASSIGNEE_NOT_FOUND(HttpStatus.NOT_FOUND, "담당자를 찾을 수 없습니다."),
@@ -45,7 +43,7 @@ public enum ErrorMessage {
     // 409
     USER_USED_USERNAME(HttpStatus.CONFLICT, "이미 존재하는 사용자명입니다."),
     USER_USED_EMAIL(HttpStatus.CONFLICT, "이미 사용 중인 이메일입니다."),
-    USER_REQUEST_NOT_VALID_PASSWORD_FORMAT(HttpStatus.CONFLICT, "비밀번호는 영어와 숫자, 특수문자를 최소 1개 이상 포함해서 4~15자리 이내로 입력해주세요.");
+    USER_REQUEST_NOT_VALID_PASSWORD_FORMAT(HttpStatus.CONFLICT, "비밀번호는 영어와 숫자, 특수문자를 최소 1개 이상 포함해서 4~15자리 이내로 입력해주세요."),
     // 409,
     TEAM_ALREADY_PRESENT(HttpStatus.CONFLICT, "이미 존재하는 팀 이름입니다."),
     TEAM_HAS_USER_WHEN_DELETE(HttpStatus.CONFLICT, "팀에 멤버가 존재하여 삭제할 수 없습니다."),

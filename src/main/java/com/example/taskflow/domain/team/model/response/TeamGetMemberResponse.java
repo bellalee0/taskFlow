@@ -20,7 +20,7 @@ public class TeamGetMemberResponse {
     public static TeamGetMemberResponse from(UserDto dto) {
         return new TeamGetMemberResponse(
                 dto.getId(),
-                dto.getUserName(),
+                dto.getUsername(),
                 dto.getName(),
                 dto.getEmail(),
                 dto.getRole(),
