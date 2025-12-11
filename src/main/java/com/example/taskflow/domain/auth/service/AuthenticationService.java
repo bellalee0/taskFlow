@@ -36,9 +36,9 @@ public class AuthenticationService {
 
     // 비밀번호 확인
     @Transactional
-    public AuthVerifyPasswordResponse verifyPassword(long userId, @Valid AuthVerifyPasswordRequest request) {
+    public AuthVerifyPasswordResponse verifyPassword(String username, @Valid AuthVerifyPasswordRequest request) {
 
-        User user = userRepository.findUserById(userId);
+        User user = userRepository.findUserByUsername(username);
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CustomException(AUTH_WRONG_PASSWORD);

@@ -8,7 +8,8 @@ import com.example.taskflow.domain.auth.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,14 +33,12 @@ public class AuthenticationController {
     }
 
     // 비밀번호 확인
-//    @PostMapping("/users/verify-password")
-    @PostMapping("/users/verify-password/{userId}")
+    @PostMapping("/users/verify-password")
     public ResponseEntity<GlobalResponse<AuthVerifyPasswordResponse>> verifyPasswordApi(
-        // TODO: 로그인된 사용자 정보로 변경
-        @PathVariable long userId,
+        @AuthenticationPrincipal User user,
         @Valid @RequestBody AuthVerifyPasswordRequest request
     ) {
-        AuthVerifyPasswordResponse result = authenticationService.verifyPassword(userId, request);
+        AuthVerifyPasswordResponse result = authenticationService.verifyPassword(user.getUsername(), request);
 
         return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.AUTH_CHECK_PASSWORD_SUCCESS, result));
     }
