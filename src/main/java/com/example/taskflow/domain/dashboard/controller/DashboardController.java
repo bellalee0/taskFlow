@@ -17,10 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class DashboardController {
     private final DashboardService dashboardService;
 
+    //대시보드 통계 기능
     @GetMapping("/stats/{userId}")/*병합시 pathvariable 삭제*/
-
-    public ResponseEntity<GlobalResponse<DashboardStatsResponse>> getDashboardStatsApi (/*@AuthenticationPrincipal AuthUser authUser*/@PathVariable Long userId) {
-
+    public ResponseEntity<GlobalResponse<DashboardStatsResponse>> getDashboardStatsApi (
+            /*@AuthenticationPrincipal AuthUser authUser*/@PathVariable Long userId
+    ) {
         DashboardStatsResponse result = dashboardService.getDashboardStats(/*authUser.getId()*/userId);
 
         return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.DASHBOARD_GET_STATS_SUCCESS, result));

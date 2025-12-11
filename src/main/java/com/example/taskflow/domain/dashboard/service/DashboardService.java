@@ -14,6 +14,7 @@ public class DashboardService {
 
     private final TaskRepository taskRepository;
 
+    //region 대시보드 통계 기능
     public DashboardStatsResponse getDashboardStats(/*AuthUser authUser*/ Long userId) {
 
         /*Long userId = authUser.getId();*/
@@ -44,4 +45,5 @@ public class DashboardService {
                 completionRate
         );
     }
+    //endregion
 }
