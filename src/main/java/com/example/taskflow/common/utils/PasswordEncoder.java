@@ -1,5 +1,4 @@
-package org.example.expert.config;
-
+package com.example.taskflow.common.utils;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
