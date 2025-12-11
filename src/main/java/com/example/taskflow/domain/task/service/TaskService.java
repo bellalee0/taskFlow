@@ -39,7 +39,7 @@ public class TaskService {
     public TaskCreateResponse createTask(TaskCreateRequest request) {
 
         User assignee = findUserById(request.getAssigneeId());
-        if (Objects.isNull(assignee) || assignee.isDeleted()) {
+        if (assignee.isDeleted()) {
             throw new CustomException(ASSIGNEE_NOT_FOUND);
         }
 
@@ -69,7 +69,7 @@ public class TaskService {
     public TaskGetOneResponse getTaskById(long taskId) {
 
         Task task = taskRepository.findTaskById(taskId);
-        if (task == null || task.isDeleted()) {
+        if (task.isDeleted()) {
             throw new CustomException(TASK_NOT_FOUND);
         }
 
@@ -80,7 +80,7 @@ public class TaskService {
     @Transactional
     public TaskUpdateResponse updateTask(long taskId, TaskUpdateRequest request) {
         Task task = taskRepository.findTaskById(taskId);
-        if (task == null || task.isDeleted()) {
+        if (task.isDeleted()) {
             throw new CustomException(TASK_NOT_FOUND);
         }
 
@@ -108,7 +108,7 @@ public class TaskService {
     public TaskUpdateStatusResponse updateStatus(long taskId, TaskUpdateStatusRequest request) {
 
         Task task = taskRepository.findTaskById(taskId);
-        if (task == null || task.isDeleted()) {
+        if (task.isDeleted()) {
             throw new CustomException(TASK_NOT_FOUND);
         }
 
@@ -129,7 +129,7 @@ public class TaskService {
     @Transactional
     public void deleteTask(long taskId, long userId) {
         Task task = taskRepository.findTaskById(taskId);
-        if (task == null || task.isDeleted()) {
+        if (task.isDeleted()) {
             throw new  CustomException(TASK_NOT_FOUND);
         }
 
