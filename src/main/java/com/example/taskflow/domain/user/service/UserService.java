@@ -6,11 +6,8 @@ import com.example.taskflow.common.model.enums.UserRole;
 import com.example.taskflow.common.model.response.PageResponse;
 import com.example.taskflow.common.utils.PasswordEncoder;
 import com.example.taskflow.domain.user.model.dto.UserDto;
-import com.example.taskflow.domain.user.model.request.UserCreateRequest;
-import com.example.taskflow.domain.user.model.request.UserUpdateInfoRequest;
-import com.example.taskflow.domain.user.model.response.UserCreateResponse;
-import com.example.taskflow.domain.user.model.response.UserGetProfileResponse;
-import com.example.taskflow.domain.user.model.response.UserListInquiryResponse;
+import com.example.taskflow.domain.user.model.request.*;
+import com.example.taskflow.domain.user.model.response.*;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,13 +31,8 @@ public class UserService {
     @Transactional
     public UserCreateResponse createUser(@Valid UserCreateRequest request) {
 
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new CustomException(USER_USED_USERNAME);
-        }
-
-        if (userRepository.existsUserByEmail(request.getEmail())) {
-            throw new CustomException(USER_USED_EMAIL);
-        }
+        checkUsernameExistence(request.getUsername());
+        checkEmailExistence(request.getEmail());
 
         String encodingPassword = passwordEncoder.encode(request.getPassword());
 
@@ -76,32 +68,44 @@ public class UserService {
     }
 
     //사용자 정보 수정
-    public UserUpdateInfoRequest updateUserInfo(Long id, UserUpdateInfoRequest request) {
+    public UserUpdateInfoResponse updateUserInfo(Long id, UserUpdateInfoRequest request) {
 
         User user = userRepository.findUserById(id);
 
-        if (!user.getEmail().equals(request.getEmail())) {
-            throw new CustomException(USER_USED_EMAIL);
-        }
-
-        //request Dto로 한번에
-        user.updateName(request.getName());
-        user.updateEmail(request.getEmail());
-
-        //비밀번호 확인
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CustomException(AUTH_WRONG_EMAIL_AND_PASSWORD);
         }
-        return request;
+
+        checkEmailExistence(request.getEmail());
+
+        user.updateUser(request);
+        userRepository.saveAndFlush(user);
+
+        return UserUpdateInfoResponse.from(UserDto.from(user));
     }
 
     //회원 탈퇴
     @Transactional
     public void deleteUser(Long id) {
+
         User user = userRepository.findUserById(id);
 
+        // TODO: task, comment와 병합 후, 유저의 comment, task 삭제 처리
+
         user.updateIsDeleted();
+    }
 
+    // username 중복 여부 확인
+    private void checkUsernameExistence(String username) {
+        if (userRepository.existsByUsername(username)) {
+            throw new CustomException(USER_USED_USERNAME);
+        }
+    }
 
+    // 이메일 중복 여부 확인
+    private void checkEmailExistence(String email) {
+        if (userRepository.existsUserByEmail(email)) {
+            throw new CustomException(USER_USED_EMAIL);
+        }
     }
 }

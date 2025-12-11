@@ -2,6 +2,7 @@ package com.example.taskflow.domain.user.model.response;
 
 import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.model.enums.UserRole;
+import com.example.taskflow.domain.user.model.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,15 +22,15 @@ public class UserUpdateInfoResponse {
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
 
-    public static UserUpdateInfoResponse from(User user) {
+    public static UserUpdateInfoResponse from(UserDto userDto) {
         return new UserUpdateInfoResponse(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getName(),
-                user.getRole(),
-                user.getCreatedAt(),
-                user.getUpdatedAt()
+            userDto.getId(),
+            userDto.getUsername(),
+            userDto.getEmail(),
+            userDto.getName(),
+            userDto.getRole(),
+            userDto.getCreatedAt(),
+            userDto.getModifiedAt()
         );
     }
 }

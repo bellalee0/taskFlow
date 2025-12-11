@@ -1,4 +1,5 @@
 package com.example.taskflow.common.utils;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -29,7 +30,7 @@ public class JwtUtil {
     }
 
     // 토큰 생성
-    public String generationToken(Long userId, String username) {
+    public String generationToken(long userId, String username) {
         Date nowTokenDate = new Date();
         return Jwts.builder()
                 .subject(String.valueOf(userId))

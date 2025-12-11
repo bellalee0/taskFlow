@@ -1,9 +1,8 @@
 package com.example.taskflow.common.entity;
 
 import com.example.taskflow.common.model.enums.UserRole;
+import com.example.taskflow.domain.user.model.request.UserUpdateInfoRequest;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,12 +44,8 @@ public class User extends BaseEntity {
         this.role = role;
     }
 
-    public void updateEmail(String email) {
-        this.email = email;
+    public void updateUser(UserUpdateInfoRequest request) {
+        this.email = request.getEmail();
+        this.name = request.getName();
     }
-
-    public void updateName(String name) {
-        this.name = name;
-    }
-
 }
