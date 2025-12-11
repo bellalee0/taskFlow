@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class UserCreateResponse {
 
     private Long id;
-    private String userName;
+    private String username;
     private String email;
     private String name;
     private String role;
@@ -24,7 +24,7 @@ public class UserCreateResponse {
     public static UserCreateResponse from(UserDto userDto) {
         return new UserCreateResponse(
                 userDto.getId(),
-                userDto.getUserName(),
+                userDto.getUsername(),
                 userDto.getEmail(),
                 userDto.getName(),
                 userDto.getRole().toString(),

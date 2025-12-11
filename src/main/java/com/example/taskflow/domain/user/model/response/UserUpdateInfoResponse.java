@@ -14,10 +14,22 @@ import java.time.LocalDateTime;
 public class UserUpdateInfoResponse {
 
     private Long id;
-    private String userName;
+    private String username;
     private String email;
     private String name;
     private UserRole role;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
+
+    public static UserUpdateInfoResponse from(User user) {
+        return new UserUpdateInfoResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getName(),
+                user.getRole(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
+        );
+    }
 }
