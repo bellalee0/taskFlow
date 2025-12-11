@@ -13,6 +13,7 @@ import com.example.taskflow.domain.comment.model.request.*;
 import com.example.taskflow.domain.comment.model.response.*;
 import com.example.taskflow.domain.comment.repository.CommentRepository;
 import com.example.taskflow.domain.task.repository.TaskRepository;
+import com.example.taskflow.domain.team.model.response.MemberIdUsernameNameEmailRoleResponse;
 import com.example.taskflow.domain.user.model.dto.UserDto;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import java.util.List;
@@ -33,9 +34,9 @@ public class CommentService {
 
     // 댓글 생성
     @Transactional
-    public CommentCreateResponse createComment(long userId, long taskId, CommentCreateRequest request) {
+    public CommentCreateResponse createComment(String username, long taskId, CommentCreateRequest request) {
 
-        User user = userRepository.findUserById(userId);
+        User user = userRepository.findUserByUsername(username);
         Task task = taskRepository.findTaskById(taskId);
 
         Comment parentComment = null;
@@ -50,8 +51,7 @@ public class CommentService {
         Comment comment = new Comment(request.getContent(), user, task, parentComment);
         commentRepository.save(comment);
 
-        // TODO: UserDto 요구사항에 맞게 변경 필요(id, username, name, email, role)
-        return CommentCreateResponse.from(CommentDto.from(comment), UserDto.from(user));
+        return CommentCreateResponse.from(CommentDto.from(comment), MemberIdUsernameNameEmailRoleResponse.from(UserDto.from(user)));
     }
 
     // 댓글 목록 조회
@@ -63,21 +63,20 @@ public class CommentService {
         Page<Comment> commentList = commentRepository.findByTaskId(task.getId(), pageable);
 
         Page<CommentGetResponse> responsePage = commentList
-            // TODO: UserDto 요구사항에 맞게 변경 필요(id, username, name, email, role)
-            .map(comment -> CommentGetResponse.from(CommentDto.from(comment), UserDto.from(comment.getUser())));
+            .map(comment -> CommentGetResponse.from(CommentDto.from(comment), MemberIdUsernameNameEmailRoleResponse.from(UserDto.from(comment.getUser()))));
 
         return PageResponse.from(responsePage);
     }
 
     // 댓글 수정
     @Transactional
-    public CommentUpdateResponse updateComment(long taskId, long commentId, long userId, CommentUpdateRequest request) {
+    public CommentUpdateResponse updateComment(long taskId, long commentId, String username, CommentUpdateRequest request) {
 
         Task task = taskRepository.findTaskById(taskId);
         Comment comment = commentRepository.findCommentById(commentId, COMMENT_NOT_FOUND_COMMENT);
 
         checkTaskCommentRelationship(task, comment);
-        checkCommentUserRelationship(userId, comment);
+        checkCommentUserRelationship(username, comment);
 
         comment.update(request);
         commentRepository.saveAndFlush(comment);
@@ -87,13 +86,13 @@ public class CommentService {
 
     // 댓글 삭제
     @Transactional
-    public void deleteComment(long taskId, long commentId, long userId) {
+    public void deleteComment(long taskId, long commentId, String username) {
 
         Task task = taskRepository.findTaskById(taskId);
         Comment comment = commentRepository.findCommentById(commentId, COMMENT_NOT_FOUND_COMMENT);
 
         checkTaskCommentRelationship(task, comment);
-        checkCommentUserRelationship(userId, comment);
+        checkCommentUserRelationship(username, comment);
 
         if (comment.isDeleted()) { throw new CustomException(COMMENT_NO_PERMISSION_DELETE); }
 
@@ -113,8 +112,8 @@ public class CommentService {
     }
 
     // User가 Comment의 작성자인지 확인
-    private static void checkCommentUserRelationship(long userId, Comment comment) {
-        if (!Objects.equals(comment.getUser().getId(), userId)) {
+    private static void checkCommentUserRelationship(String username, Comment comment) {
+        if (!Objects.equals(comment.getUser().getUsername(), username)) {
             throw new CustomException(COMMENT_NO_PERMISSION_UPDATE);
         }
     }

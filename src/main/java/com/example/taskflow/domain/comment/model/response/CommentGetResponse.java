@@ -1,7 +1,7 @@
 package com.example.taskflow.domain.comment.model.response;
 
 import com.example.taskflow.domain.comment.model.dto.CommentDto;
-import com.example.taskflow.domain.user.model.dto.UserDto;
+import com.example.taskflow.domain.team.model.response.MemberIdUsernameNameEmailRoleResponse;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -18,12 +18,12 @@ public class CommentGetResponse {
     private String content;
     private Long taskId;
     private Long userId;
-    private UserDto user;
+    private MemberIdUsernameNameEmailRoleResponse user;
     private Long parentId;
     private LocalDateTime createdAT;
     private LocalDateTime updatedAT;
 
-    public static CommentGetResponse from(CommentDto commentDto, UserDto userDto) {
+    public static CommentGetResponse from(CommentDto commentDto, MemberIdUsernameNameEmailRoleResponse userDto) {
         return new CommentGetResponse(
             commentDto.getId(),
             commentDto.getContent(),
