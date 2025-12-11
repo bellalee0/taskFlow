@@ -79,13 +79,11 @@ public class TaskController {
     }
 
     // 작업 삭제 기능
-//    @DeleteMapping("/{id}")
-    @DeleteMapping("/{id}/{userId}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<GlobalResponse<Void>> deleteTaskApi(
-            @PathVariable long id,
-            @PathVariable long userId
+            @PathVariable long id
     ) {
-        taskService.deleteTask(id, userId);
+        taskService.deleteTask(id);
 
         return ResponseEntity.ok(GlobalResponse.successNodata(SuccessMessage.TASK_DELETE_SUCCESS));
     }

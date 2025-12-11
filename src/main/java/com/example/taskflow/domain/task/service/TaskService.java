@@ -19,7 +19,6 @@ import com.example.taskflow.domain.task.repository.TaskRepository;
 import com.example.taskflow.domain.user.model.dto.UserDto;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class TaskService {
 
     private final TaskRepository taskRepository;
@@ -36,10 +34,11 @@ public class TaskService {
     private final CommentRepository commentRepository;
 
     // 작업 생성 기능
+    @Transactional
     public TaskCreateResponse createTask(TaskCreateRequest request) {
 
         User assignee = findUserById(request.getAssigneeId());
-        if (Objects.isNull(assignee)) {
+        if (assignee.isDeleted()) {
             throw new CustomException(ASSIGNEE_NOT_FOUND);
         }
 
@@ -69,7 +68,7 @@ public class TaskService {
     public TaskGetOneResponse getTaskById(long taskId) {
 
         Task task = taskRepository.findTaskById(taskId);
-        if (task == null) {
+        if (task.isDeleted()) {
             throw new CustomException(TASK_NOT_FOUND);
         }
 
@@ -77,8 +76,12 @@ public class TaskService {
     }
 
     // 작업 수정 기능
+    @Transactional
     public TaskUpdateResponse updateTask(long taskId, TaskUpdateRequest request) {
         Task task = taskRepository.findTaskById(taskId);
+        if (task.isDeleted()) {
+            throw new CustomException(TASK_NOT_FOUND);
+        }
 
         User assignee = findUserById(request.getAssigneeId() != null
                 ? findUserById(request.getAssigneeId()).getId()
@@ -100,9 +103,13 @@ public class TaskService {
     }
 
     // 작업 상태 변경 기능
+    @Transactional
     public TaskUpdateStatusResponse updateStatus(long taskId, TaskUpdateStatusRequest request) {
 
         Task task = taskRepository.findTaskById(taskId);
+        if (task.isDeleted()) {
+            throw new CustomException(TASK_NOT_FOUND);
+        }
 
         TaskStatus currentStatus = task.getStatus();
         TaskStatus requestStatus = request.getStatus();
@@ -118,24 +125,17 @@ public class TaskService {
     }
 
     // 작업 삭제 기능
-    public void deleteTask(long taskid, long userId) {
-
-        Task task = taskRepository.findTaskById(taskid);
+    @Transactional
+    public void deleteTask(long taskId) {
+        Task task = taskRepository.findTaskById(taskId);
         if (task.isDeleted()) {
             throw new  CustomException(TASK_NOT_FOUND);
-        }
-
-        User user = findUserById(userId);
-
-        // TODO: 현재 프론트에는 따로 권한 확인이 없는데, 어떤 기준으로 권한 확인해야 할지 확인 필요
-        if (!Objects.equals(task.getAssigneeId().getId(), user.getId())) {
-            throw new CustomException(TASK_DELETE_FORBIDDEN);
         }
 
         List<Comment> commentList = commentRepository.findByTaskId(task.getId());
         commentList.forEach(BaseEntity::updateIsDeleted);
 
-        taskRepository.delete(task);
+        task.updateIsDeleted();
     }
 
     // 사용자 ID로 조회
