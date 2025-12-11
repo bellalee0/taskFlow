@@ -19,7 +19,6 @@ import com.example.taskflow.domain.task.repository.TaskRepository;
 import com.example.taskflow.domain.user.model.dto.UserDto;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -127,17 +126,10 @@ public class TaskService {
 
     // 작업 삭제 기능
     @Transactional
-    public void deleteTask(long taskId, long userId) {
+    public void deleteTask(long taskId) {
         Task task = taskRepository.findTaskById(taskId);
         if (task.isDeleted()) {
             throw new  CustomException(TASK_NOT_FOUND);
-        }
-
-        User user = findUserById(userId);
-
-        // TODO: 현재 프론트에는 따로 권한 확인이 없는데, 어떤 기준으로 권한 확인해야 할지 확인 필요
-        if (!Objects.equals(task.getAssigneeId().getId(), user.getId())) {
-            throw new CustomException(TASK_DELETE_FORBIDDEN);
         }
 
         List<Comment> commentList = commentRepository.findByTaskId(task.getId());
