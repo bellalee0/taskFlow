@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 public class UserListInquiryResponse {
 
     private Long id;
-    private String userName;
+    private String username;
     private String email;
     private String name;
     private String role;
@@ -22,7 +22,7 @@ public class UserListInquiryResponse {
 
     public UserListInquiryResponse(User user) {
         this.id = user.getId();
-        this.userName = user.getUserName();
+        this.username = user.getUsername();
         this.email = user.getEmail();
         this.name = user.getName();
         this.role = user.getRole().toString();
@@ -32,7 +32,7 @@ public class UserListInquiryResponse {
     public static UserListInquiryResponse from(User user) {
         return new UserListInquiryResponse(
                 user.getId(),
-                user.getUserName(),
+                user.getUsername(),
                 user.getEmail(),
                 user.getName(),
                 user.getRole().toString(),

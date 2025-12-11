@@ -23,7 +23,7 @@ public class AuthenticationService {
     @Transactional
     public LoginResponse userLogin(LoginRequest request) {
 
-        User user = userRepository.findByUserName(request.getUsername()).orElseThrow(
+        User user = userRepository.findByUsername(request.getUsername()).orElseThrow(
                 () -> new CustomException(AUTH_WRONG_EMAIL_AND_PASSWORD)
         );
 
@@ -31,6 +31,6 @@ public class AuthenticationService {
             throw new CustomException(AUTH_WRONG_EMAIL_AND_PASSWORD);
         }
 
-        return new LoginResponse(jwtUtil.generationToken(user.getUserName()));
+        return new LoginResponse(jwtUtil.generationToken(user.getUsername()));
     }
 }

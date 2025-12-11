@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class UserUpdateInfoResponse {
 
     private Long id;
-    private String userName;
+    private String username;
     private String email;
     private String name;
     private UserRole role;
@@ -24,7 +24,7 @@ public class UserUpdateInfoResponse {
     public static UserUpdateInfoResponse from(User user) {
         return new UserUpdateInfoResponse(
                 user.getId(),
-                user.getUserName(),
+                user.getUsername(),
                 user.getEmail(),
                 user.getName(),
                 user.getRole(),

@@ -3,6 +3,7 @@ package com.example.taskflow;
 import com.example.taskflow.common.entity.Task;
 import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.model.enums.TaskPriority;
+import com.example.taskflow.common.model.enums.UserRole;
 import com.example.taskflow.common.utils.PasswordEncoder;
 import com.example.taskflow.domain.task.repository.TaskRepository;
 import com.example.taskflow.domain.user.repository.UserRepository;
@@ -24,8 +25,8 @@ public class InitData {
     @Transactional
     public void init() {
         // --- Users ---
-        User user1 = new User("alpha", "alpha@test.com", "1234", "알파");
-        User user2 = new User("beta", "beta@test.com", "1234", "베타");
+        User user1 = new User("alpha", "alpha@test.com", "1234", "알파", UserRole.ADMIN);
+        User user2 = new User("beta", "beta@test.com", "1234", "베타", UserRole.USER);
 
         userRepository.save(user1);
         userRepository.save(user2);
