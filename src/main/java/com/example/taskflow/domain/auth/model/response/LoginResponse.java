@@ -1,4 +1,4 @@
-package com.example.taskflow.domain.auth.model;
+package com.example.taskflow.domain.auth.model.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

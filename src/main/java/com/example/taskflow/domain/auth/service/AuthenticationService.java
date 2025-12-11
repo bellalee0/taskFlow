@@ -5,7 +5,7 @@ import com.example.taskflow.common.exception.CustomException;
 import com.example.taskflow.common.utils.JwtUtil;
 import com.example.taskflow.common.utils.PasswordEncoder;
 import com.example.taskflow.domain.auth.model.request.LoginRequest;
-import com.example.taskflow.domain.auth.model.LoginResponse;
+import com.example.taskflow.domain.auth.model.response.LoginResponse;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
