@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -22,11 +23,10 @@ import static com.example.taskflow.common.exception.ErrorMessage.TOKEN_REQUIRED_
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
-    // 속성
+
     private final JwtUtil jwtUtil;
     private final JwtExceptionHandler jwtExceptionHandler;
 
-    // 기능
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -57,10 +57,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
             String username = jwtUtil.getUserName(jwt);
 
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    username, null, List.of());
+            User user = new User(username, "", List.of());
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
 
             filterChain.doFilter(request, response);
         } catch (CustomException e) {
