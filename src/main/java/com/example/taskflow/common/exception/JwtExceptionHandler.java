@@ -9,15 +9,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-
 import java.io.IOException;
 import java.io.PrintWriter;
 
 @Component
 @RequiredArgsConstructor
 public class JwtExceptionHandler {
-
-    private final ObjectMapper objectMapper;
 
     public void handleCustomException(HttpServletResponse response, CustomException e)
             throws IOException {

@@ -1,6 +1,5 @@
 package com.example.taskflow.domain.user.model.response;
 
-import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.model.enums.UserRole;
 import com.example.taskflow.domain.user.model.dto.UserDto;
 import lombok.AllArgsConstructor;
