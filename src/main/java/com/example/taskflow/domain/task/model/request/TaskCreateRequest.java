@@ -2,6 +2,7 @@ package com.example.taskflow.domain.task.model.request;
 
 import com.example.taskflow.common.model.enums.TaskPriority;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -12,7 +13,7 @@ public class TaskCreateRequest {
     private String title;
     private String description;
     private TaskPriority priority;
-    @NotBlank(message = "제목과 담당자는 필수입니다.")
+    @NotNull(message = "제목과 담당자는 필수입니다.")
     private Long assigneeId;
     private LocalDateTime dueDate;
 }

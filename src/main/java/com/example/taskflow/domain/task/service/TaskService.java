@@ -42,7 +42,7 @@ public class TaskService {
         Task task = new Task(request.getTitle(), request.getDescription(), request.getPriority(), assignee, request.getDueDate());
         taskRepository.save(task);
 
-        return TaskCreateResponse.from(TaskDto.from(task), MemberIdUsernameNameEmailRoleResponse.from(UserDto.from(task.getAssigneeId())));
+        return TaskCreateResponse.from(TaskDto.from(task), TaskAssgineeResponse.from(UserDto.from(task.getAssigneeId())));
     }
 
     // 작업 목록 조회 기능(페이징, 필터링)
@@ -52,7 +52,7 @@ public class TaskService {
         Page<Task> taskPage = taskRepository.findByFilters(status, priority, assigneeId, pageable);
 
         Page<TaskGetAllResponse> responsePage = taskPage
-            .map(task -> TaskGetAllResponse.from(TaskDto.from(task), MemberIdUsernameNameEmailRoleResponse.from(UserDto.from(task.getAssigneeId()))));
+            .map(task -> TaskGetAllResponse.from(TaskDto.from(task), TaskAssgineeResponse.from(UserDto.from(task.getAssigneeId()))));
 
         return PageResponse.from(responsePage);
     }
@@ -63,7 +63,7 @@ public class TaskService {
 
         Task task = taskRepository.findTaskById(taskId);
 
-        return TaskGetOneResponse.from(TaskDto.from(task), MemberIdUsernameNameEmailRoleResponse.from(UserDto.from(task.getAssigneeId())));
+        return TaskGetOneResponse.from(TaskDto.from(task), TaskAssgineeResponse.from(UserDto.from(task.getAssigneeId())));
     }
 
     // 작업 수정 기능
@@ -77,7 +77,7 @@ public class TaskService {
         task.update(request, assignee);
         taskRepository.saveAndFlush(task);
 
-        return TaskUpdateResponse.from(TaskDto.from(task), MemberIdUsernameNameEmailRoleResponse.from(UserDto.from(task.getAssigneeId())));
+        return TaskUpdateResponse.from(TaskDto.from(task), TaskAssgineeResponse.from(UserDto.from(task.getAssigneeId())));
     }
 
     // 작업 상태 변경 기능
@@ -96,7 +96,7 @@ public class TaskService {
         task.updateStatus(requestStatus);
         taskRepository.saveAndFlush(task);
 
-        return TaskUpdateStatusResponse.from(TaskDto.from(task), MemberIdUsernameNameEmailRoleResponse.from(UserDto.from(task.getAssigneeId())));
+        return TaskUpdateStatusResponse.from(TaskDto.from(task), TaskAssgineeResponse.from(UserDto.from(task.getAssigneeId())));
     }
 
     // 작업 삭제 기능

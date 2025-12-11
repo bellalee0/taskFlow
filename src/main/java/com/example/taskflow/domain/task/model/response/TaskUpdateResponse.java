@@ -19,12 +19,12 @@ public class TaskUpdateResponse {
     private final TaskStatus status;
     private final TaskPriority priority;
     private final Long assigneeId;
-    private final MemberIdUsernameNameEmailRoleResponse assignee;
+    private final TaskAssgineeResponse assignee;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
     private final LocalDateTime dueDate;
 
-    public static TaskUpdateResponse from(TaskDto taskDto, MemberIdUsernameNameEmailRoleResponse userDto) {
+    public static TaskUpdateResponse from(TaskDto taskDto, TaskAssgineeResponse userDto) {
         return new TaskUpdateResponse(
                 taskDto.getId(),
                 taskDto.getTitle(),
