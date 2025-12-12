@@ -41,7 +41,7 @@ public class DashboardService {
         long overdueTasks = taskRepository.countByStatusNotAndDueDateBefore(TaskStatus.DONE, endOfToday);
 
         double teamProgress =
-                totalTasks == 0 ? 0.0 : (completedTasks * 100.0) / totalTasks;
+                totalTasks == 0 ? 0.0 : Math.round((completedTasks * 100.0) / totalTasks);
 
         User user = userRepository.findUserByUsername(username);
 
@@ -49,7 +49,7 @@ public class DashboardService {
         long userCompletedTasks = taskRepository.countByAssigneeIdIdAndStatus(user.getId(), TaskStatus.DONE);
 
         double completionRate =
-                userTotalTasks == 0 ? 0.0 : (userCompletedTasks * 100.0) / userTotalTasks;
+                userTotalTasks == 0 ? 0.0 : Math.round((userCompletedTasks * 100.0) / userTotalTasks);
 
         DashboardStatsDto dto = DashboardStatsDto.from(
                 totalTasks,
