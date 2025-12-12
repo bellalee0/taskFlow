@@ -2,15 +2,11 @@ package com.example.taskflow.domain.user.controller;
 
 import com.example.taskflow.common.model.enums.SuccessMessage;
 import com.example.taskflow.common.model.response.GlobalResponse;
-import com.example.taskflow.common.model.response.PageResponse;
 import com.example.taskflow.domain.user.model.request.*;
 import com.example.taskflow.domain.user.model.response.*;
 import com.example.taskflow.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
