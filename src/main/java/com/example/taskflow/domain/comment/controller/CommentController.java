@@ -1,5 +1,8 @@
 package com.example.taskflow.domain.comment.controller;
 
+import static com.example.taskflow.common.model.enums.LogType.*;
+
+import com.example.taskflow.common.annotation.Loggable;
 import com.example.taskflow.common.model.enums.SuccessMessage;
 import com.example.taskflow.common.model.response.GlobalResponse;
 import com.example.taskflow.common.model.response.PageResponse;
@@ -33,6 +36,7 @@ public class CommentController {
     private final CommentService commentService;
 
     // 댓글 생성
+    @Loggable(logType = COMMENT_CREATED)
     @PostMapping("/tasks/{taskId}/comments")
     public ResponseEntity<GlobalResponse<CommentCreateResponse>> createCommentApi(
             @AuthenticationPrincipal User user,
@@ -63,6 +67,7 @@ public class CommentController {
     }
 
     // 댓글 수정
+    @Loggable(logType = COMMENT_UPDATED)
     @PutMapping("/tasks/{taskId}/comments/{commentId}")
     public ResponseEntity<GlobalResponse<CommentUpdateResponse>> updateCommentApi(
             @PathVariable long taskId,
@@ -76,6 +81,7 @@ public class CommentController {
     }
 
     // 댓글 삭제
+    @Loggable(logType = COMMENT_DELETED)
     @DeleteMapping("/tasks/{taskId}/comments/{commentId}")
     public ResponseEntity<GlobalResponse<Void>> deleteCommentApi(
             @PathVariable long taskId,
