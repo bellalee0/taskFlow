@@ -6,6 +6,7 @@ import com.example.taskflow.common.entity.Team;
 import com.example.taskflow.common.entity.TeamUser;
 import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.model.enums.TaskPriority;
+import com.example.taskflow.common.model.enums.TaskStatus;
 import com.example.taskflow.common.model.enums.UserRole;
 import com.example.taskflow.common.utils.PasswordEncoder;
 import com.example.taskflow.domain.task.repository.TaskRepository;
@@ -34,8 +35,8 @@ public class InitData {
     @Transactional
     public void init() {
         // --- Users ---
-        User user1 = new User("alpha", "alpha@test.com", /*passwordEncoder.encode("1234")*/"1234", "알파", UserRole.ADMIN);
-        User user2 = new User("beta", "beta@test.com", /*passwordEncoder.encode("1234")*/"1234", "베타", UserRole.USER);
+        User user1 = new User("alpha", "alpha@test.com", passwordEncoder.encode("1234"), "알파", UserRole.ADMIN);
+        User user2 = new User("beta", "beta@test.com", passwordEncoder.encode("1234"), "베타", UserRole.USER);
 
         userRepository.save(user1);
         userRepository.save(user2);
@@ -50,6 +51,7 @@ public class InitData {
 
 
         // --- Tasks ---
+
         Task task1 = new Task(
                 "서버 점검",
                 "일일 서버 상태 확인",

@@ -81,5 +81,4 @@ public class Task extends BaseEntity {
         this.isCompleted = false;
         this.completedDateTime = null;
     }
-
 }

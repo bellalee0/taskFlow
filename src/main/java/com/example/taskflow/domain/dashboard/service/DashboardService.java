@@ -101,9 +101,17 @@ public class DashboardService {
         for (int i = 6; i >= 0; i--) {
             LocalDate weeklyDay = today.minusDays(i);
 
+            LocalDateTime start = weeklyDay.atStartOfDay();
+            LocalDateTime end = weeklyDay.plusDays(1).atStartOfDay();
+
             String name = weeklyDay.format(toKoreanDay);
-            Long completed = taskRepository.countByCompletedDateTimeBetween(weeklyDay.atStartOfDay(), weeklyDay.atTime(LocalTime.MAX));
-            Long tasks = taskRepository.countByCreatedAtBeforeAndStatusNot(weeklyDay.atStartOfDay(), TaskStatus.DONE) + completed;
+
+            Long completed = taskRepository.countByCompletedDateTimeBetween(start, end);
+            Long planned = taskRepository.countByDueDateLessThan(end);
+            Long doneUntilYesterday = taskRepository.countByCompletedDateTimeLessThan(start);
+
+            Long tasks = planned - doneUntilYesterday;
+
             String date = weeklyDay.format(formatter);
 
             weeklyTrendList.add(new DashboardGetWeeklyTrendResponse(name, tasks, completed, date));
