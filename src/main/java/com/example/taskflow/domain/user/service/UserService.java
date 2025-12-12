@@ -118,7 +118,7 @@ public class UserService {
         List<TeamUser> teams = teamUserRepository.findByTeamId(teamId);
         List<User> userList = teams.stream().map(TeamUser::getUser).toList();
 
-        return users.stream().filter(userList::contains)
+        return users.stream().filter(user -> !userList.contains(user))
                 .map(user -> UserAvailableTeamResponse.from(UserDto.from(user))).toList();
     }
 
