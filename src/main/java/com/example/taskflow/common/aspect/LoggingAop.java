@@ -1,5 +1,7 @@
 package com.example.taskflow.common.aspect;
 
+import static com.example.taskflow.common.model.enums.LogType.TASK_STATUS_CHANGED;
+
 import com.example.taskflow.common.annotation.Loggable;
 import com.example.taskflow.common.entity.Log;
 import com.example.taskflow.common.entity.Task;
@@ -43,6 +45,8 @@ public class LoggingAop {
 
         Object result = null;
 
+        String oldStatus = getOldStatusForTaskUpdateStatus(loggable);
+
         try {
             result = joinPoint.proceed();
         } catch (Throwable throwable) {
@@ -52,7 +56,7 @@ public class LoggingAop {
 
         logInfo(joinPoint, start, username, result, false);
         
-        saveLog(loggable, username, (ResponseEntity) result);
+        saveLog(loggable, username, (ResponseEntity) result, oldStatus);
 
         return result;
     }
@@ -73,13 +77,26 @@ public class LoggingAop {
         );
     }
 
+    // Task UpdateStatus API 사용 시, 실행 전 Status 저장
+    private String getOldStatusForTaskUpdateStatus(Loggable loggable) {
+        String oldStatus = "";
+        if (loggable.logType().equals(TASK_STATUS_CHANGED)) {
+            HttpServletRequest httpServletRequest = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+            String[] requestURI = httpServletRequest.getRequestURI().split("/");
+            long taskId = Long.parseLong(requestURI[requestURI.length - 2]);
+            Task task = taskRepository.findTaskById(taskId);
+            oldStatus = task.getStatus().toString();
+        }
+        return oldStatus;
+    }
+
     // DB 형식에 맞게 로그 저장
-    private void saveLog(Loggable loggable, String username, ResponseEntity result) {
+    private void saveLog(Loggable loggable, String username, ResponseEntity result, String oldStatus) {
         LogType logType = loggable.logType();
 
         User user = userRepository.findUserByUsername(username);
 
-        FindTaskDescriptionByLogType findByLogType = getResult(result, logType);
+        FindTaskDescriptionByLogType findByLogType = getResult(result, logType, oldStatus);
 
         Log log = new Log(logType, user, findByLogType.task, findByLogType.description);
 
@@ -87,7 +104,7 @@ public class LoggingAop {
     }
 
     // 로그타입에 따라 taskId, Description 조회 및 수정
-    private FindTaskDescriptionByLogType getResult(ResponseEntity result, LogType logType) {
+    private FindTaskDescriptionByLogType getResult(ResponseEntity result, LogType logType, String oldStatus) {
 
         GlobalResponse globalResponse = (GlobalResponse) result.getBody();
 
@@ -119,9 +136,7 @@ public class LoggingAop {
             case TASK_STATUS_CHANGED:
                 TaskUpdateStatusResponse taskUpdateStatusResponse = (TaskUpdateStatusResponse) globalResponse.getData();
                 taskId = taskUpdateStatusResponse.getId();
-                // TODO: oldStatus 제대로 반영 안됨
-                Task oldTask = taskRepository.findTaskById(taskId);
-                description = description.replace("{oldStatus}", oldTask.getStatus().toString());
+                description = description.replace("{oldStatus}", oldStatus);
                 description = description.replace("{newStatus}", taskUpdateStatusResponse.getStatus().toString());
                 break;
 
