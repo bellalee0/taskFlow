@@ -2,6 +2,7 @@ package com.example.taskflow.common.entity;
 
 import com.example.taskflow.common.model.enums.TaskPriority;
 import com.example.taskflow.common.model.enums.TaskStatus;
+import com.example.taskflow.domain.task.model.request.TaskUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -36,7 +37,7 @@ public class Task extends BaseEntity {
     private User assigneeId;
 
     //@Column(nullable = false)
-    private LocalDateTime dueDateTime;
+    private LocalDateTime dueDate;
 
     @ColumnDefault("0")
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
@@ -51,8 +52,21 @@ public class Task extends BaseEntity {
         this.status = TaskStatus.TODO;
         this.priority = priority;
         this.assigneeId = assigneeId;
-        this.dueDateTime = dueDateTime;
+        this.dueDate = dueDateTime;
         this.isCompleted = false;
         this.completedDateTime = null;
+    }
+
+    public void updateStatus(TaskStatus status) {
+        this.status = status;
+    }
+
+    // 작업 정보 수정
+    public void update(TaskUpdateRequest request, User assigneeId) {
+        if (title != null) this.title = request.getTitle();
+        if (description != null) this.description = request.getDescription();
+        if (assigneeId != null) this.assigneeId = assigneeId;
+        if (priority != null) this.priority = request.getPriority();
+        if (dueDate != null) this.dueDate = request.getDueDate();
     }
 }

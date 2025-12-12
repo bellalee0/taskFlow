@@ -1,28 +1,37 @@
 package com.example.taskflow.domain.user.model.dto;
 
 import com.example.taskflow.common.entity.User;
+import com.example.taskflow.common.model.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
 
-    private Long id;
-    private String userName;
-    private String email;
-    private String password;
-    private String name;
+    private final Long id;
+    private final String username;
+    private final String email;
+    private final String password;
+    private final String name;
+    private final UserRole role;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime modifiedAt;
+    private final boolean isDeleted;
 
     public static UserDto from(User user) {
         return new UserDto(
             user.getId(),
-            user.getUserName(),
+            user.getUsername(),
             user.getEmail(),
             user.getPassword(),
-            user.getName()
+            user.getName(),
+            user.getRole(),
+            user.getCreatedAt(),
+            user.getModifiedAt(),
+            user.isDeleted()
         );
     }
 }

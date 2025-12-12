@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-@Where(clause = "deleted = false")
+@Where(clause = "is_deleted = false")
 public abstract class BaseEntity {
 
     @CreatedDate

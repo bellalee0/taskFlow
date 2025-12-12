@@ -1,7 +1,6 @@
 package com.example.taskflow.common.model.response;
 
 import com.example.taskflow.common.model.enums.SuccessMessage;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,13 +8,12 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GlobalResponse<T> {
 
-    private boolean success;
-    private String message;
-    private T data;
-    private LocalDateTime timeStamp;
+    private final boolean success;
+    private final String message;
+    private final T data;
+    private final LocalDateTime timeStamp;
 
 
     // 성공 시 (사용 예시: GlobalResponse.success(SuccessMessage 이넘, 반환 DTO)
@@ -23,7 +21,7 @@ public class GlobalResponse<T> {
         return new GlobalResponse<>(true, successMessage.getMessage(), data, LocalDateTime.now());
     }
 
-    // 성공했는데 응답 데이터는 없을 시 (사용 예시: GlobalResponse.successNodata(SuccessMessage 이넘)
+    // 성공 했는데 응답 데이터는 없을 시 (사용 예시: GlobalResponse.successNodata(SuccessMessage 이넘)
     public static GlobalResponse<Void> successNodata(SuccessMessage successMessage) {
         return new GlobalResponse<>(true, successMessage.getMessage(), null, LocalDateTime.now());
     }
