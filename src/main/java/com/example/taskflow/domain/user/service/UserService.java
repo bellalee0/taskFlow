@@ -82,7 +82,9 @@ public class UserService {
             throw new CustomException(AUTH_WRONG_EMAIL_AND_PASSWORD);
         }
 
-        checkEmailExistence(request.getEmail());
+        if (!user.getEmail().equals(request.getEmail())) {
+            checkEmailExistence(request.getEmail());
+        }
 
         user.updateUser(request);
         userRepository.saveAndFlush(user);
