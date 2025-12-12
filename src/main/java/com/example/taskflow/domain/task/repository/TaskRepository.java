@@ -3,6 +3,7 @@ package com.example.taskflow.domain.task.repository;
 import static com.example.taskflow.common.exception.ErrorMessage.TASK_NOT_FOUND;
 
 import com.example.taskflow.common.entity.Task;
+import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.exception.CustomException;
 import com.example.taskflow.common.model.enums.TaskPriority;
 import com.example.taskflow.common.model.enums.TaskStatus;
@@ -12,6 +13,8 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
@@ -28,6 +31,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             @Param("priority") TaskPriority priority,
             @Param("assigneeId") Long assigneeId,
             Pageable pageable);
+
+    List<Task> findAllByAssigneeId(User assigneeId);
 
     default Task findTaskById(Long taskId) {
         return findById(taskId)
