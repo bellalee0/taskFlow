@@ -10,13 +10,13 @@ public class UserSearchDto {
 
     private Long id;
     private String name;
-    private String userName;
+    private String username;
 
     public static UserSearchDto from(UserDto userDto) {
         return new UserSearchDto(
                 userDto.getId(),
                 userDto.getName(),
-                userDto.getUserName()
+                userDto.getUsername()
         );
     }
 
