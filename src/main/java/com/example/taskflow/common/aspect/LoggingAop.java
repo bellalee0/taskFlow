@@ -8,19 +8,12 @@ import com.example.taskflow.common.model.enums.LogType;
 import com.example.taskflow.domain.activities.repository.LogRepository;
 import com.example.taskflow.domain.task.repository.TaskRepository;
 import com.example.taskflow.domain.user.repository.UserRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.util.ContentCachingRequestWrapper;
 
 @Aspect
 @Component
@@ -32,16 +25,33 @@ public class LoggingAop {
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
 
-    @After("@annotation(loggable)")
-    public void logBefore(Loggable loggable) {
+    @Around("@annotation(loggable)")
+    public Object logExecution(ProceedingJoinPoint joinPoint, Loggable loggable) throws Throwable {
+
+        boolean exception = false;
+        long start = System.currentTimeMillis();
+        Object result = null;
+
+        try {
+            result = joinPoint.proceed();
+        } catch (Throwable throwable) {
+            exception = true;
+        }
+
+        long end = System.currentTimeMillis();
+
+        log.info(" 활동 로그 | 실행 시간={}ms | 호출자= | 메서드명 = . | 입력 파라미터={} | 실행 결과={} | 예외 발생={}",
+            (end - start),
+            joinPoint.getArgs(),
+            result,
+            exception
+        );
 
         LogType type = loggable.logType();
 
-        // TODO: 로그인한 사용자 정보로 변경
         long userId = 1L;
         User user = userRepository.findUserById(userId);
 
-        // TODO: 작업한 task ID 가져오기
         long taskId = 1L;
         Task task = taskRepository.findTaskById(taskId);
 
@@ -50,15 +60,6 @@ public class LoggingAop {
         Log log = new Log(type, user, task, description);
         logRepository.save(log);
 
-
-//        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(
-//        RequestContextHolder.getRequestAttributes())).getRequest();
-//        ContentCachingRequestWrapper requestWrapper = (ContentCachingRequestWrapper) request;
-//
-//        String userId = request.getAttribute("userId").toString();
-//        String requestUri = request.getRequestURI();
-//        LocalDateTime requestTime = LocalDateTime.now();
-//
-//        log.info("관리자 페이지 접근: userId={}, URI={}, requestTime={}, requestBody={}", userId, requestUri, requestTime, requestBody);
+        return result;
     }
 }
