@@ -16,10 +16,12 @@ import com.example.taskflow.domain.comment.repository.CommentRepository;
 import com.example.taskflow.domain.task.repository.TaskRepository;
 import com.example.taskflow.domain.user.model.dto.UserDto;
 import com.example.taskflow.domain.user.repository.UserRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,8 +64,30 @@ public class CommentService {
 
         Page<Comment> commentList = commentRepository.findByTaskId(task.getId(), pageable);
 
-        Page<CommentGetResponse> responsePage = commentList
-            .map(comment -> CommentGetResponse.from(CommentDto.from(comment), UserInfoDto.from(UserDto.from(comment.getUser()))));
+        List<Comment> parentCommentList = commentList.getContent();
+        List<Long> parentCommentId = parentCommentList.stream().map(comment -> comment.getId()).toList();
+
+        if (parentCommentId.isEmpty()) {
+            return PageResponse.from(commentList
+                .map(comment -> CommentGetResponse.from(CommentDto.from(comment), UserInfoDto.from(UserDto.from(comment.getUser())))));
+        }
+
+        List<CommentGetResponse> responseList = new ArrayList<>();
+
+        for (int i = 0; i < parentCommentId.size(); i++) {
+
+            responseList.add(CommentGetResponse.from(CommentDto.from(parentCommentList.get(i)),
+                    UserInfoDto.from(UserDto.from(parentCommentList.get(i).getUser()))));
+
+            List<Comment> childCommentList = commentRepository.findAllByParentCommentId(parentCommentId.get(i));
+            List<CommentGetResponse> childCommentDtoList = childCommentList.stream()
+                .map(comment -> CommentGetResponse.from(CommentDto.from(comment),
+                    UserInfoDto.from(UserDto.from(comment.getUser())))).toList();
+
+            responseList.addAll(childCommentDtoList);
+        }
+
+        Page<CommentGetResponse> responsePage = new PageImpl<>(responseList, pageable, responseList.size());
 
         return PageResponse.from(responsePage);
     }
