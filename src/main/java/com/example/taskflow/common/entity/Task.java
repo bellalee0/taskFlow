@@ -28,17 +28,16 @@ public class Task extends BaseEntity {
 
     private String description;
 
-    //@Column(nullable = false)
+    @Column(nullable = false)
     private TaskStatus status;
 
-    //@Column(nullable = false)
+    @Column(nullable = false)
     private TaskPriority priority;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "assignee_id", nullable = false)
     private User assigneeId;
 
-    //@Column(nullable = false)
     private LocalDateTime dueDate;
 
     @ColumnDefault("0")
@@ -54,7 +53,7 @@ public class Task extends BaseEntity {
         this.status = TaskStatus.TODO;
         this.priority = priority;
         this.assigneeId = assigneeId;
-        this.dueDate = dueDateTime;
+        this.dueDate = dueDateTime == null ? LocalDateTime.now() : dueDateTime;
         this.isCompleted = false;
         this.completedDateTime = null;
     }
