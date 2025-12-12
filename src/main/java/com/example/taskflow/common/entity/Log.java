@@ -39,7 +39,7 @@ public class Log {
     @Column(nullable = false)
     private LocalDateTime loggedDateTime;
 
-//    @Column(nullable = false)
+    @Column(nullable = false)
     private String description;
 
 
