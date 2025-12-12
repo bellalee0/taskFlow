@@ -1,7 +1,5 @@
 package com.example.taskflow.domain.task.service;
 
-import static com.example.taskflow.common.exception.ErrorMessage.*;
-
 import com.example.taskflow.common.entity.BaseEntity;
 import com.example.taskflow.common.entity.Comment;
 import com.example.taskflow.common.entity.Task;
@@ -12,17 +10,23 @@ import com.example.taskflow.common.model.enums.TaskStatus;
 import com.example.taskflow.common.model.response.PageResponse;
 import com.example.taskflow.domain.comment.repository.CommentRepository;
 import com.example.taskflow.domain.task.model.dto.TaskDto;
-import com.example.taskflow.domain.task.model.request.*;
+import com.example.taskflow.domain.task.model.request.TaskCreateRequest;
+import com.example.taskflow.domain.task.model.request.TaskUpdateRequest;
+import com.example.taskflow.domain.task.model.request.TaskUpdateStatusRequest;
 import com.example.taskflow.domain.task.model.response.*;
 import com.example.taskflow.domain.task.repository.TaskRepository;
 import com.example.taskflow.domain.user.model.dto.UserDto;
 import com.example.taskflow.domain.user.repository.UserRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static com.example.taskflow.common.exception.ErrorMessage.TASK_NOT_FOUND;
+import static com.example.taskflow.common.exception.ErrorMessage.TASK_WRONG_ENUM;
 
 @Service
 @RequiredArgsConstructor
@@ -92,6 +96,14 @@ public class TaskService {
             throw new CustomException(TASK_WRONG_ENUM);
         }
 
+        if (requestStatus == TaskStatus.DONE && currentStatus != TaskStatus.DONE) {
+            task.completedTask();
+        }
+
+        if (currentStatus == TaskStatus.DONE && requestStatus != TaskStatus.DONE) {
+            task.uncompletedTask();
+        }
+
         task.updateStatus(requestStatus);
         taskRepository.saveAndFlush(task);
 
@@ -104,7 +116,7 @@ public class TaskService {
 
         Task task = taskRepository.findTaskById(taskId);
 
-        if (task.isDeleted()) { throw new  CustomException(TASK_NOT_FOUND); }
+        if (task.isDeleted()) { throw new CustomException(TASK_NOT_FOUND); }
 
         List<Comment> commentList = commentRepository.findByTaskId(task.getId());
         commentList.forEach(BaseEntity::updateIsDeleted);
