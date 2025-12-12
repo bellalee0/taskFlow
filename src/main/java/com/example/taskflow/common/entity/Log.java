@@ -21,7 +21,7 @@ import org.hibernate.annotations.Where;
 @Table(name = "logs")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Where(clause = "is_deleted = false")
-public class Log {
+public class Log extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
