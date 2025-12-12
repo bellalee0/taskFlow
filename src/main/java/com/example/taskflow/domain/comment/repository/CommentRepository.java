@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
@@ -16,9 +17,9 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @Query("""
           SELECT c FROM Comment c
-          WHERE c.parentComment is null
+          WHERE c.parentComment is null and c.task.id = :taskId
           """)
-    Page<Comment> findByTaskId(long taskId, Pageable pageable);
+    Page<Comment> findByTaskId(@Param("taskId") long taskId, Pageable pageable);
 
     List<Comment> findAllByParentCommentId(Long id);
 
