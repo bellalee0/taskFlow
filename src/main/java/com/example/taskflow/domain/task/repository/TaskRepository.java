@@ -17,7 +17,6 @@ import java.util.List;
 import static com.example.taskflow.common.exception.ErrorMessage.TASK_NOT_FOUND;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
@@ -51,17 +50,19 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findByAssigneeIdIdAndDueDateBeforeAndStatusNot(Long assigneeId, LocalDateTime today, TaskStatus status);
 
-    default Task findTaskById(Long taskId) {
-        return findById(taskId)
-            .orElseThrow(() -> new CustomException(TASK_NOT_FOUND));
-    }
+    Long countByCompletedDateTimeBetween(LocalDateTime startOfToday, LocalDateTime endOfToday);
+
+    Long countByDueDateLessThan(LocalDateTime end);
+
+    Long countByCompletedDateTimeLessThan(LocalDateTime end);
 
     @Query("SELECT t FROM Task t WHERE " +
             "LOWER(t.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(t.description) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Task> searchByKeyword(@Param("keyword") String keyword);
 
-    Long countByCompletedDateTimeBetween(LocalDateTime startOfToday, LocalDateTime endOfToday);
-
-    Long countByCreatedAtBeforeAndStatusNot(LocalDateTime createdAtBefore, TaskStatus status);
+    default Task findTaskById(Long taskId) {
+        return findById(taskId)
+            .orElseThrow(() -> new CustomException(TASK_NOT_FOUND));
+    }
 }

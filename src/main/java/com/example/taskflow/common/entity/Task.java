@@ -82,4 +82,9 @@ public class Task extends BaseEntity {
         this.completedDateTime = null;
     }
 
+    public void completedTaskAt(LocalDateTime completedAt) {
+        this.isCompleted = true;
+        this.completedDateTime = completedAt;
+        this.status = TaskStatus.DONE;
+    }
 }
