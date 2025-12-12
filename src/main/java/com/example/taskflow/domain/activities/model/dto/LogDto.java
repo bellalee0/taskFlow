@@ -1,6 +1,8 @@
 package com.example.taskflow.domain.activities.model.dto;
 
+import com.example.taskflow.common.entity.Comment;
 import com.example.taskflow.common.entity.Log;
+import com.example.taskflow.common.entity.Task;
 import com.example.taskflow.common.model.enums.LogType;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -15,8 +17,7 @@ public class LogDto {
     private Long id;
     private LogType type;
     private Long userId;
-    private Long taskId;
-    private Long commentId;
+    private Task task;
     private LocalDateTime loggedDateTime;
     private String description;
 
@@ -25,8 +26,7 @@ public class LogDto {
             log.getId(),
             log.getType(),
             log.getUser().getId(),
-            log.getTask() == null ? 0L : log.getTask().getId(),
-            log.getComment().getId() == null ? 0L : log.getComment().getId(),
+            log.getTask(),
             log.getLoggedDateTime(),
             log.getDescription()
         );

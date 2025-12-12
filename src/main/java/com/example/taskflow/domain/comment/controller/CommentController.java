@@ -1,5 +1,8 @@
 package com.example.taskflow.domain.comment.controller;
 
+import static com.example.taskflow.common.model.enums.LogType.*;
+
+import com.example.taskflow.common.annotation.Loggable;
 import com.example.taskflow.common.model.enums.SuccessMessage;
 import com.example.taskflow.common.model.response.GlobalResponse;
 import com.example.taskflow.common.model.response.PageResponse;
@@ -13,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,15 +36,14 @@ public class CommentController {
     private final CommentService commentService;
 
     // 댓글 생성
-//    @PostMapping("/tasks/{taskId}/comments")
-    @PostMapping("/tasks/{taskId}/comments/{userId}")
+    @Loggable(logType = COMMENT_CREATED)
+    @PostMapping("/tasks/{taskId}/comments")
     public ResponseEntity<GlobalResponse<CommentCreateResponse>> createCommentApi(
-            // TODO: 로그인 사용자 정보로 변경
-            @PathVariable long userId,
+            @AuthenticationPrincipal User user,
             @PathVariable long taskId,
             @Valid @RequestBody CommentCreateRequest request
     ) {
-        CommentCreateResponse result = commentService.createComment(userId, taskId, request);
+        CommentCreateResponse result = commentService.createComment(user.getUsername(), taskId, request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(GlobalResponse.success(SuccessMessage.COMMENT_CREATE_SUCCESS, result));
     }
@@ -63,28 +67,28 @@ public class CommentController {
     }
 
     // 댓글 수정
-//    @PutMapping("/tasks/{taskId}/comments/{commentId}")
-    @PutMapping("/tasks/{taskId}/comments/{commentId}/{userId}")
+    @Loggable(logType = COMMENT_UPDATED)
+    @PutMapping("/tasks/{taskId}/comments/{commentId}")
     public ResponseEntity<GlobalResponse<CommentUpdateResponse>> updateCommentApi(
             @PathVariable long taskId,
             @PathVariable long commentId,
-            @PathVariable long userId,
+            @AuthenticationPrincipal User user,
             @Valid @RequestBody CommentUpdateRequest request
     ) {
-        CommentUpdateResponse result = commentService.updateComment(taskId, commentId, userId, request);
+        CommentUpdateResponse result = commentService.updateComment(taskId, commentId, user.getUsername(), request);
 
         return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.COMMENT_UPDATE_SUCCESS, result));
     }
 
     // 댓글 삭제
-    //    @DeleteMapping("/tasks/{taskId}/comments/{commentId}")
-    @DeleteMapping("/tasks/{taskId}/comments/{commentId}/{userId}")
+    @Loggable(logType = COMMENT_DELETED)
+    @DeleteMapping("/tasks/{taskId}/comments/{commentId}")
     public ResponseEntity<GlobalResponse<Void>> deleteCommentApi(
             @PathVariable long taskId,
             @PathVariable long commentId,
-            @PathVariable long userId
+            @AuthenticationPrincipal User user
     ) {
-        commentService.deleteComment(taskId, commentId, userId);
+        commentService.deleteComment(taskId, commentId, user.getUsername());
 
         return ResponseEntity.ok(GlobalResponse.successNodata(SuccessMessage.COMMENT_DELETE_SUCCESS));
     }

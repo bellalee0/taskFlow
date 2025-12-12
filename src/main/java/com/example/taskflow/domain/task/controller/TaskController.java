@@ -1,5 +1,8 @@
 package com.example.taskflow.domain.task.controller;
 
+import static com.example.taskflow.common.model.enums.LogType.*;
+
+import com.example.taskflow.common.annotation.Loggable;
 import com.example.taskflow.common.model.enums.SuccessMessage;
 import com.example.taskflow.common.model.enums.TaskPriority;
 import com.example.taskflow.common.model.enums.TaskStatus;
@@ -24,6 +27,7 @@ public class TaskController {
     private final TaskService taskService;
 
     // 작업 생성 기능
+    @Loggable(logType = TASK_CREATED)
     @PostMapping
     public ResponseEntity<GlobalResponse<TaskCreateResponse>> createTaskApi(
             @Valid @RequestBody TaskCreateRequest request
@@ -49,7 +53,7 @@ public class TaskController {
     // 작업 상세 조회 기능
     @GetMapping("/{id}")
     public ResponseEntity<GlobalResponse<TaskGetOneResponse>> getTaskApi(
-            @PathVariable Long id
+            @PathVariable long id
     ) {
         TaskGetOneResponse response = taskService.getTaskById(id);
 
@@ -57,9 +61,10 @@ public class TaskController {
     }
 
     // 작업 수정 기능
+    @Loggable(logType = TASK_UPDATED)
     @PutMapping("/{id}")
     public ResponseEntity<GlobalResponse<TaskUpdateResponse>> updateTaskApi(
-            @PathVariable Long id,
+            @PathVariable long id,
             @Valid @RequestBody TaskUpdateRequest request
     ) {
         TaskUpdateResponse response = taskService.updateTask(id, request);
@@ -68,6 +73,7 @@ public class TaskController {
     }
 
     // 작업 상태 변경 기능
+    @Loggable(logType = TASK_STATUS_CHANGED)
     @PatchMapping("/{id}/status")
     public ResponseEntity<GlobalResponse<TaskUpdateStatusResponse>> updateStatusApi(
         @PathVariable long id,
@@ -79,13 +85,12 @@ public class TaskController {
     }
 
     // 작업 삭제 기능
-//    @DeleteMapping("/{id}")
-    @DeleteMapping("/{id}/{userId}")
+    @Loggable(logType = TASK_DELETED)
+    @DeleteMapping("/{id}")
     public ResponseEntity<GlobalResponse<Void>> deleteTaskApi(
-            @PathVariable long id,
-            @PathVariable long userId
+            @PathVariable long id
     ) {
-        taskService.deleteTask(id, userId);
+        taskService.deleteTask(id);
 
         return ResponseEntity.ok(GlobalResponse.successNodata(SuccessMessage.TASK_DELETE_SUCCESS));
     }

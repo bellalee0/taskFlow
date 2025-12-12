@@ -1,5 +1,6 @@
 package com.example.taskflow.domain.comment.model.request;
 
+import com.example.taskflow.common.exception.ValidationMessage;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +8,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class CommentUpdateRequest {
-
-    @NotBlank(message = "댓글 내용은 필수입니다.")
+    @NotBlank(message = ValidationMessage.COMMENT_CONTENT_NOT_BLANK)
     private String content;
 }
