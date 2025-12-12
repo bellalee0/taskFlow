@@ -4,6 +4,7 @@ import com.example.taskflow.common.model.enums.SuccessMessage;
 import com.example.taskflow.common.model.response.GlobalResponse;
 import com.example.taskflow.domain.dashboard.model.response.DashboardGetStatsResponse;
 import com.example.taskflow.domain.dashboard.model.response.DashboardGetUserTaskSummaryResponse;
+import com.example.taskflow.domain.dashboard.model.response.DashboardGetWeeklyTrendResponse;
 import com.example.taskflow.domain.dashboard.service.DashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/dashboard")
@@ -36,4 +39,13 @@ public class DashboardController {
         DashboardGetUserTaskSummaryResponse result = dashboardService.getUserTaskSummary(userId);
         return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.DASHBOARD_GET_TASKS_SUCCESS, result));
     }
+
+    //주간 작업 추세
+    @GetMapping("/weekly-trend")
+    public ResponseEntity<GlobalResponse<List<DashboardGetWeeklyTrendResponse>>> getWeeklyTrendApi(
+    ) {
+        List<DashboardGetWeeklyTrendResponse> result = dashboardService.getWeeklyTrend();
+        return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.DASHBOARD_GET_WEEKLY_TREND_SUCCESS, result));
+    }
+
 }

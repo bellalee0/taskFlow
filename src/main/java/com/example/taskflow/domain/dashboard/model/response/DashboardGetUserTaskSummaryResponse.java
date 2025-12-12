@@ -9,14 +9,15 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class DashboardGetUserTaskSummaryResponse {
-    private final List<TodayTasksResponse> todayTasks;
-    private final List<UpcomingTasksResponse> upcomingTasks;
-    private final List<OverdueTasksResponse> overdueTasks;
+
+    private final List<DashboardTodayTasksResponse> todayTasks;
+    private final List<DashboardUpcomingTasksResponse> upcomingTasks;
+    private final List<DashboardOverdueTasksResponse> overdueTasks;
 
     public static DashboardGetUserTaskSummaryResponse from(
-            List<TodayTasksResponse> todayTasks,
-            List<UpcomingTasksResponse> upcomingTasks,
-            List<OverdueTasksResponse> overdueTasks
+            List<DashboardTodayTasksResponse> todayTasks,
+            List<DashboardUpcomingTasksResponse> upcomingTasks,
+            List<DashboardOverdueTasksResponse> overdueTasks
     ) {
         return new DashboardGetUserTaskSummaryResponse(todayTasks, upcomingTasks, overdueTasks);
     }

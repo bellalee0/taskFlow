@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class OverdueTasksResponse {
+public class DashboardUpcomingTasksResponse {
 
     private final Long id;
     private final String title;
@@ -18,8 +18,8 @@ public class OverdueTasksResponse {
     private final TaskPriority priority;
     private final LocalDateTime dueDate;
 
-    public static OverdueTasksResponse from(Task task) {
-        return new OverdueTasksResponse(
+    public static DashboardUpcomingTasksResponse from(Task task) {
+        return new DashboardUpcomingTasksResponse(
                 task.getId(),
                 task.getTitle(),
                 task.getStatus(),

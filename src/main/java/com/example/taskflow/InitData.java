@@ -3,6 +3,7 @@ package com.example.taskflow;
 import com.example.taskflow.common.entity.Task;
 import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.model.enums.TaskPriority;
+import com.example.taskflow.common.model.enums.TaskStatus;
 import com.example.taskflow.domain.task.repository.TaskRepository;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
@@ -61,12 +62,21 @@ public class InitData {
                 user1,
                 LocalDateTime.now().minusDays(3)
         );
+        task4.updateStatus(TaskStatus.DONE);
+
         Task task5 = new Task(
                 "대시보드 기능 풀리퀘스트",
                 "대시보드 기능 구현 완료",
                 TaskPriority.MEDIUM,
                 user1,
-                LocalDateTime.now().plusHours(1)
+                LocalDateTime.now().minusDays(2)
+        );
+        Task task6 = new Task(
+                "대시보드 기능 테스트",
+                "대시보드 기능 테스트",
+                TaskPriority.MEDIUM,
+                user1,
+                LocalDateTime.now().minusDays(2)
         );
 
         taskRepository.save(task1);
@@ -74,5 +84,6 @@ public class InitData {
         taskRepository.save(task3);
         taskRepository.save(task4);
         taskRepository.save(task5);
+        taskRepository.save(task6);
     }
 }

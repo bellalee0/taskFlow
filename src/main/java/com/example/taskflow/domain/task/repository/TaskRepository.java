@@ -32,13 +32,13 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             @Param("assigneeId") Long assigneeId,
             Pageable pageable);
 
-    long countByStatus(TaskStatus taskStatus);
+    Long countByStatus(TaskStatus taskStatus);
 
-    long countByStatusNotAndDueDateBefore(TaskStatus taskStatus, LocalDateTime now);
+    Long countByStatusNotAndDueDateBefore(TaskStatus taskStatus, LocalDateTime now);
 
-    long countByAssigneeIdId(Long userId);
+    Long countByAssigneeIdId(Long userId);
 
-    long countByAssigneeIdIdAndStatus(Long userId, TaskStatus taskStatus);
+    Long countByAssigneeIdIdAndStatus(Long userId, TaskStatus taskStatus);
 
     List<Task> findByAssigneeIdIdAndDueDateBetween(Long assigneeId, LocalDateTime start, LocalDateTime end);
 
@@ -50,4 +50,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
         return findById(taskId)
             .orElseThrow(() -> new CustomException(TASK_NOT_FOUND));
     }
+
+    Long countByCompletedDateTimeBetween(LocalDateTime startOfToday, LocalDateTime endOfToday);
+
+    Long countByCreatedAtBeforeAndStatusNot(LocalDateTime createdAtBefore, TaskStatus status);
 }
