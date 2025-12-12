@@ -9,11 +9,11 @@ import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.exception.CustomException;
 import com.example.taskflow.common.model.response.PageResponse;
 import com.example.taskflow.domain.comment.model.dto.CommentDto;
+import com.example.taskflow.domain.comment.model.dto.UserInfoDto;
 import com.example.taskflow.domain.comment.model.request.*;
 import com.example.taskflow.domain.comment.model.response.*;
 import com.example.taskflow.domain.comment.repository.CommentRepository;
 import com.example.taskflow.domain.task.repository.TaskRepository;
-import com.example.taskflow.domain.team.model.dto.MemberInfoDto;
 import com.example.taskflow.domain.user.model.dto.UserDto;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import java.util.List;
@@ -51,7 +51,7 @@ public class CommentService {
         Comment comment = new Comment(request.getContent(), user, task, parentComment);
         commentRepository.save(comment);
 
-        return CommentCreateResponse.from(CommentDto.from(comment), MemberInfoDto.from(UserDto.from(user)));
+        return CommentCreateResponse.from(CommentDto.from(comment), UserInfoDto.from(UserDto.from(user)));
     }
 
     // 댓글 목록 조회
@@ -63,7 +63,7 @@ public class CommentService {
         Page<Comment> commentList = commentRepository.findByTaskId(task.getId(), pageable);
 
         Page<CommentGetResponse> responsePage = commentList
-            .map(comment -> CommentGetResponse.from(CommentDto.from(comment), MemberInfoDto.from(UserDto.from(comment.getUser()))));
+            .map(comment -> CommentGetResponse.from(CommentDto.from(comment), UserInfoDto.from(UserDto.from(comment.getUser()))));
 
         return PageResponse.from(responsePage);
     }
