@@ -1,5 +1,6 @@
 package com.example.taskflow.domain.user.model.request;
 
+import com.example.taskflow.common.model.enums.ValidationMessage;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -9,17 +10,17 @@ import lombok.Getter;
 @Getter
 public class UserCreateRequest {
 
-    @NotBlank(message = "닉네임은 필수입니다.")
-    @Size(max = 10, message = "닉네임은 10글자를 넘길 수 없습니다.")
+    @NotBlank(message = ValidationMessage.USERNAME_NOT_BLANK)
+    @Size(max = 10, message = ValidationMessage.USERNAME_SIZE)
     private String username;
 
-    @Email(message = "올바른 이메일 형식이 아닙니다.")
+    @Email(message = ValidationMessage.EMAIL_FORMAT)
     private String email;
 
-    @NotBlank(message = "비밀번호는 필수입니다.")
-    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[~!@#$%])(?=\\S+$).{8,}$", message = "비밀번호는 영어와 숫자, 특수문자를 최소 1개 이상 포함해서 8자리 이상 입력해주세요.")
+    @NotBlank(message = ValidationMessage.PASSWORD_NOT_BLANK)
+    @Pattern(regexp = ValidationMessage.PASSWORD_REGEXP, message = ValidationMessage.PASSWORD_PATTERN_MESSAGE)
     private String password;
 
-    @NotBlank(message = "이름은 필수입니다.")
+    @NotBlank(message = ValidationMessage.NAME_NOT_BLANK)
     private String name;
 }

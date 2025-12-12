@@ -1,10 +1,11 @@
 package com.example.taskflow.domain.auth.model.request;
 
+import com.example.taskflow.common.model.enums.ValidationMessage;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
 public class AuthVerifyPasswordRequest {
-    @NotBlank(message = "비밀번호를 입력해주세요.")
+    @NotBlank(message = ValidationMessage.PASSWORD_REQUIRED)
     private String password;
 }
