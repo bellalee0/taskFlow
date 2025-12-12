@@ -67,14 +67,13 @@ public class UserService {
 
     //사용자 목록 조회
     @Transactional(readOnly = true)
-    public PageResponse<UserListInquiryResponse> getUserList(Pageable pageable) {
+    public List<UserListInquiryResponse> getUserList() {
 
-        Page<User> userList = userRepository.findAll(pageable);
+        List<User> users = userRepository.findAll();
 
-        Page<UserListInquiryResponse> userDtoList = userList.map(user ->  UserListInquiryResponse.from(UserDto.from(user)));
-
-        return PageResponse.from(userDtoList);
+        return users.stream().map(user -> UserListInquiryResponse.from(UserDto.from(user))).toList();
     }
+
 
     //사용자 정보 수정
     @Transactional

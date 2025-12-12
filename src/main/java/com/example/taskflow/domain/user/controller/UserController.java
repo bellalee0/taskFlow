@@ -46,10 +46,9 @@ public class UserController {
 
     //사용자 목록 조회
     @GetMapping
-    public ResponseEntity<GlobalResponse<PageResponse<UserListInquiryResponse>>> getUserListApi(
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
-    ) {
-        PageResponse<UserListInquiryResponse> response = userService.getUserList(pageable);
+    public ResponseEntity<GlobalResponse<List<UserListInquiryResponse>>> getUserListApi() {
+
+        List<UserListInquiryResponse> response = userService.getUserList();
 
         return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.USER_GET_LIST_SUCCESS, response));
     }
