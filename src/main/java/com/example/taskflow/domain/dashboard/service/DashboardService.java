@@ -5,6 +5,8 @@ import com.example.taskflow.common.model.enums.TaskStatus;
 import com.example.taskflow.domain.dashboard.model.dto.DashboardStatsDto;
 import com.example.taskflow.domain.dashboard.model.response.*;
 import com.example.taskflow.domain.task.repository.TaskRepository;
+import com.example.taskflow.domain.team.model.dto.MemberInfoDto;
+import com.example.taskflow.domain.user.model.dto.UserDto;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -74,15 +76,15 @@ public class DashboardService {
         User user = userRepository.findUserByUsername(username);
 
         List<DashboardTodayTasksResponse> todayTasks = taskRepository.findByAssigneeIdIdAndDueDateBetween(user.getId(), startOfToday, endOfToday).stream()
-                .map(DashboardTodayTasksResponse::from)
+                .map(todayTask -> DashboardTodayTasksResponse.from(todayTask, MemberInfoDto.from(UserDto.from(user))))
                 .toList();
 
         List<DashboardUpcomingTasksResponse> upcomingTasks = taskRepository.findByAssigneeIdIdAndDueDateAfterAndStatusNot(user.getId(), endOfToday, TaskStatus.DONE).stream()
-                .map(DashboardUpcomingTasksResponse::from)
+                .map(todayTask -> DashboardUpcomingTasksResponse.from(todayTask, MemberInfoDto.from(UserDto.from(user))))
                 .toList();
 
         List<DashboardOverdueTasksResponse> overdueTasks = taskRepository.findByAssigneeIdIdAndDueDateBeforeAndStatusNot(user.getId(), startOfToday, TaskStatus.DONE).stream()
-                .map(DashboardOverdueTasksResponse::from)
+                .map(todayTask -> DashboardOverdueTasksResponse.from(todayTask, MemberInfoDto.from(UserDto.from(user))))
                 .toList();
 
         return DashboardGetUserTaskSummaryResponse.from(todayTasks, upcomingTasks, overdueTasks);
