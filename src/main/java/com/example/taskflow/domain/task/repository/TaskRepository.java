@@ -16,6 +16,9 @@ import java.util.List;
 
 import static com.example.taskflow.common.exception.ErrorMessage.TASK_NOT_FOUND;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     // 다중 필터 작업 목록 조회 (상태, 우선순위, 담당자)
@@ -34,6 +37,20 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findAllByAssigneeId(User assigneeId);
 
+    Long countByStatus(TaskStatus taskStatus);
+
+    Long countByStatusNotAndDueDateBefore(TaskStatus taskStatus, LocalDateTime now);
+
+    Long countByAssigneeIdId(Long userId);
+
+    Long countByAssigneeIdIdAndStatus(Long userId, TaskStatus taskStatus);
+
+    List<Task> findByAssigneeIdIdAndDueDateBetween(Long assigneeId, LocalDateTime start, LocalDateTime end);
+
+    List<Task> findByAssigneeIdIdAndDueDateAfterAndStatusNot(Long assigneeId, LocalDateTime today, TaskStatus status);
+
+    List<Task> findByAssigneeIdIdAndDueDateBeforeAndStatusNot(Long assigneeId, LocalDateTime today, TaskStatus status);
+
     default Task findTaskById(Long taskId) {
         return findById(taskId)
             .orElseThrow(() -> new CustomException(TASK_NOT_FOUND));
@@ -43,4 +60,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "LOWER(t.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(t.description) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Task> searchByKeyword(@Param("keyword") String keyword);
+
+    Long countByCompletedDateTimeBetween(LocalDateTime startOfToday, LocalDateTime endOfToday);
+
+    Long countByCreatedAtBeforeAndStatusNot(LocalDateTime createdAtBefore, TaskStatus status);
 }
