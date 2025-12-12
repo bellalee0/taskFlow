@@ -71,4 +71,15 @@ public class Task extends BaseEntity {
         if (priority != null) this.priority = request.getPriority();
         if (dueDate != null) this.dueDate = request.getDueDate();
     }
+
+    public void completedTask() {
+        this.isCompleted = true;
+        this.completedDateTime = LocalDateTime.now();
+    }
+
+    public void uncompletedTask() {
+        this.isCompleted = false;
+        this.completedDateTime = null;
+    }
+
 }
