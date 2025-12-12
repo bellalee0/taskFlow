@@ -13,8 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,10 +31,8 @@ public class LogController {
     @GetMapping
     public ResponseEntity<GlobalResponse<PageResponse<LogGetAllResponse>>> getAllLogsApi(
         @PageableDefault(page = 0, size = 10) Pageable pageable,
-        // TODO: LogType 전달 방식 확인 필요
         @RequestParam(required = false) LogType type,
         @RequestParam(required = false) Long taskId,
-        // TODO: 프론트에서 시간 설정해서 주는지 확인 필요(날짜만 전달한다면 시간 지정 필요)
         @RequestParam(required = false) LocalDateTime startDate,
         @RequestParam(required = false) LocalDateTime endDate
     ) {
@@ -43,13 +42,11 @@ public class LogController {
     }
 
     // 내 활동 로그 조회
-//    @GetMapping("/me")
-    @GetMapping("/me/{userId}")
+    @GetMapping("/me")
     public ResponseEntity<GlobalResponse<List<LogGetMineResponse>>> getMyLogsApi(
-        // TODO: 로그인 유저 정보로 변경
-        @PathVariable long userId
+        @AuthenticationPrincipal User user
     ) {
-        List<LogGetMineResponse> result = logService.getMyLogs(userId);
+        List<LogGetMineResponse> result = logService.getMyLogs(user.getUsername());
 
         return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.ACTIVITIES_GET_MINE_SUCCESS, result));
     }

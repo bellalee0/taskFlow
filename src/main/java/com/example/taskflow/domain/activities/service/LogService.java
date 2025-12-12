@@ -39,9 +39,9 @@ public class LogService {
 
     // 내 활동 로그 조회
     @Transactional(readOnly = true)
-    public List<LogGetMineResponse> getMyLogs(long userId) {
+    public List<LogGetMineResponse> getMyLogs(String username) {
 
-        User user = userRepository.findUserById(userId);
+        User user = userRepository.findUserByUsername(username);
 
         List<Log> logList = logRepository.findAllByUserId(user.getId());
 
