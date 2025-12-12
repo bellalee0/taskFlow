@@ -2,15 +2,11 @@ package com.example.taskflow.domain.user.controller;
 
 import com.example.taskflow.common.model.enums.SuccessMessage;
 import com.example.taskflow.common.model.response.GlobalResponse;
-import com.example.taskflow.common.model.response.PageResponse;
 import com.example.taskflow.domain.user.model.request.*;
 import com.example.taskflow.domain.user.model.response.*;
 import com.example.taskflow.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,10 +42,9 @@ public class UserController {
 
     //사용자 목록 조회
     @GetMapping
-    public ResponseEntity<GlobalResponse<PageResponse<UserListInquiryResponse>>> getUserListApi(
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
-    ) {
-        PageResponse<UserListInquiryResponse> response = userService.getUserList(pageable);
+    public ResponseEntity<GlobalResponse<List<UserListInquiryResponse>>> getUserListApi() {
+
+        List<UserListInquiryResponse> response = userService.getUserList();
 
         return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.USER_GET_LIST_SUCCESS, response));
     }
