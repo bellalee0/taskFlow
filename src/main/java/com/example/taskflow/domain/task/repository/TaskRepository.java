@@ -1,7 +1,5 @@
 package com.example.taskflow.domain.task.repository;
 
-import static com.example.taskflow.common.exception.ErrorMessage.TASK_NOT_FOUND;
-
 import com.example.taskflow.common.entity.Task;
 import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.exception.CustomException;
@@ -15,6 +13,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+
+import static com.example.taskflow.common.exception.ErrorMessage.TASK_NOT_FOUND;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
@@ -38,4 +38,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
         return findById(taskId)
             .orElseThrow(() -> new CustomException(TASK_NOT_FOUND));
     }
+
+    @Query("SELECT t FROM Task t WHERE " +
+            "LOWER(t.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(t.description) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    List<Task> searchByKeyword(@Param("keyword") String keyword);
 }
