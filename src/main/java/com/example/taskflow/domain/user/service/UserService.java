@@ -3,7 +3,6 @@ package com.example.taskflow.domain.user.service;
 import com.example.taskflow.common.entity.*;
 import com.example.taskflow.common.exception.CustomException;
 import com.example.taskflow.common.model.enums.UserRole;
-import com.example.taskflow.common.model.response.PageResponse;
 import com.example.taskflow.common.utils.PasswordEncoder;
 import com.example.taskflow.domain.comment.repository.*;
 import com.example.taskflow.domain.task.repository.TaskRepository;
@@ -14,8 +13,6 @@ import com.example.taskflow.domain.user.model.response.*;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,14 +64,13 @@ public class UserService {
 
     //사용자 목록 조회
     @Transactional(readOnly = true)
-    public PageResponse<UserListInquiryResponse> getUserList(Pageable pageable) {
+    public List<UserListInquiryResponse> getUserList() {
 
-        Page<User> userList = userRepository.findAll(pageable);
+        List<User> users = userRepository.findAll();
 
-        Page<UserListInquiryResponse> userDtoList = userList.map(user ->  UserListInquiryResponse.from(UserDto.from(user)));
-
-        return PageResponse.from(userDtoList);
+        return users.stream().map(user -> UserListInquiryResponse.from(UserDto.from(user))).toList();
     }
+
 
     //사용자 정보 수정
     @Transactional
