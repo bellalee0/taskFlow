@@ -51,7 +51,6 @@ public class InitData {
 
 
         // --- Tasks ---
-        LocalDateTime now = LocalDateTime.now();
 
         Task task1 = new Task(
                 "서버 점검",
@@ -74,44 +73,6 @@ public class InitData {
                 user1,
                 LocalDateTime.now().plusDays(3)
         );
-
-        Task taskPastDone = new Task(
-                "과거 완료 작업",
-                "이미 끝난 일",
-                TaskPriority.LOW,
-                user1,
-                now.minusDays(5)
-        );
-        taskPastDone.completedTaskAt(now.minusDays(4));
-
-        Task taskPastTodo = new Task(
-                "과거 미완료 작업",
-                "아직 안 끝남",
-                TaskPriority.MEDIUM,
-                user1,
-                now.minusDays(3)
-        );
-
-        Task taskToday = new Task(
-                "오늘 마감 작업",
-                "오늘 해야 함",
-                TaskPriority.HIGH,
-                user1,
-                now
-        );
-
-        Task taskFuture = new Task(
-                "미래 작업",
-                "아직 멀었음",
-                TaskPriority.LOW,
-                user1,
-                now.plusDays(3)
-        );
-
-        taskRepository.save(taskPastDone);
-        taskRepository.save(taskPastTodo);
-        taskRepository.save(taskToday);
-        taskRepository.save(taskFuture);
 
         taskRepository.save(task1);
         taskRepository.save(task2);
