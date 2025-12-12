@@ -8,9 +8,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class UserSearchDto {
 
-    private Long id;
-    private String name;
-    private String username;
+    private final Long id;
+    private final String name;
+    private final String username;
 
     public static UserSearchDto from(UserDto userDto) {
         return new UserSearchDto(

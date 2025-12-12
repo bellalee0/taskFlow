@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 import static com.example.taskflow.common.exception.ErrorMessage.SEARCH_REQUIRED_FIELD;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/search")
 @RequiredArgsConstructor
 public class SearchController {
 
     private final SearchService searchService;
 
-    @GetMapping("/search")
+    @GetMapping
     public ResponseEntity<GlobalResponse<SearchResponse>> search(
-            @RequestParam(required = false) String query
+            @RequestParam String query
     ) {
         if (query == null || query.trim().isEmpty()) {
             throw new CustomException(SEARCH_REQUIRED_FIELD);

@@ -9,10 +9,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public class TaskSearchDto {
 
-    private Long id;
-    private String title;
-    private String description;
-    private TaskStatus status;
+    private final Long id;
+    private final String title;
+    private final String description;
+    private final TaskStatus status;
 
     public static TaskSearchDto from(TaskDto taskDto) {
         return new TaskSearchDto(

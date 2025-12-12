@@ -12,7 +12,15 @@ import java.util.List;
 @AllArgsConstructor
 public class SearchResponse {
 
-    private List<TaskSearchDto> tasks;
-    private List<TeamSearchDto> teams;
-    private List<UserSearchDto> users;
+    private final List<TaskSearchDto> tasks;
+    private final List<TeamSearchDto> teams;
+    private final List<UserSearchDto> users;
+
+    public static SearchResponse from(List<TaskSearchDto> taskSearchDto, List<TeamSearchDto> teamSearchDto, List<UserSearchDto> userSearchDto) {
+        return new SearchResponse(
+               taskSearchDto,
+               teamSearchDto,
+               userSearchDto
+        );
+    }
 }

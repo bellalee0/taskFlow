@@ -30,21 +30,21 @@ public class SearchService {
                 .stream()
                 .map(TaskDto::from)
                 .map(TaskSearchDto::from)
-                .collect(Collectors.toList());
+                .toList();
 
         List<TeamSearchDto> teams = teamRepository.searchByKeyword(keyword)
                 .stream()
                 .map(TeamDto::from)
                 .map(TeamSearchDto::from)
-                .collect(Collectors.toList());
+                .toList();
 
         List<UserSearchDto> users = userRepository.searchByKeyword(keyword)
                 .stream()
                 .map(UserDto::from)
                 .map(UserSearchDto::from)
-                .collect(Collectors.toList());
+                .toList();
 
-        return new SearchResponse(tasks, teams, users);
+        return SearchResponse.from(tasks, teams, users);
     }
 }
 
