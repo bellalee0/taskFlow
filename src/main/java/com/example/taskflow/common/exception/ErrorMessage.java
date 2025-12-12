@@ -14,6 +14,7 @@ public enum ErrorMessage {
     TASK_BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청 파라미터입니다."),
     TASK_invalid(HttpStatus.BAD_REQUEST, "유효하지 않은 상태 값입니다."),
     TASK_WRONG_ENUM(HttpStatus.BAD_REQUEST, "유효하지 않은 상태 값입니다."),
+    SEARCH_REQUIRED_FIELD(HttpStatus.BAD_REQUEST, "검색어를 입력해주세요."),
 
     // 401
     AUTH_WRONG_EMAIL_AND_PASSWORD(HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 올바르지 않습니다."),
