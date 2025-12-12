@@ -1,5 +1,6 @@
 package com.example.taskflow.domain.user.model.request;
 
+import com.example.taskflow.common.exception.ValidationMessage;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -8,14 +9,14 @@ import lombok.Getter;
 @Getter
 public class UserUpdateInfoRequest {
 
-    @NotBlank
-    @Email(message = "올바른 이메일 형식이 아닙니다.")
+    @NotBlank(message = ValidationMessage.NOT_BLANK_DEFAULT)
+    @Email(message = ValidationMessage.EMAIL_FORMAT)
     private String email;
 
-    @NotBlank
-    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[~!@#$%])(?=\\S+$).{8,}$", message = "비밀번호는 영어와 숫자, 특수문자를 최소 1개 이상 포함해서 8자리 이상 입력해주세요.")
+    @NotBlank(message = ValidationMessage.NOT_BLANK_DEFAULT)
+    @Pattern(regexp = ValidationMessage.PASSWORD_REGEXP, message = ValidationMessage.PASSWORD_PATTERN_MESSAGE)
     private String password;
 
-    @NotBlank
+    @NotBlank(message = ValidationMessage.NOT_BLANK_DEFAULT)
     private String name;
 }
