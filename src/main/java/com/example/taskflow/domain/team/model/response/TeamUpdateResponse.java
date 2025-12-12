@@ -1,10 +1,12 @@
 package com.example.taskflow.domain.team.model.response;
 
+import com.example.taskflow.domain.team.model.dto.MemberInfoDto;
 import com.example.taskflow.domain.team.model.dto.TeamDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -13,8 +15,15 @@ public class TeamUpdateResponse {
     private final String name;
     private final String description;
     private final LocalDateTime createdAt;
+    private final List<MemberInfoDto> members;
 
-    public static TeamUpdateResponse from(TeamDto dto) {
-        return new TeamUpdateResponse(dto.getId(), dto.getName(), dto.getDescription(), dto.getCreatedAt());
+    public static TeamUpdateResponse from(TeamDto dto, List<MemberInfoDto> members) {
+        return new TeamUpdateResponse(
+                dto.getId(),
+                dto.getName(),
+                dto.getDescription(),
+                dto.getCreatedAt(),
+                members
+        );
     }
 }

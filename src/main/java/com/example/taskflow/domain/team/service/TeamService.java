@@ -6,6 +6,7 @@ import com.example.taskflow.common.entity.Team;
 import com.example.taskflow.common.entity.TeamUser;
 import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.exception.CustomException;
+import com.example.taskflow.domain.team.model.dto.MemberInfoDto;
 import com.example.taskflow.domain.team.model.dto.TeamDto;
 import com.example.taskflow.domain.team.model.request.*;
 import com.example.taskflow.domain.team.model.response.*;
@@ -34,9 +35,16 @@ public class TeamService {
 
         List<Team> teamList = teamRepository.findAll();
 
-        return teamList.stream().map(team -> TeamGetListResponse.from(TeamDto.from(team))).toList();
+        List<TeamGetListResponse> teamDtoList = new ArrayList<>();
+        for (Team team : teamList) {
+            TeamDto teamDto = TeamDto.from(team);
+            List<MemberInfoDto> memberDtoList = getMembersInfo(team.getId());
+
+            teamDtoList.add(TeamGetListResponse.from(teamDto, memberDtoList));
+        }
+        return teamDtoList;
     }
-    //endregion
+//endregion
 
     //region 팀 상세 조회
     @Transactional(readOnly = true)
@@ -45,10 +53,7 @@ public class TeamService {
         Team team = teamRepository.findTeamById(teamId);
         TeamDto teamDto = TeamDto.from(team);
 
-        List<TeamUser> teamUserList = teamUserRepository.findByTeamId(teamId);
-
-        List<MemberIdUsernameNameEmailRoleResponse> memberDtoList = teamUserList.stream()
-            .map(teamUser -> MemberIdUsernameNameEmailRoleResponse.from(UserDto.from(teamUser.getUser()))).toList();
+        List<MemberInfoDto> memberDtoList = getMembersInfo(teamId);
 
         return TeamGetOneResponse.from(teamDto, memberDtoList);
     }
@@ -58,7 +63,7 @@ public class TeamService {
     @Transactional(readOnly = true)
     public List<TeamGetMemberResponse> getTeamMember(Long teamId) {
 
-        if(!teamRepository.existsById(teamId)){
+        if (!teamRepository.existsById(teamId)) {
             throw new CustomException(TEAM_NOT_FOUND);
         }
 
@@ -99,7 +104,9 @@ public class TeamService {
         selectedTeam.updateTeam(request);
         teamRepository.saveAndFlush(selectedTeam);
 
-        return TeamUpdateResponse.from(TeamDto.from(selectedTeam));
+        List<MemberInfoDto> members = getMembersInfo(teamId);
+
+        return TeamUpdateResponse.from(TeamDto.from(selectedTeam), members);
     }
     //endregion
 
@@ -135,8 +142,9 @@ public class TeamService {
 
         List<TeamUser> teamUserList = teamUserRepository.findByTeamId(teamId);
 
-        List<MemberIdUsernameNameResponse> memberList = teamUserList.stream()
-            .map(savedTeamUser -> MemberIdUsernameNameResponse.from(UserDto.from(savedTeamUser.getUser()))).toList();
+        List<MemberInfoDto> memberList = teamUserList.stream()
+                .map(savedTeamUser -> MemberInfoDto.from(UserDto.from(savedTeamUser.getUser())))
+                .toList();
 
         return TeamMemberCreateResponse.from(TeamDto.from(team), memberList);
     }
@@ -151,4 +159,12 @@ public class TeamService {
         teamUser.updateIsDeleted();
     }
     //endregion
+
+    //List<TeamUser>에서 teamId를 갖는 MembersInfo를 조회하는 매서드
+    private List<MemberInfoDto> getMembersInfo(Long teamId) {
+        List<TeamUser> teamUsers = teamUserRepository.findByTeamId(teamId);
+        return teamUsers.stream()
+                        .map(teamUser -> MemberInfoDto.from(UserDto.from(teamUser.getUser())))
+                        .toList();
+    }
 }

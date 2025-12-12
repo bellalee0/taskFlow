@@ -1,5 +1,6 @@
 package com.example.taskflow.domain.team.model.response;
 
+import com.example.taskflow.domain.team.model.dto.MemberInfoDto;
 import com.example.taskflow.domain.team.model.dto.TeamDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,9 +15,9 @@ public class TeamMemberCreateResponse {
     private final String name;
     private final String description;
     private final LocalDateTime createdAt;
-    private final List<MemberIdUsernameNameResponse> members;
+    private final List<MemberInfoDto> members;
 
-    public static TeamMemberCreateResponse from(TeamDto dto, List<MemberIdUsernameNameResponse> members) {
+    public static TeamMemberCreateResponse from(TeamDto dto, List<MemberInfoDto> members) {
         return new TeamMemberCreateResponse(
                 dto.getId(),
                 dto.getName(),

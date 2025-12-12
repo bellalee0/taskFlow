@@ -3,7 +3,6 @@ package com.example.taskflow.domain.task.model.response;
 import com.example.taskflow.common.model.enums.TaskPriority;
 import com.example.taskflow.common.model.enums.TaskStatus;
 import com.example.taskflow.domain.task.model.dto.TaskDto;
-import com.example.taskflow.domain.team.model.response.MemberIdUsernameNameEmailRoleResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
