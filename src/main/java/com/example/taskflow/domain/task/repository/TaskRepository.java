@@ -14,6 +14,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
@@ -38,6 +39,12 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     long countByAssigneeIdId(Long userId);
 
     long countByAssigneeIdIdAndStatus(Long userId, TaskStatus taskStatus);
+
+    List<Task> findByAssigneeIdIdAndDueDateBetween(Long assigneeId, LocalDateTime start, LocalDateTime end);
+
+    List<Task> findByAssigneeIdIdAndDueDateAfterAndStatusNot(Long assigneeId, LocalDateTime today, TaskStatus status);
+
+    List<Task> findByAssigneeIdIdAndDueDateBeforeAndStatusNot(Long assigneeId, LocalDateTime today, TaskStatus status);
 
     default Task findTaskById(Long taskId) {
         return findById(taskId)

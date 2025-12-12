@@ -54,9 +54,25 @@ public class InitData {
             user1,
             LocalDateTime.now().plusDays(3)
         );
+        Task task4 = new Task(
+                "코드 리펙토링",
+                "매서드 최적화",
+                TaskPriority.LOW,
+                user1,
+                LocalDateTime.now().minusDays(3)
+        );
+        Task task5 = new Task(
+                "대시보드 기능 풀리퀘스트",
+                "대시보드 기능 구현 완료",
+                TaskPriority.MEDIUM,
+                user1,
+                LocalDateTime.now().plusHours(1)
+        );
 
         taskRepository.save(task1);
         taskRepository.save(task2);
         taskRepository.save(task3);
+        taskRepository.save(task4);
+        taskRepository.save(task5);
     }
 }

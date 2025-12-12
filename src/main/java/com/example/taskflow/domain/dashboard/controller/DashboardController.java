@@ -20,7 +20,7 @@ public class DashboardController {
 
     //대시보드 통계 기능
     @GetMapping("/stats/{userId}")/*병합시 pathvariable 삭제*/
-    public ResponseEntity<GlobalResponse<DashboardGetStatsResponse>> getDashboardStatsApi (
+    public ResponseEntity<GlobalResponse<DashboardGetStatsResponse>> getDashboardStatsApi(
             /*@AuthenticationPrincipal AuthUser authUser*/@PathVariable Long userId
     ) {
         DashboardGetStatsResponse result = dashboardService.getDashboardStats(/*authUser.getId()*/userId);
@@ -30,8 +30,10 @@ public class DashboardController {
 
     //내 작업 요약
     @GetMapping("/tasks/{userId}")
-    public ResponseEntity<GlobalResponse<DashboardGetUserTaskSummaryResponse>> getUserTaskSummaryApi (
+    public ResponseEntity<GlobalResponse<DashboardGetUserTaskSummaryResponse>> getUserTaskSummaryApi(
             /*@AuthenticationPrincipal @PathVariable AuthUser authUser*/@PathVariable Long userId
     ) {
-
+        DashboardGetUserTaskSummaryResponse result = dashboardService.getUserTaskSummary(userId);
+        return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.DASHBOARD_GET_TASKS_SUCCESS, result));
+    }
 }
