@@ -2,8 +2,7 @@ package com.example.taskflow.domain.activities.model.response;
 
 import com.example.taskflow.common.model.enums.LogType;
 import com.example.taskflow.domain.activities.model.dto.LogDto;
-import com.example.taskflow.domain.user.model.dto.UserDto;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.example.taskflow.domain.team.model.dto.MemberInfoDto;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,12 +14,12 @@ public class LogGetAllResponse {
     private Long id;
     private LogType type;
     private Long userId;
-    private UserDto user;
+    private MemberInfoDto user;
     private Long taskId;
     private LocalDateTime timestamp;
     private String description;
 
-    public static LogGetAllResponse from(LogDto logDto, UserDto userDto) {
+    public static LogGetAllResponse from(LogDto logDto, MemberInfoDto userDto) {
         return new LogGetAllResponse(
             logDto.getId(),
             logDto.getType(),

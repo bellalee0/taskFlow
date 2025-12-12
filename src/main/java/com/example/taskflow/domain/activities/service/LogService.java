@@ -7,6 +7,7 @@ import com.example.taskflow.common.model.response.PageResponse;
 import com.example.taskflow.domain.activities.model.dto.LogDto;
 import com.example.taskflow.domain.activities.model.response.*;
 import com.example.taskflow.domain.activities.repository.LogRepository;
+import com.example.taskflow.domain.team.model.dto.MemberInfoDto;
 import com.example.taskflow.domain.user.model.dto.UserDto;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import java.time.LocalDateTime;
@@ -31,7 +32,7 @@ public class LogService {
         Page<Log> logPage = logRepository.findByFilters(pageable, type, taskId, startDate, endDate);
 
         Page<LogGetAllResponse> responsePage = logPage
-            .map(log -> LogGetAllResponse.from(LogDto.from(log), UserDto.from(log.getUser())));
+            .map(log -> LogGetAllResponse.from(LogDto.from(log), MemberInfoDto.from(UserDto.from(log.getUser()))));
 
         return PageResponse.from(responsePage);
     }
@@ -46,7 +47,7 @@ public class LogService {
 
         return logList.stream()
             .map(LogDto::from).toList()
-            .stream().map(logDto -> LogGetMineResponse.from(logDto, UserDto.from(user)))
+            .stream().map(logDto -> LogGetMineResponse.from(logDto, MemberInfoDto.from(UserDto.from(user))))
             .toList();
     }
 }

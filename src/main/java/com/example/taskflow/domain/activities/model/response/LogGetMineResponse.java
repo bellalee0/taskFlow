@@ -2,7 +2,7 @@ package com.example.taskflow.domain.activities.model.response;
 
 import com.example.taskflow.common.model.enums.LogType;
 import com.example.taskflow.domain.activities.model.dto.LogDto;
-import com.example.taskflow.domain.user.model.dto.UserDto;
+import com.example.taskflow.domain.team.model.dto.MemberInfoDto;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,14 +13,14 @@ public class LogGetMineResponse {
 
     private Long id;
     private Long userId;
-    private UserDto user;
+    private MemberInfoDto user;
     private String action;
     private LogType targetType;
     private Long targetId;
     private String description;
     private LocalDateTime createdAt;
 
-    public static LogGetMineResponse from(LogDto logDto, UserDto userDto) {
+    public static LogGetMineResponse from(LogDto logDto, MemberInfoDto userDto) {
         return new LogGetMineResponse(
             logDto.getId(),
             logDto.getUserId(),
