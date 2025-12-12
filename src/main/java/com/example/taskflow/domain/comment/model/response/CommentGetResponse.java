@@ -18,8 +18,8 @@ public class CommentGetResponse {
     private final Long userId;
     private final UserInfoDto user;
     private final Long parentId;
-    private final LocalDateTime createdAT;
-    private final LocalDateTime updatedAT;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
     public static CommentGetResponse from(CommentDto commentDto, UserInfoDto userDto) {
         return new CommentGetResponse(
