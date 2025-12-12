@@ -8,6 +8,8 @@ import com.example.taskflow.domain.dashboard.model.response.DashboardGetWeeklyTr
 import com.example.taskflow.domain.dashboard.service.DashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,21 +24,21 @@ public class DashboardController {
     private final DashboardService dashboardService;
 
     //대시보드 통계 기능
-    @GetMapping("/stats/{userId}")/*병합시 pathvariable 삭제*/
+    @GetMapping("/stats")
     public ResponseEntity<GlobalResponse<DashboardGetStatsResponse>> getDashboardStatsApi(
-            /*@AuthenticationPrincipal AuthUser authUser*/@PathVariable Long userId
+            @AuthenticationPrincipal User user
     ) {
-        DashboardGetStatsResponse result = dashboardService.getDashboardStats(/*authUser.getId()*/userId);
+        DashboardGetStatsResponse result = dashboardService.getDashboardStats(user.getUsername());
 
         return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.DASHBOARD_GET_STATS_SUCCESS, result));
     }
 
     //내 작업 요약
-    @GetMapping("/tasks/{userId}")
+    @GetMapping("/tasks")
     public ResponseEntity<GlobalResponse<DashboardGetUserTaskSummaryResponse>> getUserTaskSummaryApi(
-            /*@AuthenticationPrincipal @PathVariable AuthUser authUser*/@PathVariable Long userId
+            @AuthenticationPrincipal User user
     ) {
-        DashboardGetUserTaskSummaryResponse result = dashboardService.getUserTaskSummary(userId);
+        DashboardGetUserTaskSummaryResponse result = dashboardService.getUserTaskSummary(user.getUsername());
         return ResponseEntity.ok(GlobalResponse.success(SuccessMessage.DASHBOARD_GET_TASKS_SUCCESS, result));
     }
 
