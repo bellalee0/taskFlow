@@ -1,9 +1,11 @@
 package com.example.taskflow.domain.dashboard.service;
 
+import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.model.enums.TaskStatus;
 import com.example.taskflow.domain.dashboard.model.dto.DashboardStatsDto;
 import com.example.taskflow.domain.dashboard.model.response.*;
 import com.example.taskflow.domain.task.repository.TaskRepository;
+import com.example.taskflow.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,10 +23,11 @@ import java.util.Locale;
 public class DashboardService {
 
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
 
     //region 대시보드 통계 기능
     @Transactional(readOnly = true)
-    public DashboardGetStatsResponse getDashboardStats(Long userId) {
+    public DashboardGetStatsResponse getDashboardStats(String username) {
 
         LocalDate today = LocalDate.now();
         LocalDateTime endOfToday = today.atTime(LocalTime.MAX);
@@ -38,8 +41,10 @@ public class DashboardService {
         double teamProgress =
                 totalTasks == 0 ? 0.0 : (completedTasks * 100.0) / totalTasks;
 
-        long userTotalTasks = taskRepository.countByAssigneeIdId(userId);
-        long userCompletedTasks = taskRepository.countByAssigneeIdIdAndStatus(userId, TaskStatus.DONE);
+        User user = userRepository.findUserByUsername(username);
+
+        long userTotalTasks = taskRepository.countByAssigneeIdId(user.getId());
+        long userCompletedTasks = taskRepository.countByAssigneeIdIdAndStatus(user.getId(), TaskStatus.DONE);
 
         double completionRate =
                 userTotalTasks == 0 ? 0.0 : (userCompletedTasks * 100.0) / userTotalTasks;
@@ -60,21 +65,23 @@ public class DashboardService {
 
     //region 내 작업 요약
     @Transactional(readOnly = true)
-    public DashboardGetUserTaskSummaryResponse getUserTaskSummary(Long userId) {
+    public DashboardGetUserTaskSummaryResponse getUserTaskSummary(String username) {
 
         LocalDate today = LocalDate.now();
         LocalDateTime startOfToday = today.atStartOfDay();
         LocalDateTime endOfToday = today.atTime(LocalTime.MAX);
 
-        List<DashboardTodayTasksResponse> todayTasks = taskRepository.findByAssigneeIdIdAndDueDateBetween(userId, startOfToday, endOfToday).stream()
+        User user = userRepository.findUserByUsername(username);
+
+        List<DashboardTodayTasksResponse> todayTasks = taskRepository.findByAssigneeIdIdAndDueDateBetween(user.getId(), startOfToday, endOfToday).stream()
                 .map(DashboardTodayTasksResponse::from)
                 .toList();
 
-        List<DashboardUpcomingTasksResponse> upcomingTasks = taskRepository.findByAssigneeIdIdAndDueDateAfterAndStatusNot(userId, endOfToday, TaskStatus.DONE).stream()
+        List<DashboardUpcomingTasksResponse> upcomingTasks = taskRepository.findByAssigneeIdIdAndDueDateAfterAndStatusNot(user.getId(), endOfToday, TaskStatus.DONE).stream()
                 .map(DashboardUpcomingTasksResponse::from)
                 .toList();
 
-        List<DashboardOverdueTasksResponse> overdueTasks = taskRepository.findByAssigneeIdIdAndDueDateBeforeAndStatusNot(userId, startOfToday, TaskStatus.DONE).stream()
+        List<DashboardOverdueTasksResponse> overdueTasks = taskRepository.findByAssigneeIdIdAndDueDateBeforeAndStatusNot(user.getId(), startOfToday, TaskStatus.DONE).stream()
                 .map(DashboardOverdueTasksResponse::from)
                 .toList();
 
