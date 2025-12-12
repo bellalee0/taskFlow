@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class DashboardOverdueTasksResponse {
 
     private final Long id;
+    private final String assignee;
     private final String title;
     private final TaskStatus status;
     private final TaskPriority priority;
@@ -21,6 +22,7 @@ public class DashboardOverdueTasksResponse {
     public static DashboardOverdueTasksResponse from(Task task) {
         return new DashboardOverdueTasksResponse(
                 task.getId(),
+                task.getAssigneeId().getName(),
                 task.getTitle(),
                 task.getStatus(),
                 task.getPriority(),

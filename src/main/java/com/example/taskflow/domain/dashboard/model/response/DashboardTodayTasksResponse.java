@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class DashboardTodayTasksResponse {
 
     private final Long id;
+    private final String assignee;
     private final String title;
     private final TaskStatus status;
     private final TaskPriority priority;
@@ -21,6 +22,7 @@ public class DashboardTodayTasksResponse {
     public static DashboardTodayTasksResponse from(Task task) {
         return new DashboardTodayTasksResponse(
                 task.getId(),
+                task.getAssigneeId().getName(),
                 task.getTitle(),
                 task.getStatus(),
                 task.getPriority(),
