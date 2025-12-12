@@ -1,5 +1,6 @@
 package com.example.taskflow.common.entity;
 
+import com.example.taskflow.domain.team.model.request.TeamUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -20,9 +21,13 @@ public class Team extends BaseEntity {
 
     private String description;
 
-
     public Team(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public void updateTeam(TeamUpdateRequest request) {
+        this.name = request.getName();
+        this.description = request.getDescription();
     }
 }

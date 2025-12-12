@@ -2,6 +2,7 @@ package com.example.taskflow.common.entity;
 
 import com.example.taskflow.common.model.enums.TaskPriority;
 import com.example.taskflow.common.model.enums.TaskStatus;
+import com.example.taskflow.domain.task.model.request.TaskUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,13 +10,11 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
-import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
 @Table(name = "tasks")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Where(clause = "is_deleted = false")
 public class Task extends BaseEntity {
 
     @Id
@@ -63,12 +62,11 @@ public class Task extends BaseEntity {
     }
 
     // 작업 정보 수정
-    public void update(String title, String description, User assigneeId,
-                       TaskPriority priority, LocalDateTime dueDate) {
-        if (title != null) this.title = title;
-        if (description != null) this.description = description;
+    public void update(TaskUpdateRequest request, User assigneeId) {
+        if (title != null) this.title = request.getTitle();
+        if (description != null) this.description = request.getDescription();
         if (assigneeId != null) this.assigneeId = assigneeId;
-        if (priority != null) this.priority = priority;
-        if (dueDate != null) this.dueDate = dueDate;
+        if (priority != null) this.priority = request.getPriority();
+        if (dueDate != null) this.dueDate = request.getDueDate();
     }
 }

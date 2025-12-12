@@ -1,29 +1,27 @@
 package com.example.taskflow.domain.comment.model.response;
 
 import com.example.taskflow.domain.comment.model.dto.CommentDto;
-import com.example.taskflow.domain.user.model.dto.UserDto;
+import com.example.taskflow.domain.team.model.dto.MemberInfoDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommentCreateResponse {
 
-    private Long id;
-    private Long taskId;
-    private Long userId;
-    private UserDto user; // TODO: User 응답 객체로 변경
-    private String content;
-    private Long parentId;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private final Long id;
+    private final Long taskId;
+    private final Long userId;
+    private final MemberInfoDto user;
+    private final String content;
+    private final Long parentId;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
-    public static CommentCreateResponse from(CommentDto commentDto, UserDto userDto) {
+    public static CommentCreateResponse from(CommentDto commentDto, MemberInfoDto userDto) {
         return new CommentCreateResponse(
             commentDto.getId(),
             commentDto.getTaskId(),
