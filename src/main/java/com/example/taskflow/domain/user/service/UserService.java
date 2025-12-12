@@ -3,7 +3,6 @@ package com.example.taskflow.domain.user.service;
 import com.example.taskflow.common.entity.*;
 import com.example.taskflow.common.exception.CustomException;
 import com.example.taskflow.common.model.enums.UserRole;
-import com.example.taskflow.common.model.response.PageResponse;
 import com.example.taskflow.common.utils.PasswordEncoder;
 import com.example.taskflow.domain.comment.repository.*;
 import com.example.taskflow.domain.task.repository.TaskRepository;
@@ -14,8 +13,6 @@ import com.example.taskflow.domain.user.model.response.*;
 import com.example.taskflow.domain.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
