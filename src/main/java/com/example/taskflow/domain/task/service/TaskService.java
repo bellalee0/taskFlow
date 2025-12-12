@@ -104,7 +104,7 @@ public class TaskService {
 
         Task task = taskRepository.findTaskById(taskId);
 
-        if (task.isDeleted()) { throw new  CustomException(TASK_NOT_FOUND); }
+        if (task.isDeleted()) { throw new CustomException(TASK_NOT_FOUND); }
 
         List<Comment> commentList = commentRepository.findByTaskId(task.getId());
         commentList.forEach(BaseEntity::updateIsDeleted);
