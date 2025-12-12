@@ -1,6 +1,6 @@
 package com.example.taskflow.domain.user.model.request;
 
-import com.example.taskflow.common.model.enums.ValidationMessage;
+import com.example.taskflow.common.exception.ValidationMessage;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

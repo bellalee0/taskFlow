@@ -1,4 +1,4 @@
-package com.example.taskflow.common.model.enums;
+package com.example.taskflow.common.exception;
 
 public final class ValidationMessage {
 

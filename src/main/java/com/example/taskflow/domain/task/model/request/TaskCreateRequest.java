@@ -1,7 +1,7 @@
 package com.example.taskflow.domain.task.model.request;
 
 import com.example.taskflow.common.model.enums.TaskPriority;
-import com.example.taskflow.common.model.enums.ValidationMessage;
+import com.example.taskflow.common.exception.ValidationMessage;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.example.taskflow.domain.team.model.request;
 
-import com.example.taskflow.common.model.enums.ValidationMessage;
+import com.example.taskflow.common.exception.ValidationMessage;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
