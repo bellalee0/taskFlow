@@ -69,10 +69,10 @@ class SearchServiceTest {
         // Then
         assertThat(response).isNotNull();
         assertThat(response.getTasks()).hasSize(1);
-        assertThat(response.getTasks().get(0).getTitle()).contains(task.getTitle());
+        assertThat(response.getTasks().get(0).getTitle()).isEqualTo(task.getTitle());
         assertThat(response.getTeams()).hasSize(1);
-        assertThat(response.getTeams().get(0).getName()).contains(team.getName());
+        assertThat(response.getTeams().get(0).getName()).isEqualTo(team.getName());
         assertThat(response.getUsers()).hasSize(1);
-        assertThat(response.getUsers().get(0).getName()).contains(user.getName());
+        assertThat(response.getUsers().get(0).getName()).isEqualTo(user.getName());
     }
 }
