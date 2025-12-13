@@ -10,16 +10,23 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.example.taskflow.common.entity.Team;
+import com.example.taskflow.common.entity.TeamUser;
 import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.exception.CustomException;
+import com.example.taskflow.common.model.enums.UserRole;
 import com.example.taskflow.common.utils.PasswordEncoder;
+import com.example.taskflow.domain.comment.repository.CommentRepository;
+import com.example.taskflow.domain.team.repository.TeamUserRepository;
 import com.example.taskflow.domain.user.model.request.UserCreateRequest;
 import com.example.taskflow.domain.user.model.request.UserUpdateInfoRequest;
+import com.example.taskflow.domain.user.model.response.UserAvailableTeamResponse;
 import com.example.taskflow.domain.user.model.response.UserCreateResponse;
 import com.example.taskflow.domain.user.model.response.UserGetProfileResponse;
 import com.example.taskflow.domain.user.model.response.UserListInquiryResponse;
 import com.example.taskflow.domain.user.model.response.UserUpdateInfoResponse;
 import com.example.taskflow.domain.user.repository.UserRepository;
+import com.example.taskflow.fixture.TeamFixture;
 import com.example.taskflow.fixture.UserFixture;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +46,12 @@ class UserServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private CommentRepository commentRepository;
+
+    @Mock
+    private TeamUserRepository teamUserRepository;
 
     @InjectMocks
     private UserService userService;
@@ -201,6 +214,36 @@ class UserServiceTest {
     @Test
     @DisplayName("추가 가능한 사용자 조회 테스트 - 성공: 팀 ID 주어질 때")
     void findAvailableUsers_success_byTeamId() {
-        // TODO: 팀별 조회 테스트
+
+        // Given
+        User user = UserFixture.createTestUser();
+        ReflectionTestUtils.setField(user, "id", 1L);
+
+        User user2 = new User("test2", "test2@test.com", "qwer1234!", "test2", UserRole.USER);
+        ReflectionTestUtils.setField(user2, "id", 2L);
+
+        List<User> userList = new ArrayList<>();
+        userList.add(user);
+        userList.add(user2);
+
+        Team team = TeamFixture.createTestTeam();
+        ReflectionTestUtils.setField(team, "id", 1L);
+
+        TeamUser teamUser = new TeamUser(team, user);
+        ReflectionTestUtils.setField(teamUser, "id", 1L);
+
+        List<TeamUser> teamUserList = new ArrayList<>();
+        teamUserList.add(teamUser);
+
+        when(userRepository.findAll()).thenReturn(userList);
+        when(teamUserRepository.findByTeamId(anyLong())).thenReturn(teamUserList);
+
+        // When
+        List<UserAvailableTeamResponse> response = userService.findAvailableUsers(1L);
+
+        // Then
+        assertThat(response).isNotNull();
+        assertThat(response).hasSize(1);
+        assertThat(response.get(0).getUsername()).isEqualTo(user2.getUsername());
     }
 }
