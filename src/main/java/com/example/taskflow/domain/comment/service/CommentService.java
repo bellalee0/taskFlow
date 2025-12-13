@@ -100,7 +100,9 @@ public class CommentService {
         Comment comment = commentRepository.findCommentById(commentId);
 
         checkTaskCommentRelationship(task, comment);
-        checkCommentUserRelationship(username, comment);
+        if (!Objects.equals(comment.getUser().getUsername(), username)) {
+            throw new CustomException(COMMENT_NO_PERMISSION_UPDATE);
+        }
 
         comment.update(request);
         commentRepository.saveAndFlush(comment);
@@ -116,9 +118,11 @@ public class CommentService {
         Comment comment = commentRepository.findCommentById(commentId);
 
         checkTaskCommentRelationship(task, comment);
-        checkCommentUserRelationship(username, comment);
+        if (!Objects.equals(comment.getUser().getUsername(), username)) {
+            throw new CustomException(COMMENT_NO_PERMISSION_DELETE);
+        }
 
-        if (comment.isDeleted()) { throw new CustomException(COMMENT_NO_PERMISSION_DELETE); }
+        if (comment.isDeleted()) { throw new CustomException(COMMENT_NOT_FOUND_COMMENT); }
 
         if (commentRepository.existsByParentCommentId(comment.getId())) {
             List<Comment> childCommentList = commentRepository.findAllByParentCommentId(comment.getId());
@@ -132,13 +136,6 @@ public class CommentService {
     private void checkTaskCommentRelationship(Task task, Comment parentComment) {
         if (!Objects.equals(task.getId(), parentComment.getTask().getId())) {
             throw new CustomException(COMMENT_NOT_FOUND_TASK_OR_COMMENT);
-        }
-    }
-
-    // User가 Comment의 작성자인지 확인
-    private void checkCommentUserRelationship(String username, Comment comment) {
-        if (!Objects.equals(comment.getUser().getUsername(), username)) {
-            throw new CustomException(COMMENT_NO_PERMISSION_UPDATE);
         }
     }
 }
