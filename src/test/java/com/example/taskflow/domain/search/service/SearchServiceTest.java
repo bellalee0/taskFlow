@@ -61,7 +61,7 @@ class SearchServiceTest {
 
         when(taskRepository.searchByKeyword(anyString())).thenReturn(List.of(task));
         when(teamRepository.searchByKeyword(anyString())).thenReturn(List.of(team));
-        when(userRepository.searchByKeyword(anyString())).thenReturn(List.of());
+        when(userRepository.searchByKeyword(anyString())).thenReturn(List.of(user));
 
         // When
         SearchResponse response = searchService.search(keyword);
@@ -72,6 +72,7 @@ class SearchServiceTest {
         assertThat(response.getTasks().get(0).getTitle()).contains(task.getTitle());
         assertThat(response.getTeams()).hasSize(1);
         assertThat(response.getTeams().get(0).getName()).contains(team.getName());
-        assertThat(response.getUsers()).hasSize(0);
+        assertThat(response.getUsers()).hasSize(1);
+        assertThat(response.getUsers().get(0).getName()).contains(user.getName());
     }
 }
