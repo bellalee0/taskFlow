@@ -44,7 +44,7 @@ public class CommentService {
         Comment parentComment = null;
 
         if (request.getParentId() != null) {
-            parentComment = commentRepository.findCommentById(request.getParentId(), COMMENT_NOT_FOUND_TASK_OR_COMMENT);
+            parentComment = commentRepository.findParentCommentById(request.getParentId());
 
             checkTaskCommentRelationship(task, parentComment);
             if (parentComment.getParentComment() != null) { throw new CustomException(COMMENT_NOT_FOUND_TASK_OR_COMMENT); }
@@ -97,7 +97,7 @@ public class CommentService {
     public CommentUpdateResponse updateComment(long taskId, long commentId, String username, CommentUpdateRequest request) {
 
         Task task = taskRepository.findTaskById(taskId);
-        Comment comment = commentRepository.findCommentById(commentId, COMMENT_NOT_FOUND_COMMENT);
+        Comment comment = commentRepository.findCommentById(commentId);
 
         checkTaskCommentRelationship(task, comment);
         checkCommentUserRelationship(username, comment);
@@ -113,7 +113,7 @@ public class CommentService {
     public void deleteComment(long taskId, long commentId, String username) {
 
         Task task = taskRepository.findTaskById(taskId);
-        Comment comment = commentRepository.findCommentById(commentId, COMMENT_NOT_FOUND_COMMENT);
+        Comment comment = commentRepository.findCommentById(commentId);
 
         checkTaskCommentRelationship(task, comment);
         checkCommentUserRelationship(username, comment);
