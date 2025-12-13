@@ -3,10 +3,14 @@ package com.example.taskflow.domain.user.controller;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.example.taskflow.common.entity.Team;
+import com.example.taskflow.common.entity.TeamUser;
 import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.utils.JwtUtil;
+import com.example.taskflow.domain.team.repository.TeamRepository;
+import com.example.taskflow.domain.team.repository.TeamUserRepository;
 import com.example.taskflow.domain.user.repository.UserRepository;
-import com.example.taskflow.domain.user.service.UserService;
+import com.example.taskflow.fixture.TeamFixture;
 import com.example.taskflow.fixture.UserFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,6 +36,12 @@ class UserControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private TeamRepository teamRepository;
+
+    @Autowired
+    private TeamUserRepository teamUserRepository;
 
     User user;
     String token;
@@ -147,6 +157,19 @@ class UserControllerTest {
     @Test
     @DisplayName("GET /api/users/available 통합 테스트 - 성공: 팀별 추가 가능한 사용자 조회 성공")
     void findTeamUser_success_byTeamId() throws Exception {
-        // TODO: 팀별 조회 테스트
+
+        // Given
+        Team team = TeamFixture.createTestTeam();
+        teamRepository.save(team);
+
+        TeamUser teamUser = new TeamUser(team, user);
+        teamUserRepository.save(teamUser);
+
+        // When & Then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/available")
+                .param("teamId", String.valueOf(team.getId()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", token))
+            .andExpect(status().isOk());
     }
 }
