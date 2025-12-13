@@ -64,6 +64,26 @@ class AuthenticationControllerTest {
     }
 
     @Test
+    @DisplayName("POST /api/auth/login 통합 테스트 - 실패: 필수 항목에 빈 값 입력")
+    void loginApi_failure_blank() throws Exception {
+
+        // Given
+        String requestBody =
+            """
+            {
+                "username" : "",
+                "password" : ""
+            }
+            """;
+
+        // When & Then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @DisplayName("POST /api/auth/login 통합 테스트 - 실패: 존재하지 않는 유저명")
     void loginApi_failure_wrongUsername() throws Exception {
 
