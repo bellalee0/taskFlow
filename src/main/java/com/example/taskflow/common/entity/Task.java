@@ -64,11 +64,12 @@ public class Task extends BaseEntity {
 
     // 작업 정보 수정
     public void update(TaskUpdateRequest request, User assigneeId) {
-        if (title != null) this.title = request.getTitle();
-        if (description != null) this.description = request.getDescription();
+        if (request.getTitle() != null) this.title = request.getTitle();
+        if (request.getDescription() != null) this.description = request.getDescription();
+        if (request.getStatus() != null) this.status = request.getStatus();
         if (assigneeId != null) this.assigneeId = assigneeId;
-        if (priority != null) this.priority = request.getPriority();
-        if (dueDate != null) this.dueDate = request.getDueDate();
+        if (request.getPriority() != null) this.priority = request.getPriority();
+        if (request.getDueDate() != null) this.dueDate = request.getDueDate();
     }
 
     public void completedTask() {
