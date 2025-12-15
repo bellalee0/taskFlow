@@ -28,17 +28,16 @@ public class Task extends BaseEntity {
 
     private String description;
 
-    //@Column(nullable = false)
+    @Column(nullable = false)
     private TaskStatus status;
 
-    //@Column(nullable = false)
+    @Column(nullable = false)
     private TaskPriority priority;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "assignee_id", nullable = false)
     private User assigneeId;
 
-    //@Column(nullable = false)
     private LocalDateTime dueDate;
 
     @ColumnDefault("0")
@@ -54,7 +53,7 @@ public class Task extends BaseEntity {
         this.status = TaskStatus.TODO;
         this.priority = priority;
         this.assigneeId = assigneeId;
-        this.dueDate = dueDateTime;
+        this.dueDate = dueDateTime == null ? LocalDateTime.now() : dueDateTime;
         this.isCompleted = false;
         this.completedDateTime = null;
     }
@@ -65,11 +64,12 @@ public class Task extends BaseEntity {
 
     // 작업 정보 수정
     public void update(TaskUpdateRequest request, User assigneeId) {
-        if (title != null) this.title = request.getTitle();
-        if (description != null) this.description = request.getDescription();
+        if (request.getTitle() != null) this.title = request.getTitle();
+        if (request.getDescription() != null) this.description = request.getDescription();
+        if (request.getStatus() != null) this.status = request.getStatus();
         if (assigneeId != null) this.assigneeId = assigneeId;
-        if (priority != null) this.priority = request.getPriority();
-        if (dueDate != null) this.dueDate = request.getDueDate();
+        if (request.getPriority() != null) this.priority = request.getPriority();
+        if (request.getDueDate() != null) this.dueDate = request.getDueDate();
     }
 
     public void completedTask() {

@@ -1,5 +1,8 @@
 package com.example.taskflow.domain.comment.repository;
 
+import static com.example.taskflow.common.exception.ErrorMessage.COMMENT_NOT_FOUND_COMMENT;
+import static com.example.taskflow.common.exception.ErrorMessage.COMMENT_NOT_FOUND_TASK_OR_COMMENT;
+
 import com.example.taskflow.common.entity.Comment;
 import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.exception.CustomException;
@@ -9,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
@@ -16,9 +20,9 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @Query("""
           SELECT c FROM Comment c
-          WHERE c.parentComment is null
+          WHERE c.parentComment is null and c.task.id = :taskId
           """)
-    Page<Comment> findByTaskId(long taskId, Pageable pageable);
+    Page<Comment> findByTaskId(@Param("taskId") long taskId, Pageable pageable);
 
     List<Comment> findAllByParentCommentId(Long id);
 
@@ -26,7 +30,11 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findAllByUser(User user);
 
-    default Comment findCommentById(long id, ErrorMessage error) {
-        return findById(id).orElseThrow(() -> new CustomException(error));
+    default Comment findCommentById(long id) {
+        return findById(id).orElseThrow(() -> new CustomException(COMMENT_NOT_FOUND_COMMENT));
+    }
+
+    default Comment findParentCommentById(long id) {
+        return findById(id).orElseThrow(() -> new CustomException(COMMENT_NOT_FOUND_TASK_OR_COMMENT));
     }
 }
