@@ -7,10 +7,12 @@ import com.example.taskflow.common.model.response.PageResponse;
 import com.example.taskflow.domain.activities.model.response.LogGetAllResponse;
 import com.example.taskflow.domain.activities.model.response.LogGetMineResponse;
 import com.example.taskflow.domain.activities.service.LogService;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,11 +32,11 @@ public class LogController {
     // 전체 활동 로그 조회
     @GetMapping
     public ResponseEntity<GlobalResponse<PageResponse<LogGetAllResponse>>> getAllLogsApi(
-        @PageableDefault(page = 0, size = 10) Pageable pageable,
+        @PageableDefault(page = 0, size = 10, sort = "loggedDateTime", direction = Sort.Direction.DESC) Pageable pageable,
         @RequestParam(required = false) LogType type,
         @RequestParam(required = false) Long taskId,
-        @RequestParam(required = false) LocalDateTime startDate,
-        @RequestParam(required = false) LocalDateTime endDate
+        @RequestParam(required = false) LocalDate startDate,
+        @RequestParam(required = false) LocalDate endDate
     ) {
         PageResponse<LogGetAllResponse> result = logService.getAllLogs(pageable, type, taskId, startDate, endDate);
 
