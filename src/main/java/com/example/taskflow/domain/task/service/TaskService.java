@@ -1,0 +1,126 @@
+package com.example.taskflow.domain.task.service;
+
+import com.example.taskflow.common.entity.BaseEntity;
+import com.example.taskflow.common.entity.Comment;
+import com.example.taskflow.common.entity.Task;
+import com.example.taskflow.common.entity.User;
+import com.example.taskflow.common.exception.CustomException;
+import com.example.taskflow.common.model.enums.TaskPriority;
+import com.example.taskflow.common.model.enums.TaskStatus;
+import com.example.taskflow.common.model.response.PageResponse;
+import com.example.taskflow.domain.comment.repository.CommentRepository;
+import com.example.taskflow.domain.task.model.dto.TaskDto;
+import com.example.taskflow.domain.task.model.request.TaskCreateRequest;
+import com.example.taskflow.domain.task.model.request.TaskUpdateRequest;
+import com.example.taskflow.domain.task.model.request.TaskUpdateStatusRequest;
+import com.example.taskflow.domain.task.model.response.*;
+import com.example.taskflow.domain.task.repository.TaskRepository;
+import com.example.taskflow.domain.user.model.dto.UserDto;
+import com.example.taskflow.domain.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static com.example.taskflow.common.exception.ErrorMessage.TASK_NOT_FOUND;
+import static com.example.taskflow.common.exception.ErrorMessage.TASK_WRONG_ENUM;
+
+@Service
+@RequiredArgsConstructor
+public class TaskService {
+
+    private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
+
+    // 작업 생성 기능
+    @Transactional
+    public TaskCreateResponse createTask(TaskCreateRequest request) {
+
+        User assignee = userRepository.findUserById(request.getAssigneeId());
+
+        Task task = new Task(request.getTitle(), request.getDescription(), request.getPriority(), assignee, request.getDueDate());
+        taskRepository.save(task);
+
+        return TaskCreateResponse.from(TaskDto.from(task), TaskAssgineeResponse.from(UserDto.from(task.getAssigneeId())));
+    }
+
+    // 작업 목록 조회 기능(페이징, 필터링)
+    @Transactional(readOnly = true)
+    public PageResponse<TaskGetAllResponse> getTaskList(TaskStatus status, TaskPriority priority, Long assigneeId, Pageable pageable) {
+
+        Page<Task> taskPage = taskRepository.findByFilters(status, priority, assigneeId, pageable);
+
+        Page<TaskGetAllResponse> responsePage = taskPage
+            .map(task -> TaskGetAllResponse.from(TaskDto.from(task), TaskAssgineeResponse.from(UserDto.from(task.getAssigneeId()))));
+
+        return PageResponse.from(responsePage);
+    }
+
+    // 작업 상세 조회 기능
+    @Transactional(readOnly = true)
+    public TaskGetOneResponse getTaskById(long taskId) {
+
+        Task task = taskRepository.findTaskById(taskId);
+
+        return TaskGetOneResponse.from(TaskDto.from(task), TaskAssgineeResponse.from(UserDto.from(task.getAssigneeId())));
+    }
+
+    // 작업 수정 기능
+    @Transactional
+    public TaskUpdateResponse updateTask(long taskId, TaskUpdateRequest request) {
+
+        Task task = taskRepository.findTaskById(taskId);
+
+        User assignee = userRepository.findUserById(request.getAssigneeId() != null ? userRepository.findUserById(request.getAssigneeId()).getId() : null);
+
+        task.update(request, assignee);
+        taskRepository.saveAndFlush(task);
+
+        return TaskUpdateResponse.from(TaskDto.from(task), TaskAssgineeResponse.from(UserDto.from(task.getAssigneeId())));
+    }
+
+    // 작업 상태 변경 기능
+    @Transactional
+    public TaskUpdateStatusResponse updateStatus(long taskId, TaskUpdateStatusRequest request) {
+
+        Task task = taskRepository.findTaskById(taskId);
+
+        TaskStatus currentStatus = task.getStatus();
+        TaskStatus requestStatus = request.getStatus();
+
+        if (Math.abs(requestStatus.getLevel() - currentStatus.getLevel()) > 1) {
+            throw new CustomException(TASK_WRONG_ENUM);
+        }
+
+        if (requestStatus == TaskStatus.DONE && currentStatus != TaskStatus.DONE) {
+            task.completedTask();
+        }
+
+        if (currentStatus == TaskStatus.DONE && requestStatus != TaskStatus.DONE) {
+            task.uncompletedTask();
+        }
+
+        task.updateStatus(requestStatus);
+        taskRepository.saveAndFlush(task);
+
+        return TaskUpdateStatusResponse.from(TaskDto.from(task), TaskAssgineeResponse.from(UserDto.from(task.getAssigneeId())));
+    }
+
+    // 작업 삭제 기능
+    @Transactional
+    public void deleteTask(long taskId) {
+
+        Task task = taskRepository.findTaskById(taskId);
+
+        if (task.isDeleted()) { throw new CustomException(TASK_NOT_FOUND); }
+
+        List<Comment> commentList = commentRepository.findByTaskId(task.getId());
+        commentList.forEach(BaseEntity::updateIsDeleted);
+
+        task.updateIsDeleted();
+    }
+}

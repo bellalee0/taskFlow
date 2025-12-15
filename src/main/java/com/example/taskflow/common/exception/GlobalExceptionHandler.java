@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.Objects;
 
 @RestControllerAdvice
-@Slf4j
+@Slf4j(topic = "CustomExceptionHandler")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -25,6 +25,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = CustomException.class)
     public ResponseEntity<GlobalResponse<Void>> handlerCustomException(CustomException ex) {
+
         log.error("CustomException 발생 : {} ", ex.getMessage());
 
         return ResponseEntity.status(ex.getErrorMessage().getStatus()).body(GlobalResponse.exception(ex.getErrorMessage().getMessage()));

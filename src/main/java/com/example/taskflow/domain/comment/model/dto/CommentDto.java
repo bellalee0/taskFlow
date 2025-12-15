@@ -1,23 +1,22 @@
 package com.example.taskflow.domain.comment.model.dto;
 
 import com.example.taskflow.common.entity.Comment;
-import com.example.taskflow.common.entity.Task;
-import com.example.taskflow.common.entity.User;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class CommentDto {
 
-    private Long id;
-    private Long taskId;
-    private Long userId;
-    private String content;
-    private Long parentCommentId;
-    private int depth;
+    private final Long id;
+    private final Long taskId;
+    private final Long userId;
+    private final String content;
+    private final Comment parentComment;
+    private final boolean isDeleted;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime modifiedAt;
 
     public static CommentDto from(Comment comment) {
         return new CommentDto(
@@ -25,8 +24,10 @@ public class CommentDto {
             comment.getTask().getId(),
             comment.getUser().getId(),
             comment.getContent(),
-            comment.getParentComment() == null ? 0L : comment.getParentComment().getId(),
-            comment.getDepth()
+            comment.getParentComment(),
+            comment.isDeleted(),
+            comment.getCreatedAt(),
+            comment.getModifiedAt()
         );
     }
 }

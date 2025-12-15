@@ -1,15 +1,17 @@
 package com.example.taskflow.common.entity;
 
-
+import com.example.taskflow.domain.comment.model.request.CommentUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
 @Table(name = "comments")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Where(clause = "is_deleted = false")
 public class Comment extends BaseEntity {
 
     @Id
@@ -27,25 +29,19 @@ public class Comment extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "parent_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
     private Comment parentComment;
 
-    private int depth;
-
-
-    public Comment(String content, User user, Task task) {
-        this.content = content;
-        this.user = user;
-        this.task = task;
-        this.depth = 0;
-    }
 
     public Comment(String content, User user, Task task, Comment parentComment) {
         this.content = content;
         this.user = user;
         this.task = task;
         this.parentComment = parentComment;
-        this.depth = 1;
+    }
+
+    public void update(CommentUpdateRequest request) {
+        this.content = request.getContent();
     }
 }

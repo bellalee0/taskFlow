@@ -1,0 +1,58 @@
+package com.example.taskflow.domain.activities.service;
+
+import com.example.taskflow.common.entity.Log;
+import com.example.taskflow.common.entity.User;
+import com.example.taskflow.common.model.enums.LogType;
+import com.example.taskflow.common.model.response.PageResponse;
+import com.example.taskflow.domain.activities.model.dto.LogDto;
+import com.example.taskflow.domain.activities.model.response.*;
+import com.example.taskflow.domain.activities.repository.LogRepository;
+import com.example.taskflow.domain.team.model.dto.MemberInfoDto;
+import com.example.taskflow.domain.user.model.dto.UserDto;
+import com.example.taskflow.domain.user.repository.UserRepository;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class LogService {
+
+    private final LogRepository logRepository;
+    private final UserRepository userRepository;
+
+    // 전체 활동 로그 조회
+    @Transactional(readOnly = true)
+    public PageResponse<LogGetAllResponse> getAllLogs(Pageable pageable, LogType type, Long taskId, LocalDate startDate, LocalDate endDate) {
+
+        LocalDateTime startDateTime = startDate != null ? startDate.atStartOfDay() : null;
+        LocalDateTime endDateTime = endDate != null ? endDate.atTime(LocalTime.MAX) : null;
+
+        Page<Log> logPage = logRepository.findByFilters(pageable, type, taskId, startDateTime, endDateTime);
+
+        Page<LogGetAllResponse> responsePage = logPage
+            .map(log -> LogGetAllResponse.from(LogDto.from(log), MemberInfoDto.from(UserDto.from(log.getUser()))));
+
+        return PageResponse.from(responsePage);
+    }
+
+    // 내 활동 로그 조회
+    @Transactional(readOnly = true)
+    public List<LogGetMineResponse> getMyLogs(String username) {
+
+        User user = userRepository.findUserByUsername(username);
+
+        List<Log> logList = logRepository.findAllByUserId(user.getId());
+
+        return logList.stream()
+            .map(LogDto::from).toList()
+            .stream().map(logDto -> LogGetMineResponse.from(logDto, MemberInfoDto.from(UserDto.from(user))))
+            .toList();
+    }
+}

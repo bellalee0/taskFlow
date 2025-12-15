@@ -1,15 +1,17 @@
 package com.example.taskflow.common.entity;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
+import com.example.taskflow.domain.team.model.request.TeamUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
 @Table(name = "teams")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Where(clause = "is_deleted = false")
 public class Team extends BaseEntity {
 
     @Id
@@ -24,5 +26,10 @@ public class Team extends BaseEntity {
     public Team(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public void updateTeam(TeamUpdateRequest request) {
+        this.name = request.getName();
+        this.description = request.getDescription();
     }
 }

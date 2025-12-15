@@ -1,28 +1,28 @@
 package com.example.taskflow.domain.task.model.dto;
 
 import com.example.taskflow.common.entity.Task;
-import com.example.taskflow.common.entity.User;
 import com.example.taskflow.common.model.enums.TaskPriority;
 import com.example.taskflow.common.model.enums.TaskStatus;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class TaskDto {
 
-    private Long id;
-    private String title;
-    private String description;
-    private TaskStatus status;
-    private TaskPriority priority;
-    private Long assigneeId;
-    private LocalDateTime dueDate;
-    private boolean isCompleted;
-    private LocalDateTime completedDate;
+    private final Long id;
+    private final String title;
+    private final String description;
+    private final TaskStatus status;
+    private final TaskPriority priority;
+    private final Long assigneeId;
+    private final LocalDateTime dueDateTime;
+    private final boolean isCompleted;
+    private final LocalDateTime completedDateTime;
+    private final boolean isDeleted;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime modifiedAt;
 
     public static TaskDto from(Task task) {
         return new TaskDto(
@@ -34,7 +34,10 @@ public class TaskDto {
             task.getAssigneeId().getId(),
             task.getDueDate(),
             task.isCompleted(),
-            task.getCompletedDate()
+            task.getCompletedDateTime(),
+            task.isDeleted(),
+            task.getCreatedAt(),
+            task.getModifiedAt()
         );
     }
 }
