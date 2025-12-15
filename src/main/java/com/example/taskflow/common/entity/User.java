@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
@@ -27,7 +26,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(length = 50, nullable = false)
     private String name;
 
     @Column(nullable = false)
