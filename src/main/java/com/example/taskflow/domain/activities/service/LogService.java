@@ -10,7 +10,9 @@ import com.example.taskflow.domain.activities.repository.LogRepository;
 import com.example.taskflow.domain.team.model.dto.MemberInfoDto;
 import com.example.taskflow.domain.user.model.dto.UserDto;
 import com.example.taskflow.domain.user.repository.UserRepository;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,9 +29,12 @@ public class LogService {
 
     // 전체 활동 로그 조회
     @Transactional(readOnly = true)
-    public PageResponse<LogGetAllResponse> getAllLogs(Pageable pageable, LogType type, Long taskId, LocalDateTime startDate, LocalDateTime endDate) {
+    public PageResponse<LogGetAllResponse> getAllLogs(Pageable pageable, LogType type, Long taskId, LocalDate startDate, LocalDate endDate) {
 
-        Page<Log> logPage = logRepository.findByFilters(pageable, type, taskId, startDate, endDate);
+        LocalDateTime startDateTime = startDate != null ? startDate.atStartOfDay() : null;
+        LocalDateTime endDateTime = endDate != null ? endDate.atTime(LocalTime.MAX) : null;
+
+        Page<Log> logPage = logRepository.findByFilters(pageable, type, taskId, startDateTime, endDateTime);
 
         Page<LogGetAllResponse> responsePage = logPage
             .map(log -> LogGetAllResponse.from(LogDto.from(log), MemberInfoDto.from(UserDto.from(log.getUser()))));
