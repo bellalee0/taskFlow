@@ -44,7 +44,7 @@ public class CommentService {
         Comment parentComment = null;
 
         if (request.getParentId() != null) {
-            parentComment = commentRepository.findCommentById(request.getParentId(), COMMENT_NOT_FOUND_TASK_OR_COMMENT);
+            parentComment = commentRepository.findParentCommentById(request.getParentId());
 
             checkTaskCommentRelationship(task, parentComment);
             if (parentComment.getParentComment() != null) { throw new CustomException(COMMENT_NOT_FOUND_TASK_OR_COMMENT); }
@@ -97,10 +97,12 @@ public class CommentService {
     public CommentUpdateResponse updateComment(long taskId, long commentId, String username, CommentUpdateRequest request) {
 
         Task task = taskRepository.findTaskById(taskId);
-        Comment comment = commentRepository.findCommentById(commentId, COMMENT_NOT_FOUND_COMMENT);
+        Comment comment = commentRepository.findCommentById(commentId);
 
         checkTaskCommentRelationship(task, comment);
-        checkCommentUserRelationship(username, comment);
+        if (!Objects.equals(comment.getUser().getUsername(), username)) {
+            throw new CustomException(COMMENT_NO_PERMISSION_UPDATE);
+        }
 
         comment.update(request);
         commentRepository.saveAndFlush(comment);
@@ -113,12 +115,14 @@ public class CommentService {
     public void deleteComment(long taskId, long commentId, String username) {
 
         Task task = taskRepository.findTaskById(taskId);
-        Comment comment = commentRepository.findCommentById(commentId, COMMENT_NOT_FOUND_COMMENT);
+        Comment comment = commentRepository.findCommentById(commentId);
 
         checkTaskCommentRelationship(task, comment);
-        checkCommentUserRelationship(username, comment);
+        if (!Objects.equals(comment.getUser().getUsername(), username)) {
+            throw new CustomException(COMMENT_NO_PERMISSION_DELETE);
+        }
 
-        if (comment.isDeleted()) { throw new CustomException(COMMENT_NO_PERMISSION_DELETE); }
+        if (comment.isDeleted()) { throw new CustomException(COMMENT_NOT_FOUND_COMMENT); }
 
         if (commentRepository.existsByParentCommentId(comment.getId())) {
             List<Comment> childCommentList = commentRepository.findAllByParentCommentId(comment.getId());
@@ -132,13 +136,6 @@ public class CommentService {
     private void checkTaskCommentRelationship(Task task, Comment parentComment) {
         if (!Objects.equals(task.getId(), parentComment.getTask().getId())) {
             throw new CustomException(COMMENT_NOT_FOUND_TASK_OR_COMMENT);
-        }
-    }
-
-    // User가 Comment의 작성자인지 확인
-    private void checkCommentUserRelationship(String username, Comment comment) {
-        if (!Objects.equals(comment.getUser().getUsername(), username)) {
-            throw new CustomException(COMMENT_NO_PERMISSION_UPDATE);
         }
     }
 }

@@ -79,7 +79,7 @@ public class UserService {
         User user = userRepository.findUserById(id);
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new CustomException(AUTH_WRONG_EMAIL_AND_PASSWORD);
+            throw new CustomException(AUTH_WRONG_PASSWORD);
         }
 
         if (!user.getEmail().equals(request.getEmail())) {
