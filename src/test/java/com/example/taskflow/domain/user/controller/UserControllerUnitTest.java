@@ -128,7 +128,7 @@ class UserControllerUnitTest {
         // given
         UserCreateRequest request = new UserCreateRequest();
         ReflectionTestUtils.setField(request, "username", "test");
-        ReflectionTestUtils.setField(request, "email", "test");
+        ReflectionTestUtils.setField(request, "email", "test@test.com");
         ReflectionTestUtils.setField(request, "password", "1234");
         ReflectionTestUtils.setField(request, "name", "test");
 
